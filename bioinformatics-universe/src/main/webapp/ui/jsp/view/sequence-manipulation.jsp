@@ -42,54 +42,84 @@
 			</h2>
 		</c:if>
 	</div>
-	<div>
-		<div class="form-group col-md-10">
-			<div class="row">
-				<div class="col-md-5 my-textarea">
-					<div class="row">
-						Paste first file:
-						<textarea class="form-control" placeholder="test" required rows=8
-							id="query-field"> </textarea>
-					</div>
-					<div class="row">
-						OR <br /> <label class="btn btn-default"> Choose File <input
-							type="file" style="display: none"
-							onchange="$('#upload-file-info').html(this.files[0].name)">
-						</label> <span class='label label-info' id="upload-file-info"></span>
-					</div>
+		<div class="form-group col-md-12">
+			<div class="col-md-2">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul class="nav nav-pills nav-stacked">
+							<li><a href="#">Make Unique</a></li>
+							<li class="active"><a href="#">Get By Name</a></li>
+							<li><a href="#">Extract</a></li>
+						</ul>
+					</div>	
 				</div>
-				<div class="col-md-5">
-					<div class="row">
-						Paste second file:
-						<textarea class="form-control" placeholder="test" required rows=8
-							id="query-field"> </textarea>
-					</div>
-					<div class="row">
-						OR <br /> <label class="btn btn-default"> Choose File <input
-							type="file" style="display: none"
-							onchange="$('#upload-file-info').html(this.files[0].name)">
-						</label> <span class='label label-info' id="upload-file-info"></span>
-					</div>
-				</div>
-			</div>
 
-			<!-- Don't forget to make it CSS -->
-			<br />
-			<div class="row col-md-5">
-				<button class="btn btn-primary btn-md" type="button"
-					id="make-unique">
-					<span class="make-unique">Make Unique</span>
-				</button>
-				<button class="btn btn-primary btn-md" type="button"
-					id="get-by-name">
-					<span class="get-by-name">Get by name</span>
-				</button>
-				<button class="btn btn-primary btn-md" type="button" id="extract">
-					<span class="extract">Extract</span>
-				</button>
+			</div>
+			<div class="col-md-10">
+				<div class="row">
+					<div class="col-md-4 my-textarea">
+						<div class="row">
+							<textarea class="form-control" placeholder="test" required rows=8
+								id="query-field"> </textarea>
+						</div>
+						<div class="row">
+							OR <br /> <label class="btn btn-default"> Choose File <input type="file" style="display: none"
+								onchange="$('#upload-file-info').html(this.files[0].name)">
+							</label> <span class='label label-info' id="upload-file-info"></span>
+						</div>
+					</div>
+					<div class="col-md-4 my-textarea">
+						<div class="row">
+							<textarea class="form-control" placeholder="test" required rows=8 id="query-field"> </textarea>
+						</div>
+						<div class="row">
+							OR <br /> <label class="btn btn-default"> Choose File <input type="file" style="display: none"
+								onchange="$('#upload-file-info').html(this.files[0].name)">
+							</label> <span class='label label-info' id="upload-file-info"></span>
+						</div>
+						<div class="row">
+							<button class="btn btn-primary btn-md pull-right" type="button" id="Go">
+								<span >Go!</span>
+							</button>
+						</div>
+					</div>
+					<div class="col-md-2 panel panel-default">
+						<div class="panel-body">
+							<p class="text-primary">Set options: </p>
+							<ul class="nav nav-pills nav-stacked">
+								<li> 
+									<div class="form-group">
+										<small>First file delimiter:</small>
+										<select class="form-control input-sm" id="sel1">
+											<option>tab</option>
+											<option>comma</option>
+											<option>semicolon</option>
+											<option>vertical bar</option>
+										</select>
+										<small>First file column:</small>
+										<input type="text" class="form-control input-sm" id="usr">
+									</div>
+								</li>
+								<li>
+									<div class="form-group">
+										<small>Second file delimiter:</small> 
+										<select class="form-control input-sm" id="sel2">
+											<option>tab</option>
+											<option>comma</option>
+											<option>semicolon</option>
+											<option>vertical bar</option>
+										</select>
+										<small>Second file column:</small>
+										<input type="text" class="form-control input-sm" id="usr">
+									</div>
+								</li>
+							</ul>
+						</div>	
+					</div>
+				</div>
+
 			</div>
 		</div>
-	</div>
 
 
 	<div>

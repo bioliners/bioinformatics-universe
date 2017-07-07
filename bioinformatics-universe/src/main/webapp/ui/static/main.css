@@ -44,5 +44,10 @@ nav div.bottom-nav-bar {
  
 .my-textarea {
 	margin-right: 2em;
-
+}
+#Go{
+	width:7em;
+}
+div.panel-body {
+	padding: 2px;
 }
