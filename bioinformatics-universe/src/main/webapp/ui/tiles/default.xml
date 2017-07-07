@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+       
+<tiles-definitions>
+
+	<definition name="mainLayout" template="/ui/jsp/layout/default.jsp">
+		<put-attribute name="title" value="Binformatics" />
+		<put-attribute name="header" value="/ui/jsp/layout/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/ui/jsp/layout/footer.jsp" />
+	</definition>
+
+	<definition name="sequence-manipulation" extends="mainLayout">
+		<put-attribute name="header" value="" />
+		<put-attribute name="body" value="/ui/jsp/view/sequence-manipulation.jsp" />
+	</definition>
+
+</tiles-definitions>
