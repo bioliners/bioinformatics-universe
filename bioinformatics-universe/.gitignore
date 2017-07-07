@@ -28,3 +28,12 @@ target/
 
 # ignore all files ending with ~
 *~
+
+#Additionally
+*.settings
+*.project
+*.classpath
+*.jsdtscope
+
+
+
