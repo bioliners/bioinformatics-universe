@@ -95,7 +95,7 @@
 
 
 	<div>
-		<form method="POST" enctype="multipart/form-data" action="/sequence-manipulation">
+		<form method="POST" enctype="multipart/form-data" action="/sequence">
 			<table>
 				<tr>
 					<td>File to upload:</td>

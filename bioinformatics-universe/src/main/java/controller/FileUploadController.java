@@ -32,7 +32,7 @@ public class FileUploadController {
         this.storageService = storageService;
     }
 
-    @GetMapping("/sequence-manipulation")
+    @GetMapping("/sequence")
     public String listUploadedFiles(Model model) throws IOException {
         model.addAttribute("files", storageService
                 .loadAll()
@@ -43,10 +43,10 @@ public class FileUploadController {
                 .collect(Collectors.toList()));
         model.addAttribute("tab", "sequence");
 
-        return "sequence-manipulation";
+        return "sequence";
     }
 
-    @GetMapping("/sequence-manipulation/files/{filename:.+}")
+    @GetMapping("/sequence/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
@@ -57,14 +57,14 @@ public class FileUploadController {
                 .body(file);
     }
 
-    @PostMapping("/sequence-manipulation")
+    @PostMapping("/sequence")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
-        return "redirect:/sequence-manipulation";
+        return "redirect:/sequence";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

@@ -13,7 +13,7 @@
     <div class="navbar-collapse" id="bu-navbar">
       <ul class="nav navbar-nav">
       	<li id="home"><a href="${pageContext.request.contextPath}/home">Home</a></li>
-        <li id="sequence"><a href="${pageContext.request.contextPath}/sequence-manipulation">Sequence</a></li>
+        <li id="sequence"><a href="${pageContext.request.contextPath}/sequence">Sequence</a></li>
         <li id="domain"><a href="${pageContext.request.contextPath}/domain">Domain</a></li>
         <li id="phylogeny"><a href="${pageContext.request.contextPath}/phylogeny">Phylogeny</a></li>
         <li id="blast"><a href="${pageContext.request.contextPath}/blast">Blast </a></li>
