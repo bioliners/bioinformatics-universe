@@ -41,6 +41,7 @@ public class FileUploadController {
                                 .fromMethodName(FileUploadController.class, "serveFile", path.getFileName().toString())
                                 .build().toString())
                 .collect(Collectors.toList()));
+        model.addAttribute("tab", "sequence");
 
         return "sequence-manipulation";
     }

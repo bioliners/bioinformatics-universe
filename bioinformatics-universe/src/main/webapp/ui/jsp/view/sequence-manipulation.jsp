@@ -1,32 +1,4 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bu-navbar">
-        <span class="sr-only">Toggle Dropdown</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>     
-      </button>
-      <a class="navbar-brand" href="${pageContext.request.contextPath}/home" style="font-size:120%; color:#D8F0E3">Bioinformatics Universe</a>
-    </div>
-    
-    <div class="navbar-collapse" id="bu-navbar">
-      <ul class="nav navbar-nav">
-      	<li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-        <li class="active"><a href="${pageContext.request.contextPath}/sequence-manipulation">Sequence</a></li>
-        <li><a href="${pageContext.request.contextPath}/domain">Domain</a></li>
-        <li><a href="${pageContext.request.contextPath}/phylogeny">Phylogeny</a></li>
-        <li><a href="${pageContext.request.contextPath}/blast">Blast </a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Help</a></li>
-        <li><a href="#">About</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="bottom-nav-bar"></div>
-</nav>
 
 <div class="jumbotron backgroundtheme">
     <div class="container">
