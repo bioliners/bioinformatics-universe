@@ -42,6 +42,7 @@ public class FileUploadController {
                                 .build().toString())
                 .collect(Collectors.toList()));
         model.addAttribute("tab", "sequence");
+        model.addAttribute("sequenceTab", "get-by-name");
 
         return "sequence";
     }

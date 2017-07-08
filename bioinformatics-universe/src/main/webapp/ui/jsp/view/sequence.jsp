@@ -1,32 +1,25 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 
+<div style="display: none">
+	<span id="sequence-tab">${sequenceTab}</span>
+</div>
+
 <div class="jumbotron backgroundtheme">
     <div class="container">
 			<div>Description</div>
 	</div>
 </div>
 
-<div class="container-fluid">
-	<div>
-		<c:if test="${message} != ''">
-			<h2>
-				<c:out value="${message}"></c:out>
-			</h2>
-		</c:if>
-	</div>
+<div class="container-fluid">	
+		<div>
+			<c:if test="${message} != ''">
+				<h2>
+					<c:out value="${message}"></c:out>
+				</h2>
+			</c:if>
+		</div>
 		<div class="form-group col-md-12">
-			<div class="col-md-2">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<ul class="nav nav-pills nav-stacked">
-							<li><a href="#">Make Unique</a></li>
-							<li class="active"><a href="#">Get By Name</a></li>
-							<li><a href="#">Extract</a></li>
-						</ul>
-					</div>	
-				</div>
-
-			</div>
+			<%@ include file="sequence-navbar.jsp" %>
 			<div class="col-md-10">
 				<div class="row">
 					<div class="col-md-4 my-textarea">
