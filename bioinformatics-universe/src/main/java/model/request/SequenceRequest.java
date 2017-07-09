@@ -1,19 +1,21 @@
-package model;
+package model.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class Sequence {
-	private MultipartFile file;
+public class SequenceRequest {
+	private MultipartFile firstFile;
 	private String firstFileDelim;
 	private String firstFileColumn;
+	
+	private MultipartFile secondFile;
 	private String secondFileDelim;	
 	private String secondFileColumn;
 	
-	public MultipartFile getFile() {
-		return file;
+	public MultipartFile getFirstFile() {
+		return firstFile;
 	}
-	public void setFile(MultipartFile file) {
-		this.file = file;
+	public void setFirstFile(MultipartFile file) {
+		this.firstFile = file;
 	}
 	public String getFirstFileDelim() {
 		return firstFileDelim;
@@ -26,6 +28,13 @@ public class Sequence {
 	}
 	public void setFirstFileColumn(String firstFileColumn) {
 		this.firstFileColumn = firstFileColumn;
+	}
+	
+	public MultipartFile getSecondFile() {
+		return secondFile;
+	}
+	public void setSecondFile(MultipartFile secondFile) {
+		this.secondFile = secondFile;
 	}
 	public String getSecondFileDelim() {
 		return secondFileDelim;

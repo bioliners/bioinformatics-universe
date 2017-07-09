@@ -3,7 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-import model.Sequence;
+import model.request.SequenceRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -22,20 +22,25 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import exceptions.StorageFileNotFoundException;
+import service.SequenceService;
 import service.StorageService;
+import exceptions.StorageFileNotFoundException;
 
 @Controller
 @RequestMapping("/sequence")
 public class SequenceController {
 
+	@Autowired
     private final StorageService storageService;
 
     @Autowired
-    public SequenceController(StorageService storageService) {
+    private final SequenceService sequenceService;
+    
+    public SequenceController(StorageService storageService, SequenceService sequenceService) {
         this.storageService = storageService;
+        this.sequenceService = sequenceService;
     }
-
+    
     @GetMapping("/get-by-name")
     public String listUploadedFiles(Model model) throws IOException {
         model.addAttribute("files", storageService
@@ -63,10 +68,9 @@ public class SequenceController {
     }
     
     @PostMapping(value="/get-by-name", produces="application/json",consumes="application/json")
-    public String handleFileUpload2(Sequence sequence) {
+    public String handleFileUpload2(SequenceRequest sequence) {
     	
-    	
-        storageService.store(sequence.getFile());
+        sequenceService.getByName(sequence);
 
         return "redirect:/sequence/get-by-name";
     }
