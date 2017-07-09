@@ -3,6 +3,8 @@ package controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import model.Sequence;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -21,16 +23,16 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import exceptions.StorageFileNotFoundException;
-import serviceimpl.StorageServiceImp;
+import service.StorageService;
 
 @Controller
 @RequestMapping("/sequence")
 public class SequenceController {
 
-    private final StorageServiceImp storageService;
+    private final StorageService storageService;
 
     @Autowired
-    public SequenceController(StorageServiceImp storageService) {
+    public SequenceController(StorageService storageService) {
         this.storageService = storageService;
     }
 
@@ -59,15 +61,25 @@ public class SequenceController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+file.getFilename()+"\"")
                 .body(file);
     }
+    
+    @PostMapping(value="/get-by-name", produces="application/json",consumes="application/json")
+    public String handleFileUpload2(Sequence sequence) {
+    	
+    	
+        storageService.store(sequence.getFile());
+
+        return "redirect:/sequence/get-by-name";
+    }
 
     @PostMapping("/get-by-name")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    	
 
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
-        return "redirect:/get-by-name";
+        return "redirect:/sequence/get-by-name";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

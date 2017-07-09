@@ -9,8 +9,8 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import service.StorageService;
 import serviceimpl.StorageProperties;
-import serviceimpl.StorageServiceImp;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
@@ -29,7 +29,7 @@ public class Application extends SpringBootServletInitializer {
     }
     
 	@Bean
-	CommandLineRunner init(StorageServiceImp storageService) {
+	CommandLineRunner init(StorageService storageService) {
 		return (args) -> {
             storageService.deleteAll();
             storageService.init();
