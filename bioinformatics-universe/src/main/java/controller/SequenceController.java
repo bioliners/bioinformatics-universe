@@ -13,32 +13,34 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import storage.StorageFileNotFoundException;
-import storage.StorageService;
+import exceptions.StorageFileNotFoundException;
+import serviceimpl.StorageServiceImp;
 
 @Controller
-public class FileUploadController {
+@RequestMapping("/sequence")
+public class SequenceController {
 
-    private final StorageService storageService;
+    private final StorageServiceImp storageService;
 
     @Autowired
-    public FileUploadController(StorageService storageService) {
+    public SequenceController(StorageServiceImp storageService) {
         this.storageService = storageService;
     }
 
-    @GetMapping("/sequence")
+    @GetMapping("/get-by-name")
     public String listUploadedFiles(Model model) throws IOException {
         model.addAttribute("files", storageService
                 .loadAll()
                 .map(path ->
                         MvcUriComponentsBuilder
-                                .fromMethodName(FileUploadController.class, "serveFile", path.getFileName().toString())
+                                .fromMethodName(SequenceController.class, "serveFile", path.getFileName().toString())
                                 .build().toString())
                 .collect(Collectors.toList()));
         model.addAttribute("tab", "sequence");
@@ -47,7 +49,7 @@ public class FileUploadController {
         return "sequence";
     }
 
-    @GetMapping("/sequence/files/{filename:.+}")
+    @GetMapping("/get-by-name/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
@@ -58,14 +60,14 @@ public class FileUploadController {
                 .body(file);
     }
 
-    @PostMapping("/sequence")
+    @PostMapping("/get-by-name")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
-        return "redirect:/sequence";
+        return "redirect:/get-by-name";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

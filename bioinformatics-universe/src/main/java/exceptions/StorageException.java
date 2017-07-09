@@ -1,4 +1,4 @@
-package storage;
+package exceptions;
 
 public class StorageException extends RuntimeException {
 

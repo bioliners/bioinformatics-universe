@@ -1,6 +1,6 @@
-package storage;
+package exceptions;
 
-import storage.StorageException;
+import exceptions.StorageException;
 
 public class StorageFileNotFoundException extends StorageException {
 

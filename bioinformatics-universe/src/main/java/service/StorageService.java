@@ -1,9 +1,7 @@
-package storage;
+package service;
 
-import storage.StorageException;
-import storage.StorageFileNotFoundException;
-import storage.StorageProperties;
-import storage.StorageService;
+import serviceimpl.StorageProperties;
+import serviceimpl.StorageServiceImp;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,13 +17,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import exceptions.StorageException;
+import exceptions.StorageFileNotFoundException;
+
 @Service
-public class FileSystemStorageService implements StorageService {
+public class StorageService implements StorageServiceImp {
 
     private final Path rootLocation;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties properties) {
+    public StorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
@@ -92,7 +93,7 @@ public class FileSystemStorageService implements StorageService {
         try {
             Files.createDirectory(rootLocation);
         } catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
+            throw new StorageException("Could not initialize serviceimpl", e);
         }
     }
 }

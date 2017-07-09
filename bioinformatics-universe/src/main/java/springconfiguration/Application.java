@@ -1,4 +1,4 @@
-package controller;
+package springconfiguration;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,12 +9,12 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import storage.StorageProperties;
-import storage.StorageService;
+import serviceimpl.StorageProperties;
+import serviceimpl.StorageServiceImp;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
-@ComponentScan({"storage", "controller"})
+@ComponentScan({"service*", "controller", "springconfiguration"})
 public class Application extends SpringBootServletInitializer {
 
 	private static Class applicationClass = Application.class;
@@ -29,7 +29,7 @@ public class Application extends SpringBootServletInitializer {
     }
     
 	@Bean
-	CommandLineRunner init(StorageService storageService) {
+	CommandLineRunner init(StorageServiceImp storageService) {
 		return (args) -> {
             storageService.deleteAll();
             storageService.init();

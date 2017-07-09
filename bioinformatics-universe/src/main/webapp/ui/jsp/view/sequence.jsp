@@ -88,7 +88,7 @@
 
 
 	<div>
-		<form method="POST" enctype="multipart/form-data" action="/sequence">
+		<form method="POST" enctype="multipart/form-data" action="${pageContext.request.contextPath}/sequence/get-by-name">
 			<table>
 				<tr>
 					<td>File to upload:</td>

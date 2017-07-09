@@ -1,4 +1,4 @@
-package controller;
+package springconfiguration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

@@ -1,8 +1,8 @@
-package storage;
+package serviceimpl;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("storage")
+@ConfigurationProperties("serviceimpl")
 public class StorageProperties {
 
     /**
