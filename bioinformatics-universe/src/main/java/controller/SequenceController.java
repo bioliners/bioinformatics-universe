@@ -3,8 +3,6 @@ package controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-import model.request.SequenceRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -22,9 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import exceptions.StorageFileNotFoundException;
+import model.request.SequenceRequest;
 import service.SequenceService;
 import service.StorageService;
-import exceptions.StorageFileNotFoundException;
 
 @Controller
 @RequestMapping("/sequence")
@@ -60,6 +59,7 @@ public class SequenceController {
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
+
         Resource file = storageService.loadAsResource(filename);
         return ResponseEntity
                 .ok()
@@ -70,11 +70,15 @@ public class SequenceController {
     @PostMapping(value="/get-by-name", produces="application/json",consumes="application/json")
     public String handleFileUpload2(SequenceRequest sequence) {
     	
-        sequenceService.getByName(sequence);
-
-        return "redirect:/sequence/get-by-name";
+        String resultWithrelativePath = sequenceService.getByName(sequence);
+        
+        Resource file = storageService.loadAsResource("relativePath");
+                
+        return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "serveFile", resultWithrelativePath).build().toString();
     }
 
+    
+    
     @PostMapping("/get-by-name")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
     	

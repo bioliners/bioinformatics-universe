@@ -1,6 +1,11 @@
 package serviceimpl;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,11 +26,46 @@ import exceptions.StorageFileNotFoundException;
 @Service
 public class StorageServiceImpl implements StorageService {
 
-    private final Path rootLocation;
-
+    private final Path rootLocation;    
+    private final String workingDir = "bioinformatics-programs-workingDir";
+	private final String bioProgramsDir =  "../bioinformatics-programs";
+	private final String getSeqByName = bioProgramsDir + "/getSequencesByNames.py";
+ 
     @Autowired
-    public StorageServiceImpl(StorageProperties properties) {
-        this.rootLocation = Paths.get(properties.getLocation());
+    public StorageServiceImpl(AppProperties properties) {
+        //this.rootLocation = Paths.get(properties.getLocation());
+        
+        this.rootLocation = Paths.get(workingDir);
+        
+/*        File outputFile = new File(workingDir + "/results.txt");
+        ProcessBuilder processBuilder = new ProcessBuilder("/usr/bin/python", getSeqByName, "names", "all-deltaprot.fa");
+        
+        processBuilder.directory(new File(workingDir));
+        
+        try {
+			Process process = processBuilder.start();
+		
+			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            
+            BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
+            
+            while ((line = br.readLine()) != null) {
+            	bw.write(line);
+            	bw.write("\n");
+            }
+			
+            br.close();
+            bw.close();
+			
+        
+        } catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        System.out.println(outputFile.getPath());
+        System.out.println(outputFile.getAbsolutePath());*/
+        
     }
 
     @Override

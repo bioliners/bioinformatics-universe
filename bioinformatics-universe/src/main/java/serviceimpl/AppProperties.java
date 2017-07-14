@@ -3,7 +3,7 @@ package serviceimpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("serviceimpl")
-public class StorageProperties {
+public class AppProperties {
 
     /**
      * Folder location for storing files
