@@ -83,14 +83,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Stream<Path> loadAll() {
         try {
-        	Stream<Path> paths =  Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation));
+        	Stream<Path> paths =  Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation));
         	System.out.println("Printing paths: ");
         	paths.forEach(path -> System.out.println(path));
         	
-        	return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(path -> this.rootLocation.relativize(path));
+        	return Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation)).map(path -> this.rootLocation.relativize(path));
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
         }

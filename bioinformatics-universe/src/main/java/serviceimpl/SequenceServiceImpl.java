@@ -64,7 +64,7 @@ public class SequenceServiceImpl implements SequenceService {
 		}
         
         
-		return outputFile.getPath();
+		return outputFile.getName();
 	}
 	
 	
