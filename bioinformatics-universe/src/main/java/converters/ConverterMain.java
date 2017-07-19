@@ -16,7 +16,7 @@ public class ConverterMain {
 		sequenceInternal.setSecondFileColumn(sequenceRequest.getSecondFileColumn());
 		
 		sequenceInternal.setFirstFileDelim(sequenceRequest.getFirstFileDelim());
-		sequenceInternal.setSecondFileColumn(sequenceRequest.getSecondFileDelim());
+		sequenceInternal.setSecondFileDelim(sequenceRequest.getSecondFileDelim());
 			
 		
 		return sequenceInternal;

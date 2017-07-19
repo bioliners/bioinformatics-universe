@@ -27,10 +27,10 @@ try:
 
 	with open(protNamesAndSequences, "r") as currentFile:
 		for record in SeqIO.parse(currentFile, "fasta"):
-			#currentProtName  = record.description
+			currentProtName  = record.description
 			#currentProtName  = record.description.split("|")[3]
 			#currentProtName = "_".join(record.description.split("_")[:2]) 
-			currentProtName  = record.description.split("|")[1].split(":")[1]
+			#currentProtName  = record.description.split("|")[1].split(":")[1]
 			if currentProtName in my_proteins:
 				print ">" + record.description
 				print  record.seq

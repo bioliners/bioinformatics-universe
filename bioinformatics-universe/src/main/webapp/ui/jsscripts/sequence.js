@@ -1,32 +1,34 @@
 $(document).ready(function (){
     $('#Go').click(function() {
-    	console.log("hay")
     	getData();
     });
 });
 
 function getOptions() {
-	var firstFile = $('#first-file').val();
-	var secondFile = $('#second-file').val();
-	
-	console.log("firstFile ");
-	console.log(firstFile);
+	var firstFile = $('#first-file')[0].files[0];
+	var secondFile = $('#second-file')[0].files[0];
 	
 	var firstFileDelim = $('#first-delim').val();
 	var secondFileDelim = $('#second-delim').val();
 	
 	var firstFileColumn = $('#first-col').val();
+
 	var secondFileColumn = $('#second-col').val();
 	
 	var options = new FormData();
 	
 	options.append("firstFile", firstFile);
-//	options.append("secondFile", secondFile);
-//	options.append("firstFileDelim", firstFileDelim);
-//	options.append("secondFileDelim", secondFileDelim);
-//	options.append("firstFileColumn", firstFileColumn);
-//	options.append("secondFileColumn", secondFileColumn);
-
+	options.append("secondFile", secondFile);
+	options.append("firstFileDelim", firstFileDelim);
+	options.append("secondFileDelim", secondFileDelim);
+	
+	if (firstFileColumn != '') {
+		options.append("firstFileColumn", firstFileColumn);
+	}
+	if (secondFileColumn != '') {
+		options.append("secondFileColumn", secondFileColumn);
+	}
+	
 	return options;
 }
 
@@ -40,12 +42,15 @@ function getData() {
 	      success: processRetrievedData,
 	      error: error,
 	      contentType: false,
-	      processData: false
+	      processData: false,
+	      dataType:'text',
+	      enctype: 'multipart/form-data'
 	    });
 }
 
 function processRetrievedData(data) {
 	$('#results').attr("href", data);
+	$('#results').html(data);
 	$('#results').show();
 }
 

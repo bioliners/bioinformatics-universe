@@ -51,6 +51,7 @@
 								<div class="form-group">
 									<small>First file delimiter:</small> 
 									<select id="first-delim" class="form-control input-sm">
+										<option selected='selected' disabled>select</option>
 										<option>tab</option>
 										<option>comma</option>
 										<option>semicolon</option>
@@ -64,6 +65,7 @@
 								<div class="form-group">
 									<small>Second file delimiter:</small> 
 									<select id="second-delim" class="form-control input-sm">
+										<option selected='selected' disabled>select</option>
 										<option>tab</option>
 										<option>comma</option>
 										<option>semicolon</option>
@@ -79,5 +81,5 @@
 			</div>
 		</div>
 	</div>
-	<p><a id="results" href="#"></p>
+	<p><a id="results" href="#"></a></p>
 </div>

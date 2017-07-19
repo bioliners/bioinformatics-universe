@@ -39,7 +39,6 @@ public class SequenceServiceImpl implements SequenceService {
 
         File outputFile = new File(workingDir + "/results.txt");
         ProcessBuilder processBuilder = new ProcessBuilder("/usr/bin/python", getSeqByName, sequenceInternal.getFirstFile(), sequenceInternal.getSecondFile());
-        
         processBuilder.directory(new File(workingDir));
         
         try {

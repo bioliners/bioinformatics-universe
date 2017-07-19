@@ -4,9 +4,9 @@ public class SequenceInternal {
 	private String firstFile;
 	private String secondFile;
 	private String firstFileDelim;
-	private String firstFileColumn;
+	private int firstFileColumn;
 	private String secondFileDelim;	
-	private String secondFileColumn;
+	private int secondFileColumn;
 	
 	public String getFirstFile() {
 		return firstFile;
@@ -26,10 +26,10 @@ public class SequenceInternal {
 	public void setFirstFileDelim(String firstFileDelim) {
 		this.firstFileDelim = firstFileDelim;
 	}
-	public String getFirstFileColumn() {
+	public int getFirstFileColumn() {
 		return firstFileColumn;
 	}
-	public void setFirstFileColumn(String firstFileColumn) {
+	public void setFirstFileColumn(int firstFileColumn) {
 		this.firstFileColumn = firstFileColumn;
 	}
 	public String getSecondFileDelim() {
@@ -38,10 +38,10 @@ public class SequenceInternal {
 	public void setSecondFileDelim(String secondFileDelim) {
 		this.secondFileDelim = secondFileDelim;
 	}
-	public String getSecondFileColumn() {
+	public int getSecondFileColumn() {
 		return secondFileColumn;
 	}
-	public void setSecondFileColumn(String secondFileColumn) {
+	public void setSecondFileColumn(int secondFileColumn) {
 		this.secondFileColumn = secondFileColumn;
 	}
 

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import service.SequenceService;
@@ -58,19 +57,25 @@ public class SequenceController {
     }
             
     
-    @PostMapping(value="/get-by-name")
+/*    @PostMapping(value="/get-by-name")
     @ResponseBody
-    public String getByName(MultipartFile sequence) {
-    	MultipartFile sequence1 = sequence;
+    public String getByName(SequenceRequest sequenceRequest) {
+    	SequenceRequest sequence1 = sequenceRequest;
+    	System.out.println(sequence1.getFirstFileColumn());
+    	System.out.println(sequence1.getSecondFileColumn());
+    	
+    	System.out.println(sequence1.getFirstFileDelim());
+    	System.out.println(sequence1.getSecondFileDelim());
     	return "String";
-    }
+    }*/
     
-//    @PostMapping(value="/get-by-name")
-//    @ResponseBody
-//    public String getByName(SequenceRequest sequence) {
-//        String fileName = sequenceService.getByName(sequence);
-//        return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "serveFile", fileName).build().toString();
-//    }
+    @PostMapping(value="/get-by-name", produces="text/plain")
+    @ResponseBody
+    public String getByName(SequenceRequest sequence) {
+        String fileName = sequenceService.getByName(sequence);
+        System.out.println(sequence.getFirstFileDelim());
+        return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
+    }
     
     
 
