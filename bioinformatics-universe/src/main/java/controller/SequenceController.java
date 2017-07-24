@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import model.request.SequenceRequest;
 
@@ -55,25 +56,27 @@ public class SequenceController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+file.getFilename()+"\"")
                 .body(file);
     }
-            
     
-/*    @PostMapping(value="/get-by-name")
+    @GetMapping("/get-by-name/files/show/{filename:.+}")
     @ResponseBody
-    public String getByName(SequenceRequest sequenceRequest) {
-    	SequenceRequest sequence1 = sequenceRequest;
-    	System.out.println(sequence1.getFirstFileColumn());
-    	System.out.println(sequence1.getSecondFileColumn());
-    	
-    	System.out.println(sequence1.getFirstFileDelim());
-    	System.out.println(sequence1.getSecondFileDelim());
-    	return "String";
-    }*/
+    public InputStream handleFileShow(@PathVariable String filename) {
+        Resource file = storageService.loadAsResource(filename);
+        
+        try {
+			return file.getInputStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        return null;
+      
+    }        
     
     @PostMapping(value="/get-by-name", produces="text/plain")
     @ResponseBody
     public String getByName(SequenceRequest sequence) {
         String fileName = sequenceService.getByName(sequence);
-        System.out.println(sequence.getFirstFileDelim());
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
     }
     

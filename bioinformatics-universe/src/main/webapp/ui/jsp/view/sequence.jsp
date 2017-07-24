@@ -81,5 +81,21 @@
 			</div>
 		</div>
 	</div>
-	<p><a id="results" href="#"></a></p>
+
+	<div class="row">
+  		<div class="col-md-12 text-center result-container">
+  			<a id="results-show" class="btn btn-info btn-lg" href="#"> 
+				Show results 
+			</a>
+			<a id="results-load" class="btn btn-info btn-lg" href="#"> 
+				Download <span class="glyphicon glyphicon-download-alt"> </span>
+			</a>
+		</div>
+	</div>
+  	
+
+	
 </div>
+
+
+

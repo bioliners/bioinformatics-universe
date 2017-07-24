@@ -1,6 +1,8 @@
 $(document).ready(function (){
+	$('.result-container').hide();	
+		
     $('#Go').click(function() {
-    	getData();
+    	getData();    	
     });
 });
 
@@ -12,7 +14,6 @@ function getOptions() {
 	var secondFileDelim = $('#second-delim').val();
 	
 	var firstFileColumn = $('#first-col').val();
-
 	var secondFileColumn = $('#second-col').val();
 	
 	var options = new FormData();
@@ -49,9 +50,16 @@ function getData() {
 }
 
 function processRetrievedData(data) {
-	$('#results').attr("href", data);
-	$('#results').html(data);
-	$('#results').show();
+	$('#results-load').attr("href", data);
+	
+	
+	var tempData = data.split("/");
+	var firstPart = tempData.slice(0,-1).join("/");
+	var fin = firstPart + "/show/" + tempData.slice(-1, tempData.length);
+	
+	$('#results-show').attr("href", fin);
+	$('.result-container').show();
+
 }
 
 function error() {
