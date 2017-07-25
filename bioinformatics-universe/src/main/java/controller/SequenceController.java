@@ -56,23 +56,7 @@ public class SequenceController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+file.getFilename()+"\"")
                 .body(file);
     }
-    
-    @GetMapping("/get-by-name/files/show/{filename:.+}")
-    @ResponseBody
-    public InputStream handleFileShow(@PathVariable String filename) {
-        Resource file = storageService.loadAsResource(filename);
-        
-        try {
-			return file.getInputStream();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        return null;
-      
-    }        
-    
+
     @PostMapping(value="/get-by-name", produces="text/plain")
     @ResponseBody
     public String getByName(SequenceRequest sequence) {

@@ -51,13 +51,6 @@ function getData() {
 
 function processRetrievedData(data) {
 	$('#results-load').attr("href", data);
-	
-	
-	var tempData = data.split("/");
-	var firstPart = tempData.slice(0,-1).join("/");
-	var fin = firstPart + "/show/" + tempData.slice(-1, tempData.length);
-	
-	$('#results-show').attr("href", fin);
 	$('.result-container').show();
 
 }
