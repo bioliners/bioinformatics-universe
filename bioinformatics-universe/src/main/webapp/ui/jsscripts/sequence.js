@@ -1,15 +1,43 @@
 $(document).ready(function (){
 	$('.result-container').hide();	
-		
+
+	$('#first-file').change(function() {
+	    $('#first-file-info').html(this.files[0].name);
+	    $('#first-file-area').val('');
+	});
+
+    $('#second-file').change(function() {
+	    $('#second-file-info').html(this.files[0].name);
+	    $('#second-file-area').val('');
+	});
+
+    $('#first-file-area').change(function() {
+        $('#first-file-info').empty();
+        console.log("before" + $('#first-file').val());
+        $('#first-file').val('');
+        console.log("after" + $('#first-file').val());
+
+    });
+
+	$('#second-file-area').change(function() {
+	    $('#second-file-info').empty();
+	    $('#second-file').val('');
+
+	});
+
     $('#Go').click(function() {
-    	getData();    	
+    	getData();
     });
 });
 
 function getOptions() {
 	var firstFile = $('#first-file')[0].files[0];
 	var secondFile = $('#second-file')[0].files[0];
-	
+
+	var firstFileArea = $('#first-file-area').val();
+	var secondFileArea = $('#second-file-area').val();
+
+
 	var firstFileDelim = $('#first-delim').val();
 	var secondFileDelim = $('#second-delim').val();
 	
@@ -17,9 +45,25 @@ function getOptions() {
 	var secondFileColumn = $('#second-col').val();
 	
 	var options = new FormData();
-	
-	options.append("firstFile", firstFile);
-	options.append("secondFile", secondFile);
+    console.log("firstFile ");
+    console.log(firstFile);
+
+    console.log("firstFileArea ");
+    console.log(firstFileArea);
+
+
+	if (typeof firstFile != 'undefined') {
+	    console.log("wrong");
+	    options.append("firstFile", firstFile);
+	}
+	if (typeof secondFile != 'undefined') {
+	    options.append("secondFile", secondFile);
+	}
+
+
+	options.append("firstFileTextArea", firstFileArea);
+	options.append("secondFileTextArea", secondFileArea);
+
 	options.append("firstFileDelim", firstFileDelim);
 	options.append("secondFileDelim", secondFileDelim);
 	
@@ -29,7 +73,7 @@ function getOptions() {
 	if (secondFileColumn != '') {
 		options.append("secondFileColumn", secondFileColumn);
 	}
-	
+
 	return options;
 }
 
@@ -49,10 +93,10 @@ function getData() {
 	    });
 }
 
+
 function processRetrievedData(data) {
 	$('#results-load').attr("href", data);
 	$('.result-container').show();
-
 }
 
 function error() {

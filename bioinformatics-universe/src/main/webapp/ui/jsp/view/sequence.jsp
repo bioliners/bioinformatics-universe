@@ -17,24 +17,24 @@
 			<div class="row">
 				<div class="col-md-4 my-textarea">
 					<div class="row">
-						<textarea class="form-control" placeholder="test" required rows=8 id="query-field"> </textarea>
+						<textarea id="first-file-area" class="form-control" placeholder="test" required rows=8> </textarea>
 					</div>
 					<div class="row">
 						OR <br /> 
 						<label class="btn btn-default"> 
-						Choose File <input id="first-file" type="file" style="display: none" onchange="$('#first-file-info').html(this.files[0].name)">
+						Choose File <input id="first-file" type="file" style="display: none">
 						</label> 
 						<span class='label label-info' id="first-file-info"></span>
 					</div>
 				</div>
 				<div class="col-md-4 my-textarea">
 					<div class="row">
-						<textarea class="form-control" placeholder="test" required rows=8 id="query-field"> </textarea>
+						<textarea id="second-file-area" class="form-control" placeholder="test" required rows=8> </textarea>
 					</div>
 					<div class="row">
 						OR <br /> 
 						<label class="btn btn-default"> 
-						Choose File <input id="second-file" type="file" style="display: none" onchange="$('#second-file-info').html(this.files[0].name)">
+						Choose File <input id="second-file" type="file" style="display: none">
 						</label> <span class='label label-info' id="second-file-info"></span>
 					</div>
 					<div class="row">

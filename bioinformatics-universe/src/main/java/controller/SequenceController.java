@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.io.InputStream;
 
+import exceptions.IncorrectRequestException;
 import model.request.SequenceRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import service.SequenceService;
@@ -59,7 +55,7 @@ public class SequenceController {
 
     @PostMapping(value="/get-by-name", produces="text/plain")
     @ResponseBody
-    public String getByName(SequenceRequest sequence) {
+    public String getByName(SequenceRequest sequence) throws IncorrectRequestException {
         String fileName = sequenceService.getByName(sequence);
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
     }

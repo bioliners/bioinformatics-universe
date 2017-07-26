@@ -1,24 +1,24 @@
 package model.internal;
 
 public class SequenceInternal {
-	private String firstFile;
-	private String secondFile;
+	private String firstFileName;
+	private String secondFileName;
 	private String firstFileDelim;
 	private int firstFileColumn;
 	private String secondFileDelim;	
 	private int secondFileColumn;
 	
-	public String getFirstFile() {
-		return firstFile;
+	public String getFirstFileName() {
+		return firstFileName;
 	}
-	public void setFirstFile(String firstFile) {
-		this.firstFile = firstFile;
+	public void setFirstFileName(String firstFileName) {
+		this.firstFileName = firstFileName;
 	}
-	public String getSecondFile() {
-		return secondFile;
+	public String getSecondFileName() {
+		return secondFileName;
 	}
-	public void setSecondFile(String secondFile) {
-		this.secondFile = secondFile;
+	public void setSecondFileName(String secondFileName) {
+		this.secondFileName = secondFileName;
 	}
 	public String getFirstFileDelim() {
 		return firstFileDelim;

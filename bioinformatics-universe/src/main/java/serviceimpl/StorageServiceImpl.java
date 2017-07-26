@@ -10,8 +10,14 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Stream;
+import java.util.UUID;
 
+import com.google.common.collect.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -26,46 +32,31 @@ import exceptions.StorageFileNotFoundException;
 @Service
 public class StorageServiceImpl implements StorageService {
 
+
     private final Path rootLocation;    
     private final String workingDir = "bioinformatics-programs-workingDir";
-	private final String bioProgramsDir =  "../bioinformatics-programs";
-	private final String getSeqByName = bioProgramsDir + "/getSequencesByNames.py";
+
  
     @Autowired
     public StorageServiceImpl(AppProperties properties) {
         //this.rootLocation = Paths.get(properties.getLocation());
         
         this.rootLocation = Paths.get(workingDir);
-        
-/*        File outputFile = new File(workingDir + "/results.txt");
-        ProcessBuilder processBuilder = new ProcessBuilder("/usr/bin/python", getSeqByName, "names", "all-deltaprot.fa");
-        
-        processBuilder.directory(new File(workingDir));
-        
-        try {
-			Process process = processBuilder.start();
-		
-			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            
-            BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-            
-            while ((line = br.readLine()) != null) {
-            	bw.write(line);
-            	bw.write("\n");
-            }
-			
-            br.close();
-            bw.close();
-			
-        
+    }
+
+    @Override
+    public String createAndStore(String inputAreaContent) {
+        String randomFileName = UUID.randomUUID().toString() + ".txt";
+        String fullName = this.rootLocation.resolve(randomFileName).toString();
+        File newFile = new File(fullName);
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(newFile))) {
+            bw.write(inputAreaContent.trim());
         } catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-        System.out.println(outputFile.getPath());
-        System.out.println(outputFile.getAbsolutePath());*/
-        
+            e.printStackTrace();
+        }
+
+        return randomFileName;
     }
 
     @Override

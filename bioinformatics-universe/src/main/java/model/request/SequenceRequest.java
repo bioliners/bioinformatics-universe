@@ -4,10 +4,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class SequenceRequest {
 	private MultipartFile firstFile;
+	private String firstFileTextArea;
 	private String firstFileDelim;
 	private int firstFileColumn;
 	
 	private MultipartFile secondFile;
+	private String secondFileTextArea;
 	private String secondFileDelim;	
 	private int secondFileColumn;
 	
@@ -16,6 +18,13 @@ public class SequenceRequest {
 	}
 	public void setFirstFile(MultipartFile file) {
 		this.firstFile = file;
+	}
+	public String getFirstFileTextArea() {
+		return firstFileTextArea;
+	}
+
+	public void setFirstFileTextArea(String firstFileTextArea) {
+		this.firstFileTextArea = firstFileTextArea;
 	}
 	public String getFirstFileDelim() {
 		return firstFileDelim;
@@ -36,6 +45,13 @@ public class SequenceRequest {
 	public void setSecondFile(MultipartFile secondFile) {
 		this.secondFile = secondFile;
 	}
+	public String getSecondFileTextArea() {
+		return secondFileTextArea;
+	}
+
+	public void setSecondFileTextArea(String secondFileTextArea) {
+		this.secondFileTextArea = secondFileTextArea;
+	}
 	public String getSecondFileDelim() {
 		return secondFileDelim;
 	}
@@ -48,5 +64,8 @@ public class SequenceRequest {
 	public void setSecondFileColumn(int secondFileColumn) {
 		this.secondFileColumn = secondFileColumn;
 	}
+
+
+
 
 }
