@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.UUID;
 
 import exceptions.IncorrectRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,64 +24,63 @@ import service.StorageService;
 @Service
 public class SequenceServiceImpl implements SequenceService {
 	
-	 private final String workingDir = "bioinformatics-programs-workingDir";
-	 private final String bioProgramsDir =  "../bioinformatics-programs";
-	 private final String getSeqByName = bioProgramsDir + "/getSequencesByNames.py";
+	 private final String workingDir;
+	 private final String getSeqByName;
+	 private final String python;
+	private final String prefix;
 	
-	@Autowired
+
     private final StorageService storageService;
-	
-	public SequenceServiceImpl(StorageService storageService) {
+	private final AppProperties properties;
+
+	@Autowired
+	public SequenceServiceImpl(StorageService storageService, AppProperties properties) {
 		this.storageService = storageService;
+		this.properties = properties;
+		this.workingDir = properties.getWorkingDirLocation();
+		this.getSeqByName = properties.getGetSeqByNameProgram();
+		this.python = properties.getPythonLocation();
+		this.prefix = properties.getResultFilePrefix();
 	}
 
-	public SequenceInternal validateRequestAndGetInternalRepr(SequenceRequest sequence) throws IncorrectRequestException {
+	public SequenceInternal validateRequestAndGetInternalRepr(SequenceRequest sequenceRequest) throws IncorrectRequestException {
 		String firstFileName = "";
 		String secondFileName = "";
 
-		if (sequence.getFirstFile() != null) {
-			if (!isNullOrEmpty(sequence.getFirstFileTextArea().trim())) {
+		if (sequenceRequest.getFirstFile() != null) {
+			if (!isNullOrEmpty(sequenceRequest.getFirstFileTextArea().trim())) {
 				throw new IncorrectRequestException("firstFileTextArea and firstFileName are both not empty");
 			} else {
-				storageService.store(sequence.getFirstFile());
+				firstFileName = storageService.store(sequenceRequest.getFirstFile());
 			}
-
-		} else if (!isNullOrEmpty(sequence.getFirstFileTextArea().trim())) {
-			firstFileName = storageService.createAndStore(sequence.getFirstFileTextArea());
+		} else if (!isNullOrEmpty(sequenceRequest.getFirstFileTextArea().trim())) {
+			firstFileName = storageService.createAndStore(sequenceRequest.getFirstFileTextArea());
 		}
 
-		if (sequence.getSecondFile() != null) {
-			if (!isNullOrEmpty(sequence.getSecondFileTextArea().trim())) {
+		if (sequenceRequest.getSecondFile() != null) {
+			if (!isNullOrEmpty(sequenceRequest.getSecondFileTextArea().trim())) {
 				throw new IncorrectRequestException("secondFileTextArea and firstFileName are both not empty");
 			} else {
-				storageService.store(sequence.getSecondFile());
+				secondFileName = storageService.store(sequenceRequest.getSecondFile());
 			}
-
-		} else if (!isNullOrEmpty(sequence.getSecondFileTextArea().trim())) {
-			secondFileName = storageService.createAndStore(sequence.getSecondFileTextArea());
+		} else if (!isNullOrEmpty(sequenceRequest.getSecondFileTextArea().trim())) {
+			secondFileName = storageService.createAndStore(sequenceRequest.getSecondFileTextArea());
 		}
 
 
-		SequenceInternal sequenceInternal = fromSeqRequestToSeqInternal(sequence);
-		if (!firstFileName.isEmpty()) {
-			System.out.println("firstFileName " + firstFileName);
-			sequenceInternal.setFirstFileName(firstFileName);
-		}
-		if (!secondFileName.isEmpty()) {
-			System.out.println("secondFileName " + secondFileName);
-			sequenceInternal.setSecondFileName(secondFileName);
-		}
+		SequenceInternal sequenceInternal = fromSeqRequestToSeqInternal(sequenceRequest, firstFileName, secondFileName);
 
 		return sequenceInternal;
 	}
 
-	public String getByName(SequenceRequest sequence) throws IncorrectRequestException {
+	public String getByName(SequenceRequest sequenceRequest) throws IncorrectRequestException {
+		SequenceInternal sequenceInternal = validateRequestAndGetInternalRepr(sequenceRequest);
 
-		SequenceInternal sequenceInternal = validateRequestAndGetInternalRepr(sequence);
+		String resultFileName = prefix + UUID.randomUUID().toString() + ".txt";
 
-
-		File outputFile = new File(workingDir + "/results.txt");
-        ProcessBuilder processBuilder = new ProcessBuilder("/usr/bin/python", getSeqByName, sequenceInternal.getFirstFileName(), sequenceInternal.getSecondFileName());
+		File outputFile = new File(workingDir + resultFileName);
+        ProcessBuilder processBuilder = new ProcessBuilder(python, getSeqByName, sequenceInternal.getFirstFileName(), sequenceInternal.getSecondFileName(),
+				sequenceInternal.getFirstFileDelim(), sequenceInternal.getFirstFileColumn(), sequenceInternal.getSecondFileDelim(), sequenceInternal.getSecondFileColumn());
         processBuilder.directory(new File(workingDir));
         
         try {
@@ -90,34 +90,24 @@ public class SequenceServiceImpl implements SequenceService {
             String line;
             
             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-            
             while ((line = br.readLine()) != null) {
             	bw.write(line);
             	bw.write("\n");
             }
-			
             br.close();
             bw.close();
-			
-        
         } catch (IOException e) {
 			e.printStackTrace();
 		}
-        
-        
 		return outputFile.getName();
 	}
-	
-	
+
 	
 	public String makeUnique() {
 		return "";
-		
 	}
 	
 	public String extract() {
 		return "";
-		
 	}
-
 }

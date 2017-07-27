@@ -4,24 +4,25 @@ $(document).ready(function (){
 	$('#first-file').change(function() {
 	    $('#first-file-info').html(this.files[0].name);
 	    $('#first-file-area').val('');
+	    $('.result-container').hide();
 	});
 
     $('#second-file').change(function() {
 	    $('#second-file-info').html(this.files[0].name);
 	    $('#second-file-area').val('');
+	    $('.result-container').hide();
 	});
 
     $('#first-file-area').change(function() {
         $('#first-file-info').empty();
-        console.log("before" + $('#first-file').val());
         $('#first-file').val('');
-        console.log("after" + $('#first-file').val());
-
+        $('.result-container').hide();
     });
 
 	$('#second-file-area').change(function() {
 	    $('#second-file-info').empty();
 	    $('#second-file').val('');
+	    $('.result-container').hide();
 
 	});
 
@@ -38,22 +39,16 @@ function getOptions() {
 	var secondFileArea = $('#second-file-area').val();
 
 
-	var firstFileDelim = $('#first-delim').val();
-	var secondFileDelim = $('#second-delim').val();
+	var firstFileDelim = $('#first-delim').val() != 'select' ? $('#first-delim').val() : '';
+	var secondFileDelim = $('#second-delim').val() != 'select' ? $('#second-delim').val() : '';
 	
 	var firstFileColumn = $('#first-col').val();
 	var secondFileColumn = $('#second-col').val();
 	
 	var options = new FormData();
-    console.log("firstFile ");
-    console.log(firstFile);
-
-    console.log("firstFileArea ");
-    console.log(firstFileArea);
 
 
 	if (typeof firstFile != 'undefined') {
-	    console.log("wrong");
 	    options.append("firstFile", firstFile);
 	}
 	if (typeof secondFile != 'undefined') {

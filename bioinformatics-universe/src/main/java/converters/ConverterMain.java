@@ -1,13 +1,16 @@
 package converters;
 
+import com.fasterxml.jackson.databind.JsonSerializer;
 import model.internal.SequenceInternal;
 import model.request.SequenceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import service.Delimeters;
 import service.StorageService;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class ConverterMain {
+
 
 	@Autowired
 	private final StorageService storageService;
@@ -18,24 +21,23 @@ public class ConverterMain {
 
 
 
-	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest) {
-
-		
+	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName, String SecondFileName) {
 		SequenceInternal sequenceInternal = new SequenceInternal();
 
-		if (sequenceRequest.getFirstFile() != null) {
-			sequenceInternal.setFirstFileName(sequenceRequest.getFirstFile().getOriginalFilename());
-		}
-		if (sequenceRequest.getSecondFile() != null) {
-			sequenceInternal.setSecondFileName(sequenceRequest.getSecondFile().getOriginalFilename());
-		}
+		sequenceInternal.setFirstFileName(firstFileName);
+		sequenceInternal.setSecondFileName(SecondFileName);
 
 		sequenceInternal.setFirstFileColumn(sequenceRequest.getFirstFileColumn());
 		sequenceInternal.setSecondFileColumn(sequenceRequest.getSecondFileColumn());
-		
-		sequenceInternal.setFirstFileDelim(sequenceRequest.getFirstFileDelim());
-		sequenceInternal.setSecondFileDelim(sequenceRequest.getSecondFileDelim());
-			
+
+
+		if (!sequenceRequest.getFirstFileDelim().equals("null")){
+			System.out.println("sequenceRequest.getFirstFileDelim().getClass() " + sequenceRequest.getFirstFileDelim().getClass());
+			sequenceInternal.setFirstFileDelim(Delimeters.valueOf(sequenceRequest.getFirstFileDelim().toUpperCase()).toString());
+		}
+		if (!sequenceRequest.getSecondFileDelim().equals("null")) {
+			sequenceInternal.setSecondFileDelim(Delimeters.valueOf(sequenceRequest.getSecondFileDelim().toUpperCase()).toString());
+		}
 		
 		return sequenceInternal;
 	}

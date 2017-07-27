@@ -3,10 +3,10 @@ package model.internal;
 public class SequenceInternal {
 	private String firstFileName;
 	private String secondFileName;
-	private String firstFileDelim;
-	private int firstFileColumn;
-	private String secondFileDelim;	
-	private int secondFileColumn;
+	private String firstFileDelim = "";
+	private String firstFileColumn = "";
+	private String secondFileDelim = "";
+	private String secondFileColumn = "";
 	
 	public String getFirstFileName() {
 		return firstFileName;
@@ -26,10 +26,10 @@ public class SequenceInternal {
 	public void setFirstFileDelim(String firstFileDelim) {
 		this.firstFileDelim = firstFileDelim;
 	}
-	public int getFirstFileColumn() {
+	public String getFirstFileColumn() {
 		return firstFileColumn;
 	}
-	public void setFirstFileColumn(int firstFileColumn) {
+	public void setFirstFileColumn(String firstFileColumn) {
 		this.firstFileColumn = firstFileColumn;
 	}
 	public String getSecondFileDelim() {
@@ -38,10 +38,10 @@ public class SequenceInternal {
 	public void setSecondFileDelim(String secondFileDelim) {
 		this.secondFileDelim = secondFileDelim;
 	}
-	public int getSecondFileColumn() {
+	public String getSecondFileColumn() {
 		return secondFileColumn;
 	}
-	public void setSecondFileColumn(int secondFileColumn) {
+	public void setSecondFileColumn(String secondFileColumn) {
 		this.secondFileColumn = secondFileColumn;
 	}
 

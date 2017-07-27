@@ -17,7 +17,7 @@
 			<div class="row">
 				<div class="col-md-4 my-textarea">
 					<div class="row">
-						<textarea id="first-file-area" class="form-control" placeholder="test" required rows=8> </textarea>
+						<textarea id="first-file-area" class="form-control" placeholder="Paste names" required rows=8> </textarea>
 					</div>
 					<div class="row">
 						OR <br /> 
@@ -29,7 +29,7 @@
 				</div>
 				<div class="col-md-4 my-textarea">
 					<div class="row">
-						<textarea id="second-file-area" class="form-control" placeholder="test" required rows=8> </textarea>
+						<textarea id="second-file-area" class="form-control" placeholder="Paste sequences" required rows=8> </textarea>
 					</div>
 					<div class="row">
 						OR <br /> 

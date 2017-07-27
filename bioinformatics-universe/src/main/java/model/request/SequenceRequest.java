@@ -6,12 +6,12 @@ public class SequenceRequest {
 	private MultipartFile firstFile;
 	private String firstFileTextArea;
 	private String firstFileDelim;
-	private int firstFileColumn;
+	private String firstFileColumn;
 	
 	private MultipartFile secondFile;
 	private String secondFileTextArea;
-	private String secondFileDelim;	
-	private int secondFileColumn;
+	private String secondFileDelim;
+	private String secondFileColumn;
 	
 	public MultipartFile getFirstFile() {
 		return firstFile;
@@ -32,10 +32,10 @@ public class SequenceRequest {
 	public void setFirstFileDelim(String firstFileDelim) {
 		this.firstFileDelim = firstFileDelim;
 	}
-	public int getFirstFileColumn() {
+	public String getFirstFileColumn() {
 		return firstFileColumn;
 	}
-	public void setFirstFileColumn(int firstFileColumn) {
+	public void setFirstFileColumn(String firstFileColumn) {
 		this.firstFileColumn = firstFileColumn;
 	}
 	
@@ -58,10 +58,10 @@ public class SequenceRequest {
 	public void setSecondFileDelim(String secondFileDelim) {
 		this.secondFileDelim = secondFileDelim;
 	}
-	public int getSecondFileColumn() {
+	public String getSecondFileColumn() {
 		return secondFileColumn;
 	}
-	public void setSecondFileColumn(int secondFileColumn) {
+	public void setSecondFileColumn(String secondFileColumn) {
 		this.secondFileColumn = secondFileColumn;
 	}
 

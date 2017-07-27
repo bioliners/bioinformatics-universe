@@ -1,23 +1,16 @@
 package serviceimpl;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 import java.util.stream.Stream;
 import java.util.UUID;
 
-import com.google.common.collect.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -31,54 +24,52 @@ import exceptions.StorageFileNotFoundException;
 
 @Service
 public class StorageServiceImpl implements StorageService {
-
-
-    private final Path rootLocation;    
-    private final String workingDir = "bioinformatics-programs-workingDir";
+    private final Path workingDirLocation;
 
  
     @Autowired
     public StorageServiceImpl(AppProperties properties) {
-        //this.rootLocation = Paths.get(properties.getLocation());
-        
-        this.rootLocation = Paths.get(workingDir);
+        this.workingDirLocation = Paths.get(properties.getWorkingDirLocation());
     }
 
     @Override
     public String createAndStore(String inputAreaContent) {
         String randomFileName = UUID.randomUUID().toString() + ".txt";
-        String fullName = this.rootLocation.resolve(randomFileName).toString();
-        File newFile = new File(fullName);
+        String readyName = this.workingDirLocation.resolve(randomFileName).toString();
+        File newFile = new File(readyName);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(newFile))) {
             bw.write(inputAreaContent.trim());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException("Failed to store file " + readyName, e);
         }
-
         return randomFileName;
     }
 
     @Override
-    public void store(MultipartFile file) {
+    public String store(MultipartFile file) {
+        String randomFileName = UUID.randomUUID().toString() + ".txt";
+        Path readyName = this.workingDirLocation.resolve(randomFileName);
+
         try {
             if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
+                throw new StorageException("Failed to store empty file " + readyName);
             }
-            Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
+            Files.copy(file.getInputStream(), readyName);
         } catch (IOException e) {
-            throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
+            throw new StorageException("Failed to store file " + readyName, e);
         }
+        return randomFileName;
     }
 
     @Override
     public Stream<Path> loadAll() {
         try {
-        	Stream<Path> paths =  Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation));
+        	Stream<Path> paths =  Files.walk(this.workingDirLocation, 1).filter(path -> !path.equals(this.workingDirLocation));
         	System.out.println("Printing paths: ");
         	paths.forEach(path -> System.out.println(path));
         	
-        	return Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation)).map(path -> this.rootLocation.relativize(path));
+        	return Files.walk(this.workingDirLocation, 1).filter(path -> !path.equals(this.workingDirLocation)).map(path -> this.workingDirLocation.relativize(path));
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
         }
@@ -88,8 +79,8 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Path load(String filename) {
     	System.out.println("Resolve filename: ");
-    	System.out.println(rootLocation.resolve(filename));
-        return rootLocation.resolve(filename);
+    	System.out.println(workingDirLocation.resolve(filename));
+        return workingDirLocation.resolve(filename);
     }
 
     @Override
@@ -102,7 +93,6 @@ public class StorageServiceImpl implements StorageService {
             }
             else {
                 throw new StorageFileNotFoundException("Could not read file: " + filename);
-
             }
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
@@ -111,13 +101,13 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
+        FileSystemUtils.deleteRecursively(workingDirLocation.toFile());
     }
 
     @Override
     public void init() {
         try {
-            Files.createDirectory(rootLocation);
+            Files.createDirectory(workingDirLocation);
         } catch (IOException e) {
             throw new StorageException("Could not initialize serviceimpl", e);
         }
