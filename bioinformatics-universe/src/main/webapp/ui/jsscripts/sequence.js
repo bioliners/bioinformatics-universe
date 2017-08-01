@@ -1,31 +1,33 @@
 $(document).ready(function (){
 	$('.result-container').hide();
 
+
+
+    jQuery.validator.addMethod("clearField", function(value, element) {
+        if (!$.isNumeric(value)) {
+            $(element).val('');
+            return false;
+        } else {
+            return true;
+        }
+    }, "Column should be an integer.");
+
+
     $("#first").validate( {
         rules: {
             "first-col": {
+                clearField: true,
                 digits: true
-            }
-        },
-        messages: {
-            "first-col": {
-                digits: "Column should be an integer."
             }
         }
     });
 
 
-
     $("#second").validate( {
         rules: {
             "second-col": {
-                digits: true,
-                maxlength: 2
-            }
-        },
-        messages: {
-            "second-col": {
-                digits: "Column should be an integer."
+                clearField: true,
+                digits: true
             }
         }
     });
