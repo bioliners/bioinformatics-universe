@@ -48,7 +48,9 @@
 						<p class="text-primary">Set options:</p>
 						<ul class="nav nav-pills nav-stacked">
 							<li>
+
 								<div class="form-group">
+								<form id ="first">
 									<small>First file delimiter:</small> 
 									<select id="first-delim" class="form-control input-sm">
 										<option selected='selected' disabled>select</option>
@@ -58,11 +60,15 @@
 										<option>vertical bar</option>
 									</select> 
 									<small>First file column:</small>
-									<input id="first-col" type="text" class="form-control input-sm">
+									<input id="first-col" name="first-col" type="text" class="form-control input-sm">
+									</form>
 								</div>
+
 							</li>
 							<li>
+
 								<div class="form-group">
+								<form id ="second">
 									<small>Second file delimiter:</small> 
 									<select id="second-delim" class="form-control input-sm">
 										<option selected='selected' disabled>select</option>
@@ -72,8 +78,10 @@
 										<option>vertical bar</option>
 									</select>
 									<small>Second file column:</small>
-									<input id="second-col" type="text" class="form-control input-sm">
+									<input id="second-col" name="second-col" type="text" class="form-control input-sm">
+									</form>
 								</div>
+
 							</li>
 						</ul>
 					</div>

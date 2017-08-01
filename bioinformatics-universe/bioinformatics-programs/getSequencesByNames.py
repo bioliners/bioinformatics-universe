@@ -16,13 +16,13 @@ secondFileDelim = None
 firstFileCol = None
 secondFileCol = None
 
-if len(sys.argv) > 3:
+if len(sys.argv) > 3 and (sys.argv[3] != ""):
 	firstFileDelim = sys.argv[3]
-if len(sys.argv) > 4:
+if len(sys.argv) > 4 and (sys.argv[4] != ""):
 	firstFileCol = int(sys.argv[4])
-if len(sys.argv) > 5:
+if len(sys.argv) > 5 and (sys.argv[5] != ""):
 	secondFileDelim = sys.argv[5]
-if len(sys.argv) > 6:
+if len(sys.argv) > 6 and (sys.argv[6] != ""):
 	secondFileCol = int(sys.argv[6])
 
 

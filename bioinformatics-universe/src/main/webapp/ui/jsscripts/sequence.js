@@ -1,5 +1,46 @@
 $(document).ready(function (){
-	$('.result-container').hide();	
+	$('.result-container').hide();
+
+    $("#first").validate( {
+        rules: {
+            "first-col": {
+                digits: true
+            }
+        },
+        messages: {
+            "first-col": {
+                digits: "Column should be an integer."
+            }
+        }
+    });
+
+
+
+    $("#second").validate( {
+        rules: {
+            "second-col": {
+                digits: true,
+                maxlength: 2
+            }
+        },
+        messages: {
+            "second-col": {
+                digits: "Column should be an integer."
+            }
+        }
+    });
+
+
+
+    $("#first-col").change(function() {
+        $("#first-col").valid();
+    });
+
+    $("#second-col").change(function() {
+        $("#second-col").valid();
+    });
+
+
 
 	$('#first-file').change(function() {
 	    $('#first-file-info').html(this.files[0].name);
@@ -39,14 +80,14 @@ function getOptions() {
 	var secondFileArea = $('#second-file-area').val();
 
 
-	var firstFileDelim = $('#first-delim').val() != 'select' ? $('#first-delim').val() : '';
-	var secondFileDelim = $('#second-delim').val() != 'select' ? $('#second-delim').val() : '';
-	
+	var firstFileDelim = $('#first-delim').val();
+	var secondFileDelim = $('#second-delim').val();
+
+
 	var firstFileColumn = $('#first-col').val();
 	var secondFileColumn = $('#second-col').val();
 	
 	var options = new FormData();
-
 
 	if (typeof firstFile != 'undefined') {
 	    options.append("firstFile", firstFile);
@@ -55,13 +96,20 @@ function getOptions() {
 	    options.append("secondFile", secondFile);
 	}
 
+ 	if (firstFileDelim != null) {
+	    options.append("firstFileDelim", firstFileDelim);
+	}
+	if (firstFileDelim != null) {
+	    options.append("secondFileDelim", secondFileDelim);
+	}
 
-	options.append("firstFileTextArea", firstFileArea);
-	options.append("secondFileTextArea", secondFileArea);
+    if (firstFileArea != '') {
+        options.append("firstFileTextArea", firstFileArea);
+    }
+    if (secondFileArea != '') {
+        options.append("secondFileTextArea", secondFileArea);
+    }
 
-	options.append("firstFileDelim", firstFileDelim);
-	options.append("secondFileDelim", secondFileDelim);
-	
 	if (firstFileColumn != '') {
 		options.append("firstFileColumn", firstFileColumn);
 	}
@@ -94,6 +142,12 @@ function processRetrievedData(data) {
 	$('.result-container').show();
 }
 
-function error() {
+function error(jqXHR, textStatus, errorThrown) {
 	window.alert("Error happened!");
+	console.log(jqXHR.responseText);
+	console.log(jqXHR);
+	console.log("=======");
+	console.log(textStatus);
+	console.log("=======");
+	console.log(errorThrown);
 }

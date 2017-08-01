@@ -1,9 +1,9 @@
 package controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import exceptions.IncorrectRequestException;
+import exceptions.BioServerException;
 import model.request.SequenceRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +57,7 @@ public class SequenceController {
     @ResponseBody
     public String getByName(SequenceRequest sequence) throws IncorrectRequestException {
         String fileName = sequenceService.getByName(sequence);
+
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
     }
     
@@ -66,4 +67,6 @@ public class SequenceController {
     public ResponseEntity handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
+
+
 }

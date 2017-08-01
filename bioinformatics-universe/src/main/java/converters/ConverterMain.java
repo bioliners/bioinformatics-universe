@@ -1,13 +1,12 @@
 package converters;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
+import exceptions.IncorrectRequestException;
 import model.internal.SequenceInternal;
 import model.request.SequenceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import service.Delimeters;
 import service.StorageService;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class ConverterMain {
 
@@ -20,26 +19,42 @@ public class ConverterMain {
 	}
 
 
-
-	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName, String SecondFileName) {
+	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName,
+															   String SecondFileName) throws IncorrectRequestException{
 		SequenceInternal sequenceInternal = new SequenceInternal();
 
 		sequenceInternal.setFirstFileName(firstFileName);
 		sequenceInternal.setSecondFileName(SecondFileName);
 
-		sequenceInternal.setFirstFileColumn(sequenceRequest.getFirstFileColumn());
-		sequenceInternal.setSecondFileColumn(sequenceRequest.getSecondFileColumn());
 
+		if (sequenceRequest.getFirstFileColumn() != null) {
 
-		if (!sequenceRequest.getFirstFileDelim().equals("null")){
-			System.out.println("sequenceRequest.getFirstFileDelim().getClass() " + sequenceRequest.getFirstFileDelim().getClass());
-			sequenceInternal.setFirstFileDelim(Delimeters.valueOf(sequenceRequest.getFirstFileDelim().toUpperCase()).toString());
+			try {
+				Integer.parseInt(sequenceRequest.getFirstFileColumn());
+			} catch (Exception ne) {
+				throw new IncorrectRequestException("String instead of integer in firstFileColumn field of SequenceRequest object.", ne);
+			}
+			sequenceInternal.setFirstFileColumn(sequenceRequest.getFirstFileColumn());
 		}
-		if (!sequenceRequest.getSecondFileDelim().equals("null")) {
-			sequenceInternal.setSecondFileDelim(Delimeters.valueOf(sequenceRequest.getSecondFileDelim().toUpperCase()).toString());
+
+		if (sequenceRequest.getSecondFileColumn() != null) {
+			try {
+				Integer.parseInt(sequenceRequest.getSecondFileColumn());
+
+			} catch (Exception ne) {
+				throw new IncorrectRequestException("String instead of integer in secondFileColumn field of SequenceRequest object.", ne);
+			}
+			sequenceInternal.setSecondFileColumn(sequenceRequest.getSecondFileColumn());
 		}
-		
+
+		if (sequenceRequest.getFirstFileDelim() != null){
+			sequenceInternal.setFirstFileDelim(
+					Delimeters.valueOf(sequenceRequest.getFirstFileDelim().toUpperCase()).toString());
+		}
+		if (sequenceRequest.getSecondFileDelim() != null) {
+			sequenceInternal.setSecondFileDelim(
+					Delimeters.valueOf(sequenceRequest.getSecondFileDelim().toUpperCase()).toString());
+		}
 		return sequenceInternal;
 	}
-
 }
