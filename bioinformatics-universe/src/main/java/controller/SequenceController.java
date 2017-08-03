@@ -38,7 +38,21 @@ public class SequenceController {
     public String getByNamePage(Model model) throws IOException {
         model.addAttribute("tab", "sequence");
         model.addAttribute("sequenceTab", "get-by-name");
-        return "sequence";
+        return "sequence-get-by-name";
+    }
+
+    @GetMapping("/make-unique")
+    public String makeUnique(Model model) throws IOException {
+        model.addAttribute("tab", "sequence");
+        model.addAttribute("sequenceTab", "make-unique");
+        return "sequence-make-unique";
+    }
+
+    @GetMapping("/extract")
+    public String extract(Model model) throws IOException {
+        model.addAttribute("tab", "sequence");
+        model.addAttribute("sequenceTab", "extract");
+        return "sequence-extract";
     }
  
 

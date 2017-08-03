@@ -52,3 +52,9 @@ div.panel-body {
 	padding: 2px;
 }
 
+
+label.error {
+    font-size:small;
+    color: #3399ff;
+
+}

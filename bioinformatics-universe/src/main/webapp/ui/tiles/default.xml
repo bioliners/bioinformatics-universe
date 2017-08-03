@@ -12,8 +12,15 @@
 		<put-attribute name="footer" value="/ui/jsp/layout/default-footer.jsp" />
 	</definition>
 
-	<definition name="sequence" extends="mainLayout">
-		<put-attribute name="body" value="/ui/jsp/view/sequence.jsp" />
+	<definition name="sequence-get-by-name" extends="mainLayout">
+		<put-attribute name="body" value="/ui/jsp/view/sequence-get-by-name.jsp" />
 	</definition>
 
+	<definition name="sequence-make-unique" extends="mainLayout">
+		<put-attribute name="body" value="/ui/jsp/view/sequence-make-unique.jsp" />
+	</definition>
+
+	<definition name="sequence-extract" extends="mainLayout">
+		<put-attribute name="body" value="/ui/jsp/view/sequence-extract.jsp" />
+	</definition>
 </tiles-definitions>

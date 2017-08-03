@@ -1,45 +1,51 @@
 $(document).ready(function (){
 	$('.result-container').hide();
 
-
-
-    jQuery.validator.addMethod("clearField", function(value, element) {
-        if (!$.isNumeric(value)) {
+    jQuery.validator.addMethod("clearIncorrect", function(value, element) {
+        if (!$.isNumeric(value) || (value.slice(0,1) == 0)) {
             $(element).val('');
             return false;
         } else {
             return true;
         }
-    }, "Column should be an integer.");
+    }, "Column should be a number, greater than 0.");
 
 
-    $("#first").validate( {
+    var valid1 = $("#first").validate( {
         rules: {
             "first-col": {
-                clearField: true,
+                clearIncorrect: true,
                 digits: true
             }
         }
     });
 
 
-    $("#second").validate( {
+    var valid2 = $("#second").validate( {
         rules: {
             "second-col": {
-                clearField: true,
+                clearIncorrect: true,
                 digits: true
             }
         }
     });
 
 
-
-    $("#first-col").change(function() {
+    $("#first-col").keyup(function() {
         $("#first-col").valid();
     });
 
-    $("#second-col").change(function() {
+    $("#second-col").keyup(function() {
         $("#second-col").valid();
+    });
+
+    $("#first-col").focusout(function() {
+        valid1.resetForm();
+        valid2.resetForm();
+    });
+    $("#second-col").focusout(function() {
+        valid1.resetForm();
+        valid2.resetForm();
     });
 
 

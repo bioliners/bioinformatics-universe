@@ -50,36 +50,36 @@
 							<li>
 
 								<div class="form-group">
-								<form id ="first">
-									<small>First file delimiter:</small> 
-									<select id="first-delim" class="form-control input-sm">
-										<option selected='selected' disabled>select</option>
-										<option>tab</option>
-										<option>comma</option>
-										<option>semicolon</option>
-										<option>vertical bar</option>
-									</select> 
-									<small>First file column:</small>
-									<input id="first-col" name="first-col" type="text" class="form-control input-sm">
-									</form>
+                                    <form id ="first">
+                                        <small>First file delimiter:</small>
+                                        <select id="first-delim" class="form-control input-sm">
+                                            <option selected='selected' disabled>select</option>
+                                            <option>tab</option>
+                                            <option>comma</option>
+                                            <option>semicolon</option>
+                                            <option>vertical bar</option>
+                                        </select>
+                                        <small>First file column:</small>
+                                        <input id="first-col" name="first-col" type="text" class="form-control input-sm">
+                                    </form>
 								</div>
 
 							</li>
 							<li>
 
 								<div class="form-group">
-								<form id ="second">
-									<small>Second file delimiter:</small> 
-									<select id="second-delim" class="form-control input-sm">
-										<option selected='selected' disabled>select</option>
-										<option>tab</option>
-										<option>comma</option>
-										<option>semicolon</option>
-										<option>vertical bar</option>
-									</select>
-									<small>Second file column:</small>
-									<input id="second-col" name="second-col" type="text" class="form-control input-sm">
-									</form>
+                                    <form id ="second">
+                                        <small>Second file delimiter:</small>
+                                        <select id="second-delim" class="form-control input-sm">
+                                            <option selected='selected' disabled>select</option>
+                                            <option>tab</option>
+                                            <option>comma</option>
+                                            <option>semicolon</option>
+                                            <option>vertical bar</option>
+                                        </select>
+                                        <small>Second file column:</small>
+                                        <input id="second-col" name="second-col" type="text" class="form-control input-sm">
+                                    </form>
 								</div>
 
 							</li>
