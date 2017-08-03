@@ -6,11 +6,9 @@ $(document).ready( function() {
 });
 
 function mainNavbar(tab) {
-	$(tab).addClass('active')
-	console.log("Tab is " + tab);	
+	$(tab).addClass('active');
 }
 
 function sequnceNavbar(tab) {
-	$(tab).addClass('active')
-	console.log("Sequence navbar tab is " + tab);	
+	$(tab).addClass('active');
 }

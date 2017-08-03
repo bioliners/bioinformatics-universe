@@ -6,7 +6,7 @@
 
 <div class="jumbotron backgroundtheme">
     <div class="container">
-			<div>Description</div>
+			<div></div>
 	</div>
 </div>
 

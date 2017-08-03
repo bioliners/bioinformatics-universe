@@ -48,15 +48,15 @@ public class SequenceController {
         return "sequence-make-unique";
     }
 
-    @GetMapping("/extract")
-    public String extractPage(Model model) throws IOException {
+    @GetMapping("/delete-by-name")
+    public String deleteByNamePage(Model model) throws IOException {
         model.addAttribute("tab", "sequence");
-        model.addAttribute("sequenceTab", "extract");
-        return "sequence-extract";
+        model.addAttribute("sequenceTab", "delete-by-name");
+        return "sequence-delete-by-name";
     }
  
 
-    @GetMapping("/get-by-name/files/{filename:.+}")
+    @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> handleFileDownload(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename);
@@ -71,6 +71,16 @@ public class SequenceController {
     @ResponseBody
     public String getByName(SequenceRequest sequence) throws IncorrectRequestException {
         String fileName = sequenceService.getByName(sequence);
+
+        return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
+    }
+
+
+    @PostMapping(value="/make-unique", produces="text/plain")
+    @ResponseBody
+    public String makeUnique(SequenceRequest sequence) throws IncorrectRequestException {
+        String fileName = sequenceService.getByName(sequence);
+        //String fileName = sequenceService.makeUnique(sequence);
 
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
     }

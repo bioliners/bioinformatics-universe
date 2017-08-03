@@ -62,13 +62,13 @@ $(document).ready(function (){
 	    $('.result-container').hide();
 	});
 
-    $('#first-file-area').change(function() {
+    $('#first-file-area').keyup(function() {
         $('#first-file-info').empty();
         $('#first-file').val('');
         $('.result-container').hide();
     });
 
-	$('#second-file-area').change(function() {
+	$('#second-file-area').keyup(function() {
 	    $('#second-file-info').empty();
 	    $('#second-file').val('');
 	    $('.result-container').hide();

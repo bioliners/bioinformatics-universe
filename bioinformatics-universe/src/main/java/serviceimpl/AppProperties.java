@@ -11,6 +11,7 @@ public class AppProperties {
     private String location = "bioinformatics-programs-workingDir";
     private String bioProgramsDir = "../bioinformatics-programs";
     private String getSeqByNameProgram = bioProgramsDir + "/getSequencesByNames.py";
+    private String makeUniqueProgram = bioProgramsDir + "/getUniqueSeqs.py";
     private String pythonLocation = "/usr/bin/python";
     private String resultFilePrefix = "/bio-universe-";
 
@@ -52,5 +53,13 @@ public class AppProperties {
 
     public void setResultFilePrefix(String resultFilePrefix) {
         this.resultFilePrefix = resultFilePrefix;
+    }
+
+    public String getMakeUniqueProgram() {
+        return makeUniqueProgram;
+    }
+
+    public void setMakeUniqueProgram(String makeUniqueProgram) {
+        this.makeUniqueProgram = makeUniqueProgram;
     }
 }

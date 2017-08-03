@@ -20,7 +20,7 @@ public class ConverterMain {
 
 
 	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName,
-															   String SecondFileName) throws IncorrectRequestException{
+															   String SecondFileName) throws IncorrectRequestException {
 		SequenceInternal sequenceInternal = new SequenceInternal();
 
 		sequenceInternal.setFirstFileName(firstFileName);

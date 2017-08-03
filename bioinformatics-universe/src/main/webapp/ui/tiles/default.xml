@@ -20,7 +20,7 @@
 		<put-attribute name="body" value="/ui/jsp/view/sequence-make-unique.jsp" />
 	</definition>
 
-	<definition name="sequence-extract" extends="mainLayout">
-		<put-attribute name="body" value="/ui/jsp/view/sequence-extract.jsp" />
+	<definition name="sequence-delete-by-name" extends="mainLayout">
+		<put-attribute name="body" value="/ui/jsp/view/sequence-delete-by-name.jsp" />
 	</definition>
 </tiles-definitions>

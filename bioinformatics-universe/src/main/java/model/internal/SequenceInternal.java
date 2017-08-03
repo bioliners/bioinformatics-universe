@@ -1,12 +1,16 @@
 package model.internal;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class SequenceInternal {
 	private String firstFileName;
 	private String secondFileName;
-	private String firstFileDelim = "";
-	private String firstFileColumn = "";
-	private String secondFileDelim = "";
-	private String secondFileColumn = "";
+	private String firstFileDelim;
+	private String firstFileColumn;
+	private String secondFileDelim;
+	private String secondFileColumn;
+	private List<String> allFields = new LinkedList<>();
 	
 	public String getFirstFileName() {
 		return firstFileName;
@@ -43,6 +47,29 @@ public class SequenceInternal {
 	}
 	public void setSecondFileColumn(String secondFileColumn) {
 		this.secondFileColumn = secondFileColumn;
+	}
+
+	public void setAllFields() {
+		allFields.add(getFirstFileName());
+		if (getSecondFileName() != null) {
+			allFields.add(getSecondFileName());
+		}
+		if (getFirstFileDelim() != null) {
+			allFields.add(getFirstFileDelim());
+		}
+		if (getFirstFileColumn() != null) {
+			allFields.add(getFirstFileColumn());
+		}
+		if (getSecondFileDelim() != null) {
+			allFields.add(getSecondFileDelim());
+		}
+		if (getSecondFileColumn() != null) {
+			allFields.add(getSecondFileColumn());
+		}
+	}
+
+	public List<String> getAllFields() {
+		return allFields;
 	}
 
 }

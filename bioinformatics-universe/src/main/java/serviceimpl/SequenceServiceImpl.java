@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.UUID;
 
 import exceptions.IncorrectRequestException;
@@ -17,16 +18,16 @@ import org.springframework.stereotype.Service;
 
 import model.internal.SequenceInternal;
 import model.request.SequenceRequest;
-import org.springframework.web.multipart.MultipartFile;
 import service.SequenceService;
 import service.StorageService;
 
 @Service
 public class SequenceServiceImpl implements SequenceService {
 	
-	 private final String workingDir;
-	 private final String getSeqByName;
-	 private final String python;
+	private final String workingDir;
+	private final String getSeqByName;
+	private final String makeUnique;
+	private final String python;
 	private final String prefix;
 	
 
@@ -41,11 +42,67 @@ public class SequenceServiceImpl implements SequenceService {
 		this.getSeqByName = properties.getGetSeqByNameProgram();
 		this.python = properties.getPythonLocation();
 		this.prefix = properties.getResultFilePrefix();
+		this.makeUnique = properties.getMakeUniqueProgram();
 	}
 
-	public SequenceInternal storeFileAndGetInternalRepr(SequenceRequest sequenceRequest) throws IncorrectRequestException {
-		String firstFileName = "";
-		String secondFileName = "";
+
+	@Override
+	public String getByName(SequenceRequest sequenceRequest) throws IncorrectRequestException {
+		return launchProcessAndGetResultFileName(sequenceRequest, getSeqByName);
+	}
+
+	@Override
+	public String makeUnique(SequenceRequest sequenceRequest) throws IncorrectRequestException {
+		return launchProcessAndGetResultFileName(sequenceRequest, makeUnique);
+	}
+
+	@Override
+	public String extract() {
+		return "";
+	}
+
+	public String launchProcessAndGetResultFileName(SequenceRequest sequenceRequest, String commandName) throws IncorrectRequestException {
+
+		SequenceInternal sequenceInternal = storeFileAndGetInternalRepresentation(sequenceRequest);
+		sequenceInternal.setAllFields();
+
+		String resultFileName = prefix + UUID.randomUUID().toString() + ".txt";
+		File outputFile = new File(workingDir + resultFileName);
+
+
+		List<String> commandArguments = sequenceInternal.getAllFields();
+		commandArguments.add(0, python);
+		commandArguments.add(1, commandName);
+
+		for (String arg : commandArguments) {
+			System.out.println("arg " + arg);
+		}
+
+		ProcessBuilder processBuilder = new ProcessBuilder(commandArguments);
+		processBuilder.directory(new File(workingDir));
+		try {
+			Process process = processBuilder.start();
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
+			while ((line = br.readLine()) != null) {
+				bw.write(line);
+				bw.write("\n");
+			}
+			br.close();
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return outputFile.getName();
+	}
+
+
+	public SequenceInternal storeFileAndGetInternalRepresentation(SequenceRequest sequenceRequest) throws IncorrectRequestException {
+		String firstFileName = null;
+		String secondFileName = null;
 
 		if (sequenceRequest.getFirstFile() != null) {
 			if (!isNullOrEmpty(sequenceRequest.getFirstFileTextArea())) {
@@ -69,48 +126,6 @@ public class SequenceServiceImpl implements SequenceService {
 
 		SequenceInternal sequenceInternal = fromSeqRequestToSeqInternal(sequenceRequest, firstFileName, secondFileName);
 
-
 		return sequenceInternal;
-	}
-
-	public String getByName(SequenceRequest sequenceRequest) throws IncorrectRequestException {
-
-		SequenceInternal sequenceInternal = storeFileAndGetInternalRepr(sequenceRequest);
-
-		String resultFileName = prefix + UUID.randomUUID().toString() + ".txt";
-
-		File outputFile = new File(workingDir + resultFileName);
-
-
-        ProcessBuilder processBuilder = new ProcessBuilder(python, getSeqByName, sequenceInternal.getFirstFileName(), sequenceInternal.getSecondFileName(),
-				sequenceInternal.getFirstFileDelim(), sequenceInternal.getFirstFileColumn(), sequenceInternal.getSecondFileDelim(), sequenceInternal.getSecondFileColumn());
-        processBuilder.directory(new File(workingDir));
-        
-        try {
-			Process process = processBuilder.start();
-		
-			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            
-            BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-            while ((line = br.readLine()) != null) {
-            	bw.write(line);
-            	bw.write("\n");
-            }
-            br.close();
-            bw.close();
-        } catch (IOException e) {
-			e.printStackTrace();
-		}
-		return outputFile.getName();
-	}
-
-	
-	public String makeUnique() {
-		return "";
-	}
-	
-	public String extract() {
-		return "";
 	}
 }
