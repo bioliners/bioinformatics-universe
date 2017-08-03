@@ -42,14 +42,14 @@ public class SequenceController {
     }
 
     @GetMapping("/make-unique")
-    public String makeUnique(Model model) throws IOException {
+    public String makeUniquePage(Model model) throws IOException {
         model.addAttribute("tab", "sequence");
         model.addAttribute("sequenceTab", "make-unique");
         return "sequence-make-unique";
     }
 
     @GetMapping("/extract")
-    public String extract(Model model) throws IOException {
+    public String extractPage(Model model) throws IOException {
         model.addAttribute("tab", "sequence");
         model.addAttribute("sequenceTab", "extract");
         return "sequence-extract";
