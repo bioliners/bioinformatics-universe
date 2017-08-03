@@ -67,21 +67,16 @@ public class SequenceController {
                 .body(file);
     }
 
-    @PostMapping(value="/get-by-name", produces="text/plain")
+    @PostMapping(value="/process-request", produces="text/plain")
     @ResponseBody
-    public String getByName(SequenceRequest sequence) throws IncorrectRequestException {
-        String fileName = sequenceService.getByName(sequence);
-
-        return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
-    }
-
-
-    @PostMapping(value="/make-unique", produces="text/plain")
-    @ResponseBody
-    public String makeUnique(SequenceRequest sequence) throws IncorrectRequestException {
-        String fileName = sequenceService.getByName(sequence);
-        //String fileName = sequenceService.makeUnique(sequence);
-
+    public String processRequest(SequenceRequest sequence) throws IncorrectRequestException {
+        String fileName = "";
+        //Needs to be refactored
+        if (sequence.getCommandToBeProcessedBy() == "get-by-name") {
+            fileName = sequenceService.getByName(sequence);
+        } else if (sequence.getCommandToBeProcessedBy() == "make-unique") {
+            fileName = sequenceService.makeUnique(sequence);
+        }
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
     }
     

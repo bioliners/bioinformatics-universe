@@ -12,6 +12,8 @@ public class SequenceRequest {
 	private String secondFileTextArea;
 	private String secondFileDelim;
 	private String secondFileColumn;
+
+	private String commandToBeProcessedBy;
 	
 	public MultipartFile getFirstFile() {
 		return firstFile;
@@ -66,6 +68,10 @@ public class SequenceRequest {
 	}
 
 
-
-
+	public String getCommandToBeProcessedBy() {
+		return commandToBeProcessedBy;
+	}
+	public void setCommandToBeProcessedBy(String commandToBeProcessedBy) {
+		this.commandToBeProcessedBy = commandToBeProcessedBy;
+	}
 }

@@ -23,14 +23,11 @@ import service.StorageService;
 
 @Service
 public class SequenceServiceImpl implements SequenceService {
-	
 	private final String workingDir;
 	private final String getSeqByName;
 	private final String makeUnique;
 	private final String python;
 	private final String prefix;
-	
-
     private final StorageService storageService;
 	private final AppProperties properties;
 
@@ -44,7 +41,6 @@ public class SequenceServiceImpl implements SequenceService {
 		this.prefix = properties.getResultFilePrefix();
 		this.makeUnique = properties.getMakeUniqueProgram();
 	}
-
 
 	@Override
 	public String getByName(SequenceRequest sequenceRequest) throws IncorrectRequestException {
@@ -99,7 +95,6 @@ public class SequenceServiceImpl implements SequenceService {
 		return outputFile.getName();
 	}
 
-
 	public SequenceInternal storeFileAndGetInternalRepresentation(SequenceRequest sequenceRequest) throws IncorrectRequestException {
 		String firstFileName = null;
 		String secondFileName = null;
@@ -123,9 +118,7 @@ public class SequenceServiceImpl implements SequenceService {
 		} else if (!isNullOrEmpty(sequenceRequest.getSecondFileTextArea())) {
 			secondFileName = storageService.createAndStore(sequenceRequest.getSecondFileTextArea());
 		}
-
 		SequenceInternal sequenceInternal = fromSeqRequestToSeqInternal(sequenceRequest, firstFileName, secondFileName);
-
 		return sequenceInternal;
 	}
 }

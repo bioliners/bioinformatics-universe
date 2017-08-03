@@ -82,7 +82,10 @@ $(document).ready(function (){
 
 function getOptions() {
 	var firstFile = $('#first-file')[0].files[0];
-	var secondFile = $('#second-file')[0].files[0];
+
+	if (typeof $('#second-file')[0] != 'undefined') {
+	    var secondFile = $('#second-file')[0].files[0];
+    }
 
 	var firstFileArea = $('#first-file-area').val();
 	var secondFileArea = $('#second-file-area').val();
@@ -94,7 +97,8 @@ function getOptions() {
 
 	var firstFileColumn = $('#first-col').val();
 	var secondFileColumn = $('#second-col').val();
-	
+
+
 	var options = new FormData();
 
 	if (typeof firstFile != 'undefined') {
@@ -104,26 +108,45 @@ function getOptions() {
 	    options.append("secondFile", secondFile);
 	}
 
- 	if (firstFileDelim != null) {
-	    options.append("firstFileDelim", firstFileDelim);
+ 	if (typeof firstFileDelim != 'undefined') {
+        if (firstFileDelim != null) {
+	        options.append("firstFileDelim", firstFileDelim);
+	    }
 	}
-	if (firstFileDelim != null) {
-	    options.append("secondFileDelim", secondFileDelim);
+	if (typeof secondFileDelim != 'undefined') {
+	    if (secondFileDelim != null) {
+	        options.append("secondFileDelim", secondFileDelim);
+	    }
 	}
 
-    if (firstFileArea != '') {
-        options.append("firstFileTextArea", firstFileArea);
+    if (typeof firstFileArea != 'undefined') {
+        if (firstFileArea != '') {
+            options.append("firstFileTextArea", firstFileArea);
+        }
     }
-    if (secondFileArea != '') {
-        options.append("secondFileTextArea", secondFileArea);
+    if (typeof secondFileArea != 'undefined') {
+        if (secondFileArea != '') {
+            options.append("secondFileTextArea", secondFileArea);
+        }
     }
 
-	if (firstFileColumn != '') {
-		options.append("firstFileColumn", firstFileColumn);
+	if (typeof firstFileColumn != 'undefined') {
+	    if (firstFileColumn != '') {
+ 		    options.append("firstFileColumn", firstFileColumn);
+ 		}
 	}
-	if (secondFileColumn != '') {
-		options.append("secondFileColumn", secondFileColumn);
+	if (typeof secondFileColumn != 'undefined') {
+	    if (secondFileColumn != '') {
+		    options.append("secondFileColumn", secondFileColumn);
+		}
 	}
+
+    if ($('#sequence-tab').text() == "sequence-make-unique") {
+        options.append("commandToBeProcessedBy", "make-unique");
+    }
+    if ($('#sequence-tab').text() == "sequence-get-by-name") {
+        options.append("commandToBeProcessedBy", "get-by-name");
+    }
 
 	return options;
 }
@@ -133,7 +156,7 @@ function getData() {
 	var options = getOptions();
 	$.ajax({
 	      type: 'POST',
-	      url: 'get-by-name',
+	      url: 'process-request',
 	      data : options,
 	      success: processRetrievedData,
 	      error: error,
@@ -152,10 +175,5 @@ function processRetrievedData(data) {
 
 function error(jqXHR, textStatus, errorThrown) {
 	window.alert("Error happened!");
-	console.log(jqXHR.responseText);
 	console.log(jqXHR);
-	console.log("=======");
-	console.log(textStatus);
-	console.log("=======");
-	console.log(errorThrown);
 }

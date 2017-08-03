@@ -10,6 +10,7 @@ public class SequenceInternal {
 	private String firstFileColumn;
 	private String secondFileDelim;
 	private String secondFileColumn;
+	private String  commandToBeProcessedBy;
 	private List<String> allFields = new LinkedList<>();
 	
 	public String getFirstFileName() {
@@ -47,6 +48,13 @@ public class SequenceInternal {
 	}
 	public void setSecondFileColumn(String secondFileColumn) {
 		this.secondFileColumn = secondFileColumn;
+	}
+	public String getCommandToBeProcessedBy() {
+		return commandToBeProcessedBy;
+	}
+
+	public void setCommandToBeProcessedBy(String commandToBeProcessedBy) {
+		this.commandToBeProcessedBy = commandToBeProcessedBy;
 	}
 
 	public void setAllFields() {

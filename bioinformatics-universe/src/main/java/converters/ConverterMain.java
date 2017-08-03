@@ -25,7 +25,7 @@ public class ConverterMain {
 
 		sequenceInternal.setFirstFileName(firstFileName);
 		sequenceInternal.setSecondFileName(SecondFileName);
-
+		sequenceInternal.setCommandToBeProcessedBy(sequenceRequest.getCommandToBeProcessedBy());
 
 		if (sequenceRequest.getFirstFileColumn() != null) {
 
