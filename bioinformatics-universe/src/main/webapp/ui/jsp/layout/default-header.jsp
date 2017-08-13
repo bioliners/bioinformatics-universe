@@ -15,7 +15,7 @@
       	<li id="home"><a href="${pageContext.request.contextPath}/home">Home</a></li>
         <li id="sequence"><a href="${pageContext.request.contextPath}/sequence">Sequence</a></li>
         <li id="domain"><a href="${pageContext.request.contextPath}/domain">Domain</a></li>
-        <li id="phylogeny"><a href="${pageContext.request.contextPath}/phylogeny">Phylogeny</a></li>
+        <li id="evolution"><a href="${pageContext.request.contextPath}/evolution">Evolution</a></li>
         <li id="blast"><a href="${pageContext.request.contextPath}/blast">Blast </a></li>
         <li id="protocols"><a href="${pageContext.request.contextPath}/protocols">Protocols </a></li>
       </ul>
