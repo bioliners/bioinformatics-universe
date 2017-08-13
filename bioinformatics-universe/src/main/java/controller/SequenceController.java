@@ -72,9 +72,9 @@ public class SequenceController {
     public String processRequest(SequenceRequest sequence) throws IncorrectRequestException {
         String fileName = "";
         //Needs to be refactored
-        if (sequence.getCommandToBeProcessedBy() == "get-by-name") {
+        if (sequence.getCommandToBeProcessedBy().equals("get-by-name")) {
             fileName = sequenceService.getByName(sequence);
-        } else if (sequence.getCommandToBeProcessedBy() == "make-unique") {
+        } else if (sequence.getCommandToBeProcessedBy().equals("make-unique")) {
             fileName = sequenceService.makeUnique(sequence);
         }
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();

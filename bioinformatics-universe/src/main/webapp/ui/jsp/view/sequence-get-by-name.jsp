@@ -20,10 +20,10 @@
 						<textarea id="first-file-area" class="form-control" placeholder="Paste names" required rows=8> </textarea>
 					</div>
 					<div class="row">
-						OR <br /> 
-						<label class="btn btn-default"> 
-						Choose File <input id="first-file" type="file" style="display: none">
-						</label> 
+						OR <br />
+						<label class="btn btn-default">
+						Choose File <input id="first-file" type="file" style="display: none" multiple>
+						</label>
 						<span class='label label-info' id="first-file-info"></span>
 					</div>
 				</div>

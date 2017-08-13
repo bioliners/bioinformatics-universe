@@ -58,7 +58,6 @@ public class SequenceServiceImpl implements SequenceService {
 	}
 
 	public String launchProcessAndGetResultFileName(SequenceRequest sequenceRequest, String commandName) throws IncorrectRequestException {
-
 		SequenceInternal sequenceInternal = storeFileAndGetInternalRepresentation(sequenceRequest);
 		sequenceInternal.setAllFields();
 

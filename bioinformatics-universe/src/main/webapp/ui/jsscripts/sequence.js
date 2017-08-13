@@ -1,6 +1,14 @@
 $(document).ready(function (){
 	$('.result-container').hide();
+	takeCareOfValidators();
+	takeCareOfFields();
 
+    $('#Go').click(function() {
+    	getData();
+    });
+});
+
+function takeCareOfValidators() {
     jQuery.validator.addMethod("clearIncorrect", function(value, element) {
         if (!$.isNumeric(value) || (value.slice(0,1) == 0)) {
             $(element).val('');
@@ -19,8 +27,6 @@ $(document).ready(function (){
             }
         }
     });
-
-
     var valid2 = $("#second").validate( {
         rules: {
             "second-col": {
@@ -30,15 +36,12 @@ $(document).ready(function (){
         }
     });
 
-
     $("#first-col").keyup(function() {
         $("#first-col").valid();
     });
-
     $("#second-col").keyup(function() {
         $("#second-col").valid();
     });
-
     $("#first-col").focusout(function() {
         valid1.resetForm();
         valid2.resetForm();
@@ -47,9 +50,9 @@ $(document).ready(function (){
         valid1.resetForm();
         valid2.resetForm();
     });
+}
 
-
-
+function takeCareOfFields() {
 	$('#first-file').change(function() {
 	    $('#first-file-info').html(this.files[0].name);
 	    $('#first-file-area').val('');
@@ -74,27 +77,17 @@ $(document).ready(function (){
 	    $('.result-container').hide();
 
 	});
-
-    $('#Go').click(function() {
-    	getData();
-    });
-});
+}
 
 function getOptions() {
 	var firstFile = $('#first-file')[0].files[0];
-
 	if (typeof $('#second-file')[0] != 'undefined') {
 	    var secondFile = $('#second-file')[0].files[0];
     }
-
 	var firstFileArea = $('#first-file-area').val();
 	var secondFileArea = $('#second-file-area').val();
-
-
 	var firstFileDelim = $('#first-delim').val();
 	var secondFileDelim = $('#second-delim').val();
-
-
 	var firstFileColumn = $('#first-col').val();
 	var secondFileColumn = $('#second-col').val();
 
@@ -141,13 +134,12 @@ function getOptions() {
 		}
 	}
 
-    if ($('#sequence-tab').text() == "sequence-make-unique") {
+    if ($('#sequence-tab').text() == "make-unique") {
         options.append("commandToBeProcessedBy", "make-unique");
     }
-    if ($('#sequence-tab').text() == "sequence-get-by-name") {
+    if ($('#sequence-tab').text() == "get-by-name") {
         options.append("commandToBeProcessedBy", "get-by-name");
     }
-
 	return options;
 }
 
