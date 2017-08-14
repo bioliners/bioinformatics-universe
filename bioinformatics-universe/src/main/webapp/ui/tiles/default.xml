@@ -23,4 +23,9 @@
 	<definition name="sequence-delete-by-name" extends="mainLayout">
 		<put-attribute name="body" value="/ui/jsp/view/sequence-delete-by-name.jsp" />
 	</definition>
+	
+	<definition name="evolution-create-cogs" extends="mainLayout">
+		<put-attribute name="body" value="/ui/jsp/view/evolution-create-cogs.jsp" />
+	</definition>
+	
 </tiles-definitions>

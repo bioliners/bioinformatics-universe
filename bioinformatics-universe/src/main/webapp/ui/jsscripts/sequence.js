@@ -134,10 +134,10 @@ function getOptions() {
 		}
 	}
 
-    if ($('#sequence-tab').text() == "make-unique") {
+    if ($('#subnavigation-tab').text() == "make-unique") {
         options.append("commandToBeProcessedBy", "make-unique");
     }
-    if ($('#sequence-tab').text() == "get-by-name") {
+    if ($('#subnavigation-tab').text() == "get-by-name") {
         options.append("commandToBeProcessedBy", "get-by-name");
     }
 	return options;

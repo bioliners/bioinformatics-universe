@@ -1,7 +1,7 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 
 <div style="display: none">
-	<span id="sequence-tab">${sequenceTab}</span>
+	<span id="subnavigation-tab">${subnavigationTab}</span>
 </div>
 
 <div class="jumbotron backgroundtheme">

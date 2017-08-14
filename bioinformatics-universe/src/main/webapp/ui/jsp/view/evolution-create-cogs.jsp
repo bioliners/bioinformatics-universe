@@ -12,17 +12,13 @@
 
 <div class="container-fluid">
 	<div class="form-group col-md-12">
-		<%@ include file="sequence-navbar.jsp"%>
+		<%@ include file="evolution-navbar.jsp"%>
 		<div class="col-md-10">
 			<div class="row">
 				<div class="col-md-8 my-textarea">
 					<div class="row">
-						<textarea id="first-file-area" class="form-control" placeholder="Paste sequences in fasta format." required rows=8> </textarea>
-					</div>
-					<div class="row">
-						OR <br />
-						<label class="btn btn-default">
-						Choose File <input id="first-file" type="file" style="display: none">
+						<label class="btn btn-default btn-lg">
+						Choose Files <input id="first-file" type="file" style="display: none" multiple>
 						</label>
 						<span class='label label-info' id="first-file-info"></span>
 					</div>
@@ -30,6 +26,23 @@
 						<button id="Go" class="btn btn-primary btn-md pull-right" type="button">
 							<span>Go!</span>
 						</button>
+					</div>
+				</div>
+				<div class="col-md-2 panel panel-default">
+					<div class="panel-body">
+						<p class="text-primary">Set options:</p>
+						<div class="form-group">
+							<form id="first">
+								<small>File delimiter:</small> 
+								<select id="first-delim" class="form-control input-sm">
+									<option selected='selected' disabled>select</option>
+									<option>tab</option>
+									<option>comma</option>
+									<option>semicolon</option>
+									<option>vertical bar</option>
+								</select> <small>File column:</small> <input id="first-col" name="first-col" type="text" class="form-control input-sm">
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>

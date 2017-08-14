@@ -1,7 +1,7 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 
 <div style="display: none">
-	<span id="sequence-tab">${sequenceTab}</span>
+	<span id="subnavigation-tab">${subnavigationTab}</span>
 </div>
 
 <div class="jumbotron backgroundtheme">
@@ -22,7 +22,7 @@
 					<div class="row">
 						OR <br />
 						<label class="btn btn-default">
-						Choose File <input id="first-file" type="file" style="display: none" multiple>
+						Choose File <input id="first-file" type="file" style="display: none">
 						</label>
 						<span class='label label-info' id="first-file-info"></span>
 					</div>
