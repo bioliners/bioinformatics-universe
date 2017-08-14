@@ -8,6 +8,9 @@ public class EvolutionRequest {
 	private List<MultipartFile> listOfFiles;
 	private String fileDelim;
 	private String fileColumn;
+	private String identityThreshold;
+	private String coverageThreshold;
+	private String evalueThreshold;
 	private String commandToBeProcessedBy;
 
 	
@@ -42,6 +45,28 @@ public class EvolutionRequest {
 	public void setCommandToBeProcessedBy(String commandToBeProcessedBy) {
 		this.commandToBeProcessedBy = commandToBeProcessedBy;
 	}
-	
 
+	public String getIdentityThreshold() {
+		return identityThreshold;
+	}
+
+	public void setIdentityThreshold(String identityThreshold) {
+		this.identityThreshold = identityThreshold;
+	}
+
+	public String getCoverageThreshold() {
+		return coverageThreshold;
+	}
+
+	public void setCoverageThreshold(String coverageThreshold) {
+		this.coverageThreshold = coverageThreshold;
+	}
+
+	public String getEvalueThreshold() {
+		return evalueThreshold;
+	}
+
+	public void setEvalueThreshold(String evalueThreshold) {
+		this.evalueThreshold = evalueThreshold;
+	}
 }

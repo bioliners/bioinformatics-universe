@@ -8,21 +8,34 @@ public class AppProperties {
     /**
      * Folders locations
      */
-    private String location = "bioinformatics-programs-workingDir";
+    private String workingDirLocation = "bioinformatics-programs-workingDir";
+    private String multipleWorkingFilesLocation = workingDirLocation + "/multiple-workingFiles";
     private String bioProgramsDir = "../bioinformatics-programs";
     private String getSeqByNameProgram = bioProgramsDir + "/getSequencesByNames.py";
     private String makeUniqueProgram = bioProgramsDir + "/getUniqueSeqs.py";
+    private String prepareNamesProgram = bioProgramsDir + "/prepareNamesProgram.sh";
+    private String blastAllVsAllProgram = bioProgramsDir + "/blast-all-vs-all.sh";
+    private String createCogsProgram = bioProgramsDir + "/createCOGs.py";
     private String pythonLocation = "/usr/bin/python";
+    private String bashLocation = "/bin/bash";
+    private String blastpLocation = "/home/vadim/Soft/blast/ncbi-blast-2.2.31+/bin/blastpLocation";
     private String resultFilePrefix = "/bio-universe-";
 
     public String getWorkingDirLocation() {
-        return location;
+        return workingDirLocation;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setWorkingDirLocation(String workingDirLocation) {
+        this.workingDirLocation = workingDirLocation;
     }
 
+    public String getMultipleWorkingFilesLocation() {
+        return multipleWorkingFilesLocation;
+    }
+
+    public void setMultipleWorkingFilesLocation(String multipleWorkingFilesLocation) {
+        this.multipleWorkingFilesLocation = multipleWorkingFilesLocation;
+    }
     public String getBioProgramsDir() {
         return bioProgramsDir;
     }
@@ -62,4 +75,45 @@ public class AppProperties {
     public void setMakeUniqueProgram(String makeUniqueProgram) {
         this.makeUniqueProgram = makeUniqueProgram;
     }
+
+    public String getBashLocation() {
+        return bashLocation;
+    }
+
+    public void setBashLocation(String bashLocation) {
+        this.bashLocation = bashLocation;
+    }
+
+    public String getBlastpLocation() {
+        return blastpLocation;
+    }
+
+    public void setBlastpLocation(String blastpLocation) {
+        this.blastpLocation = blastpLocation;
+    }
+
+    public String getPrepareNamesProgram() {
+        return prepareNamesProgram;
+    }
+
+    public void setPrepareNamesProgram(String prepareNamesProgram) {
+        this.prepareNamesProgram = prepareNamesProgram;
+    }
+
+    public String getBlastAllVsAllProgram() {
+        return blastAllVsAllProgram;
+    }
+
+    public void setBlastAllVsAllProgram(String blastAllVsAllProgram) {
+        this.blastAllVsAllProgram = blastAllVsAllProgram;
+    }
+
+    public String getCreateCogsProgram() {
+        return createCogsProgram;
+    }
+
+    public void setCreateCogsProgram(String createCogsProgram) {
+        this.createCogsProgram = createCogsProgram;
+    }
+
 }

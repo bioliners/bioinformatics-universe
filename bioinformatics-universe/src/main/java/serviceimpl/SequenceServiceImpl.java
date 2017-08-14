@@ -2,6 +2,7 @@ package serviceimpl;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static converters.ConverterMain.fromSeqRequestToSeqInternal;
+import static org.apache.naming.SelectorContext.prefix;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,24 +23,16 @@ import service.SequenceService;
 import service.StorageService;
 
 @Service
-public class SequenceServiceImpl implements SequenceService {
-	private final String workingDir;
+public class SequenceServiceImpl extends BioUniverseServiceImpl implements SequenceService {
 	private final String getSeqByName;
 	private final String makeUnique;
-	private final String python;
-	private final String prefix;
-    private final StorageService storageService;
-	private final AppProperties properties;
 
-	@Autowired
+
+
 	public SequenceServiceImpl(StorageService storageService, AppProperties properties) {
-		this.storageService = storageService;
-		this.properties = properties;
-		this.workingDir = properties.getWorkingDirLocation();
-		this.getSeqByName = properties.getGetSeqByNameProgram();
-		this.python = properties.getPythonLocation();
-		this.prefix = properties.getResultFilePrefix();
-		this.makeUnique = properties.getMakeUniqueProgram();
+		super(storageService, properties);
+		this.getSeqByName = super.getProperties().getGetSeqByNameProgram();
+		this.makeUnique = super.getProperties().getMakeUniqueProgram();
 	}
 
 	@Override
@@ -61,20 +54,16 @@ public class SequenceServiceImpl implements SequenceService {
 		SequenceInternal sequenceInternal = storeFileAndGetInternalRepresentation(sequenceRequest);
 		sequenceInternal.setAllFields();
 
-		String resultFileName = prefix + UUID.randomUUID().toString() + ".txt";
-		File outputFile = new File(workingDir + resultFileName);
+		String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + ".txt";
+		File outputFile = new File(super.getWorkingDir() + resultFileName);
 
 
 		List<String> commandArguments = sequenceInternal.getAllFields();
-		commandArguments.add(0, python);
+		commandArguments.add(0, super.getPython());
 		commandArguments.add(1, commandName);
 
-		for (String arg : commandArguments) {
-			System.out.println("arg " + arg);
-		}
-
 		ProcessBuilder processBuilder = new ProcessBuilder(commandArguments);
-		processBuilder.directory(new File(workingDir));
+		processBuilder.directory(new File(super.getWorkingDir()));
 		try {
 			Process process = processBuilder.start();
 
@@ -102,20 +91,20 @@ public class SequenceServiceImpl implements SequenceService {
 			if (!isNullOrEmpty(sequenceRequest.getFirstFileTextArea())) {
 				throw new IncorrectRequestException("firstFileTextArea and firstFileName are both not empty");
 			} else {
-				firstFileName = storageService.store(sequenceRequest.getFirstFile());
+				firstFileName = super.getStorageService().store(sequenceRequest.getFirstFile());
 			}
 		} else if (!isNullOrEmpty(sequenceRequest.getFirstFileTextArea())) {
-			firstFileName = storageService.createAndStore(sequenceRequest.getFirstFileTextArea());
+			firstFileName = super.getStorageService().createAndStore(sequenceRequest.getFirstFileTextArea());
 		}
 
 		if (sequenceRequest.getSecondFile() != null) {
 			if (!isNullOrEmpty(sequenceRequest.getSecondFileTextArea())) {
 				throw new IncorrectRequestException("secondFileTextArea and firstFileName are both not empty");
 			} else {
-				secondFileName = storageService.store(sequenceRequest.getSecondFile());
+				secondFileName = super.getStorageService().store(sequenceRequest.getSecondFile());
 			}
 		} else if (!isNullOrEmpty(sequenceRequest.getSecondFileTextArea())) {
-			secondFileName = storageService.createAndStore(sequenceRequest.getSecondFileTextArea());
+			secondFileName = super.getStorageService().createAndStore(sequenceRequest.getSecondFileTextArea());
 		}
 		SequenceInternal sequenceInternal = fromSeqRequestToSeqInternal(sequenceRequest, firstFileName, secondFileName);
 		return sequenceInternal;

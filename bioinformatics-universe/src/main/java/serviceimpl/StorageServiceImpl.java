@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.UUID;
 
@@ -25,11 +26,13 @@ import exceptions.StorageFileNotFoundException;
 @Service
 public class StorageServiceImpl implements StorageService {
     private final Path workingDirLocation;
+    private final Path multipleWorkingFilesLocation;
 
  
     @Autowired
     public StorageServiceImpl(AppProperties properties) {
         this.workingDirLocation = Paths.get(properties.getWorkingDirLocation());
+        this.multipleWorkingFilesLocation = Paths.get(properties.getMultipleWorkingFilesLocation());
     }
 
     @Override
@@ -60,6 +63,25 @@ public class StorageServiceImpl implements StorageService {
             throw new StorageException("Failed to store file " + readyName, e);
         }
         return randomFileName;
+    }
+
+    @Override
+    public void storeMultipleFiles(List<MultipartFile> fileList) {
+        if (fileList.isEmpty()) {
+            throw new StorageException("fileList is empty");
+        }
+        for (MultipartFile file : fileList) {
+            String randomFileName = UUID.randomUUID().toString() + ".txt";
+            Path readyName = this.multipleWorkingFilesLocation.resolve(randomFileName);
+            try {
+                if (file.isEmpty()) {
+                    throw new StorageException("Failed to store empty file " + readyName);
+                }
+                Files.copy(file.getInputStream(), readyName);
+            } catch (IOException e) {
+                throw new StorageException("Failed to store file " + readyName, e);
+            }
+        }
     }
 
     @Override
@@ -102,12 +124,14 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(workingDirLocation.toFile());
+        FileSystemUtils.deleteRecursively(multipleWorkingFilesLocation.toFile());
     }
 
     @Override
     public void init() {
         try {
             Files.createDirectory(workingDirLocation);
+            Files.createDirectory(multipleWorkingFilesLocation);
         } catch (IOException e) {
             throw new StorageException("Could not initialize serviceimpl", e);
         }

@@ -23,5 +23,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
 <script src="${pageContext.request.contextPath}/ui/jsscripts/navbar-tabs.js"></script>
+<script src="${pageContext.request.contextPath}/ui/jsscripts/fields-processing.js"></script>
+<script src="${pageContext.request.contextPath}/ui/jsscripts/send-and-process-data.js"></script>
 <script src="${pageContext.request.contextPath}/ui/jsscripts/sequence.js"></script>
 </html>

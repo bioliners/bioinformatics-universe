@@ -1,6 +1,7 @@
 package service;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
@@ -11,6 +12,8 @@ public interface StorageService {
     void init();
 
     String store(MultipartFile file);
+
+    void storeMultipleFiles(List<MultipartFile> fileList);
 
     String createAndStore(String inputAreaContent);
 

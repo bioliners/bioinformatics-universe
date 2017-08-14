@@ -40,7 +40,15 @@
 									<option>comma</option>
 									<option>semicolon</option>
 									<option>vertical bar</option>
-								</select> <small>File column:</small> <input id="first-col" name="first-col" type="text" class="form-control input-sm">
+								</select>
+								<small>File column:</small>
+								<input id="first-col" name="first-col" type="text" class="form-control input-sm">
+								<small>Identity threshold:</small>
+								<input id="identity-threshold" name="identity-threshold" type="text" class="form-control input-sm">
+								<small>Coverage threshold:</small>
+								<input id="coverage-threshold" name="coverage-threshold" type="text" class="form-control input-sm">
+								<small>E-value threshold:</small>
+								<input id="evalue-threshold" name="evalue-threshold" type="text" class="form-control input-sm">
 							</form>
 						</div>
 					</div>
