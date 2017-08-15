@@ -13,7 +13,7 @@ public interface StorageService {
 
     String store(MultipartFile file);
 
-    void storeMultipleFiles(List<MultipartFile> fileList);
+    void storeMultipleFiles(List<MultipartFile> fileList, String filesLocationAsString);
 
     String createAndStore(String inputAreaContent);
 
@@ -22,6 +22,10 @@ public interface StorageService {
     Path load(String filename);
 
     Resource loadAsResource(String filename);
+
+    void createDir(String dirAsString);
+
+    void createMultipleDirs(List<String> dirAsString);
 
     void deleteAll();
 

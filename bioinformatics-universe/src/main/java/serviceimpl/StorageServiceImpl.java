@@ -26,13 +26,11 @@ import exceptions.StorageFileNotFoundException;
 @Service
 public class StorageServiceImpl implements StorageService {
     private final Path workingDirLocation;
-    private final Path multipleWorkingFilesLocation;
 
  
     @Autowired
     public StorageServiceImpl(AppProperties properties) {
         this.workingDirLocation = Paths.get(properties.getWorkingDirLocation());
-        this.multipleWorkingFilesLocation = Paths.get(properties.getMultipleWorkingFilesLocation());
     }
 
     @Override
@@ -66,13 +64,15 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void storeMultipleFiles(List<MultipartFile> fileList) {
+    public void storeMultipleFiles(List<MultipartFile> fileList, String filesLocationAsString) {
         if (fileList.isEmpty()) {
             throw new StorageException("fileList is empty");
         }
+
+        Path filesLocation = Paths.get(filesLocationAsString);
         for (MultipartFile file : fileList) {
             String randomFileName = UUID.randomUUID().toString() + ".txt";
-            Path readyName = this.multipleWorkingFilesLocation.resolve(randomFileName);
+            Path readyName = filesLocation.resolve(randomFileName);
             try {
                 if (file.isEmpty()) {
                     throw new StorageException("Failed to store empty file " + readyName);
@@ -122,16 +122,34 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public void createMultipleDirs(List<String> dirAsString) {
+        dirAsString.stream().forEach(dir -> {
+            try {
+                Files.createDirectory(Paths.get(dir));
+            } catch (IOException e) {
+                throw new StorageException("Could not create directory " + dir, e);
+            }
+        });
+    }
+
+    @Override
+    public void createDir(String dirAsString) {
+        try {
+            Files.createDirectory(Paths.get(dirAsString));
+        } catch (IOException e) {
+            throw new StorageException("Could not initialize serviceimpl", e);
+        }
+    }
+
+    @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(workingDirLocation.toFile());
-        FileSystemUtils.deleteRecursively(multipleWorkingFilesLocation.toFile());
     }
 
     @Override
     public void init() {
         try {
             Files.createDirectory(workingDirLocation);
-            Files.createDirectory(multipleWorkingFilesLocation);
         } catch (IOException e) {
             throw new StorageException("Could not initialize serviceimpl", e);
         }

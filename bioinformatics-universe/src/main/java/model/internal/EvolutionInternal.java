@@ -13,8 +13,8 @@ public class EvolutionInternal {
     private String coverageThreshold;
     private String evalueThreshold;
     private String  commandToBeProcessedBy;
-    private List<String> filedsInfo = new LinkedList<>();
-    private List<String> allThresholds = new LinkedList<>();
+    private List<String> fieldsInfo = new LinkedList<>();
+    private List<String> allFields = new LinkedList<>();
 
     public String getFileDelim() {
         return fileDelim;
@@ -36,33 +36,8 @@ public class EvolutionInternal {
         this.commandToBeProcessedBy = commandToBeProcessedBy;
     }
 
-    public void setFieldsInfo() {
-        if (fileDelim != null) {
-            allThresholds.add(fileDelim);
-        }
-        if (fileColumn != null) {
-            allThresholds.add(fileColumn);
-        }
-    }
-    public void setAllThresholds() {
-        if (identityThreshold != null) {
-            allThresholds.add(identityThreshold);
-        }
-        if (coverageThreshold != null) {
-            allThresholds.add(coverageThreshold);
-        }
-        if (evalueThreshold != null) {
-            allThresholds.add(evalueThreshold);
-        }
-    }
-
-    public List<String> getAllThresholds() {
-        return allThresholds;
-    }
-
-
     public List<String> getFieldsInfo() {
-        return filedsInfo;
+        return fieldsInfo;
     }
 
     public String getIdentityThreshold() {
@@ -91,5 +66,29 @@ public class EvolutionInternal {
 
     public String getCommandToBeProcessedBy() {
         return commandToBeProcessedBy;
+    }
+
+    public List<String> getAllFields() {
+        return allFields;
+    }
+
+    public void setFields() {
+        if (fileDelim != null) {
+            fieldsInfo.add(fileDelim);
+        }
+        if (fileColumn != null) {
+            fieldsInfo.add(fileColumn);
+        }
+        allFields.addAll(fieldsInfo);
+
+        if (identityThreshold != null) {
+            allFields.add(identityThreshold);
+        }
+        if (coverageThreshold != null) {
+            allFields.add(coverageThreshold);
+        }
+        if (evalueThreshold != null) {
+            allFields.add(evalueThreshold);
+        }
     }
 }

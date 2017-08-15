@@ -2,6 +2,8 @@ package serviceimpl;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.UUID;
+
 @ConfigurationProperties("serviceimpl")
 public class AppProperties {
 
@@ -9,7 +11,6 @@ public class AppProperties {
      * Folders locations
      */
     private String workingDirLocation = "bioinformatics-programs-workingDir";
-    private String multipleWorkingFilesLocation = workingDirLocation + "/multiple-workingFiles";
     private String bioProgramsDir = "../bioinformatics-programs";
     private String getSeqByNameProgram = bioProgramsDir + "/getSequencesByNames.py";
     private String makeUniqueProgram = bioProgramsDir + "/getUniqueSeqs.py";
@@ -30,12 +31,9 @@ public class AppProperties {
     }
 
     public String getMultipleWorkingFilesLocation() {
-        return multipleWorkingFilesLocation;
+        return workingDirLocation + "/files-" + UUID.randomUUID().toString();
     }
 
-    public void setMultipleWorkingFilesLocation(String multipleWorkingFilesLocation) {
-        this.multipleWorkingFilesLocation = multipleWorkingFilesLocation;
-    }
     public String getBioProgramsDir() {
         return bioProgramsDir;
     }
