@@ -13,6 +13,18 @@ public class ConverterMain {
 	public ConverterMain(StorageService storageService) {
 	}
 
+	private static String getInternalDelim(String field) throws IncorrectRequestException {
+		String internalDelim = null;
+		if (field != null) {
+			try {
+				internalDelim = Delimeters.valueOf(field.toUpperCase()).toString();
+			} catch (Exception e) {
+				throw new IncorrectRequestException("Delimeter of Request object is incorrect.", e);
+			}
+		}
+		return internalDelim;
+	}
+	
 	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName,
 															   String SecondFileName) throws IncorrectRequestException {
 		SequenceInternal sequenceInternal = new SequenceInternal();
@@ -21,39 +33,12 @@ public class ConverterMain {
 		sequenceInternal.setSecondFileName(SecondFileName);
 		sequenceInternal.setCommandToBeProcessedBy(sequenceRequest.getCommandToBeProcessedBy());
 
-		if (sequenceRequest.getFirstFileColumn() != null) {
-			try {
-				Integer.parseInt(sequenceRequest.getFirstFileColumn());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("firstFileColumn field of SequenceRequest object is incorrect.", e);
-			}
-			sequenceInternal.setFirstFileColumn(sequenceRequest.getFirstFileColumn());
-		}
-
-		if (sequenceRequest.getSecondFileColumn() != null) {
-			try {
-				Integer.parseInt(sequenceRequest.getSecondFileColumn());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("secondFileColumn field of SequenceRequest object is incorrect.", e);
-			}
-			sequenceInternal.setSecondFileColumn(sequenceRequest.getSecondFileColumn());
-		}
-
-		if (sequenceRequest.getFirstFileDelim() != null){
-			try {
-				sequenceInternal.setFirstFileDelim(Delimeters.valueOf(sequenceRequest.getFirstFileDelim().toUpperCase()).toString());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("firstFileDelim field of SequenceRequest object is incorrect.", e);
-			}
-		}
+		sequenceInternal.setFirstFileColumn(Integer.toString(sequenceRequest.getFirstFileColumn()));
+		sequenceInternal.setSecondFileColumn(Integer.toString(sequenceRequest.getSecondFileColumn()));
 		
-		if (sequenceRequest.getSecondFileDelim() != null) {
-			try {
-				sequenceInternal.setSecondFileDelim(Delimeters.valueOf(sequenceRequest.getSecondFileDelim().toUpperCase()).toString());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("secondFileDelim field of SequenceRequest object is incorrect.", e);
-			}
-		}
+		sequenceInternal.setFirstFileDelim(getInternalDelim(sequenceRequest.getFirstFileDelim()));
+		sequenceInternal.setSecondFileDelim(getInternalDelim(sequenceRequest.getSecondFileDelim()));
+		
 		return sequenceInternal;
 	}
 
