@@ -52,7 +52,7 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     }
     @Override
     public String getPostfix() {
-        return prefix;
+        return postfix;
     }
     @Override
     public AppProperties getProperties() {

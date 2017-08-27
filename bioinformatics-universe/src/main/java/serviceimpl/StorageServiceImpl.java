@@ -26,17 +26,19 @@ import exceptions.StorageFileNotFoundException;
 @Service
 public class StorageServiceImpl implements StorageService {
     private final Path workingDirLocation;
+    private final String postfix;
 
  
     @Autowired
     public StorageServiceImpl(AppProperties properties) {
         this.workingDirLocation = Paths.get(properties.getWorkingDirLocation());
+        this.postfix = properties.getPostfix();
     }
 
     @Override
     public String createAndStore(String inputAreaContent) {
-        String randomFileName = UUID.randomUUID().toString() + ".txt";
-        String readyName = this.workingDirLocation.resolve(randomFileName).toString();
+        String randomFileName = UUID.randomUUID().toString() + postfix;
+        String readyName = workingDirLocation.resolve(randomFileName).toString();
         File newFile = new File(readyName);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(newFile))) {
@@ -49,8 +51,8 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public String store(MultipartFile file) {
-        String randomFileName = UUID.randomUUID().toString() + ".txt";
-        Path readyName = this.workingDirLocation.resolve(randomFileName);
+        String randomFileName = UUID.randomUUID().toString() + postfix;
+        Path readyName = workingDirLocation.resolve(randomFileName);
 
         try {
             if (file.isEmpty()) {
@@ -71,7 +73,7 @@ public class StorageServiceImpl implements StorageService {
 
         Path filesLocation = Paths.get(filesLocationAsString);
         for (MultipartFile file : fileList) {
-            String randomFileName = UUID.randomUUID().toString() + ".txt";
+            String randomFileName = UUID.randomUUID().toString() + postfix;
             Path readyName = filesLocation.resolve(randomFileName);
             try {
                 if (file.isEmpty()) {
@@ -87,11 +89,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Stream<Path> loadAll() {
         try {
-        	Stream<Path> paths =  Files.walk(this.workingDirLocation, 1).filter(path -> !path.equals(this.workingDirLocation));
+        	Stream<Path> paths =  Files.walk(workingDirLocation, 1).filter(path -> !path.equals(workingDirLocation));
         	System.out.println("Printing paths: ");
         	paths.forEach(path -> System.out.println(path));
         	
-        	return Files.walk(this.workingDirLocation, 1).filter(path -> !path.equals(this.workingDirLocation)).map(path -> this.workingDirLocation.relativize(path));
+        	return Files.walk(workingDirLocation, 1).filter(path -> !path.equals(workingDirLocation)).map(path -> workingDirLocation.relativize(path));
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
         }
