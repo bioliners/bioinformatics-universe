@@ -13,6 +13,7 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     private final String python;
     private final String bash;
     private final String prefix;
+    private final String postfix;
     private final AppProperties properties;
     private final StorageService storageService;
 
@@ -26,6 +27,7 @@ public class BioUniverseServiceImpl implements BioUniverseService {
         this.bash = properties.getBashLocation();
         this.python = properties.getPythonLocation();
         this.prefix = properties.getResultFilePrefix();
+        this.postfix = properties.getPostfix();
     }
 
     @Override
@@ -46,6 +48,10 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     }
     @Override
     public String getPrefix() {
+        return prefix;
+    }
+    @Override
+    public String getPostfix() {
         return prefix;
     }
     @Override

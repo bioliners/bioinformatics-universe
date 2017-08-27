@@ -16,6 +16,8 @@ public interface BioUniverseService {
     String getPython();
 
     String getPrefix();
+    
+    String getPostfix();
 
     AppProperties getProperties();
 

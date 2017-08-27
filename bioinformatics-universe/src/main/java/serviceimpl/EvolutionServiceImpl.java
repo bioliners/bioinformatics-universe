@@ -1,17 +1,26 @@
 package serviceimpl;
 
+import static converters.ConverterMain.fromEvolRequestToEvolInternal;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+
 import model.internal.EvolutionInternal;
+import model.request.EvolutionRequest;
+
 import org.springframework.stereotype.Service;
 
-import model.request.EvolutionRequest;
-import exceptions.IncorrectRequestException;
 import service.EvolutionService;
 import service.StorageService;
-
-import java.io.*;
-import java.util.*;
-
-import static converters.ConverterMain.fromEvolRequestToEvolInternal;
+import exceptions.IncorrectRequestException;
 
 @Service
 public class EvolutionServiceImpl extends BioUniverseServiceImpl implements EvolutionService {
@@ -38,37 +47,37 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, inputFilesLocation1);
 		evolutionInternal.setFields();
 
-		List<String> args1 = new LinkedList<>();
-		List<String> args2 = new LinkedList<>();
-		List<String> args3 = new LinkedList<>();
-		args1.addAll(Arrays.asList(new String[] {inputFilesLocation1, outputFilesLocation1}));
-		args1.addAll(evolutionInternal.getFieldsInfo());
-		args2.addAll(Arrays.asList(new String[] {inputFilesLocation2, outputFilesLocation2}));
-		args3.add(inputFilesLocation3);
-		args3.addAll(evolutionInternal.getAllFields());
+		List<String> argsForPrepNames = new LinkedList<>();
+		List<String> argsForBlast = new LinkedList<>();
+		List<String> argsForCreateCogs = new LinkedList<>();
+		argsForPrepNames.addAll(Arrays.asList(new String[] {inputFilesLocation1, outputFilesLocation1}));
+		argsForPrepNames.addAll(evolutionInternal.getFieldsInfo());
+		argsForBlast.addAll(Arrays.asList(new String[] {inputFilesLocation2, outputFilesLocation2}));
+		argsForCreateCogs.add(inputFilesLocation3);
+		argsForCreateCogs.addAll(evolutionInternal.getAllFields());
 
 
 		String[] arrayOfPrograms = {super.getBash(), super.getBash(), super.getPython()};
 		String[] arrayOfCommands = {prepareNames, blastAllVsAll, createCogs};
-		List[] arrayOfArgumentsLists = {args1, args2, args3};
+		List[] arrayOfArgumentLists = {argsForPrepNames, argsForBlast, argsForCreateCogs};
 
 		List<String>[] commandsAndArguments = new LinkedList [arrayOfCommands.length];
 		for (int i=0; i<=arrayOfCommands.length; i++) {
 			commandsAndArguments[i].add(arrayOfPrograms[i]);
 			commandsAndArguments[i].add(arrayOfCommands[i]);
-			commandsAndArguments[i].addAll(arrayOfArgumentsLists[i]);
+			commandsAndArguments[i].addAll(arrayOfArgumentLists[i]);
 		}
 		return launchProcessAndGetResultFileName(commandsAndArguments);
 	}
 
 
 	public String launchProcessAndGetResultFileName(final List<String>[] commandsAndArguments) throws IncorrectRequestException {
-		String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + ".txt";
+		String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix();
 		File outputFile = new File(super.getWorkingDir() + resultFileName);
 		Process process = null;
 		List<ProcessBuilder> listOfProcessBuilders = new LinkedList<>();
 
-		for (int i=0; i<= commandsAndArguments.length; i++) {
+		for (int i=0; i<=commandsAndArguments.length; i++) {
 			listOfProcessBuilders.add(new ProcessBuilder(commandsAndArguments[i]));
 			listOfProcessBuilders.get(i).directory(new File(super.getWorkingDir()));
 		}
