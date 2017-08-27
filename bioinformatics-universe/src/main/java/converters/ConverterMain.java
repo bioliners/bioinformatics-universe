@@ -1,20 +1,17 @@
 package converters;
 
-import com.fasterxml.jackson.databind.JsonSerializer;
-import exceptions.IncorrectRequestException;
 import model.internal.EvolutionInternal;
 import model.internal.SequenceInternal;
 import model.request.EvolutionRequest;
 import model.request.SequenceRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import service.Delimeters;
 import service.StorageService;
+import exceptions.IncorrectRequestException;
 
 public class ConverterMain {
 
 	public ConverterMain(StorageService storageService) {
 	}
-
 
 	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName,
 															   String SecondFileName) throws IncorrectRequestException {
@@ -25,11 +22,10 @@ public class ConverterMain {
 		sequenceInternal.setCommandToBeProcessedBy(sequenceRequest.getCommandToBeProcessedBy());
 
 		if (sequenceRequest.getFirstFileColumn() != null) {
-
 			try {
 				Integer.parseInt(sequenceRequest.getFirstFileColumn());
-			} catch (Exception ne) {
-				throw new IncorrectRequestException("String instead of integer in firstFileColumn field of SequenceRequest object.", ne);
+			} catch (Exception e) {
+				throw new IncorrectRequestException("firstFileColumn field of SequenceRequest object is incorrect.", e);
 			}
 			sequenceInternal.setFirstFileColumn(sequenceRequest.getFirstFileColumn());
 		}
@@ -37,48 +33,54 @@ public class ConverterMain {
 		if (sequenceRequest.getSecondFileColumn() != null) {
 			try {
 				Integer.parseInt(sequenceRequest.getSecondFileColumn());
-
-			} catch (Exception ne) {
-				throw new IncorrectRequestException("String instead of integer in secondFileColumn field of SequenceRequest object.", ne);
+			} catch (Exception e) {
+				throw new IncorrectRequestException("secondFileColumn field of SequenceRequest object is incorrect.", e);
 			}
 			sequenceInternal.setSecondFileColumn(sequenceRequest.getSecondFileColumn());
 		}
 
 		if (sequenceRequest.getFirstFileDelim() != null){
-			sequenceInternal.setFirstFileDelim(
-					Delimeters.valueOf(sequenceRequest.getFirstFileDelim().toUpperCase()).toString());
+			try {
+				sequenceInternal.setFirstFileDelim(Delimeters.valueOf(sequenceRequest.getFirstFileDelim().toUpperCase()).toString());
+			} catch (Exception e) {
+				throw new IncorrectRequestException("firstFileDelim field of SequenceRequest object is incorrect.", e);
+			}
 		}
+		
 		if (sequenceRequest.getSecondFileDelim() != null) {
-			sequenceInternal.setSecondFileDelim(
-					Delimeters.valueOf(sequenceRequest.getSecondFileDelim().toUpperCase()).toString());
+			try {
+				sequenceInternal.setSecondFileDelim(Delimeters.valueOf(sequenceRequest.getSecondFileDelim().toUpperCase()).toString());
+			} catch (Exception e) {
+				throw new IncorrectRequestException("secondFileDelim field of SequenceRequest object is incorrect.", e);
+			}
 		}
 		return sequenceInternal;
 	}
 
 	public static EvolutionInternal fromEvolRequestToEvolInternal(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
 		EvolutionInternal evolutionInternal = new EvolutionInternal();
-
 		if (evolutionRequest.getFileColumn() != null) {
 			try {
 				Integer.parseInt(evolutionRequest.getFileColumn());
-
-			} catch (Exception ne) {
-				throw new IncorrectRequestException("String instead of integer in fileColumn field of EvolutionRequest object.", ne);
+			} catch (Exception e) {
+				throw new IncorrectRequestException("fileColumn field of EvolutionRequest object is incorrect.", e);
 			}
 			evolutionInternal.setFileColumn(evolutionInternal.getFileColumn());
 		}
 
 		if (evolutionRequest.getFileDelim() != null) {
-			evolutionInternal.setFileDelim(
-					Delimeters.valueOf(evolutionRequest.getFileDelim().toUpperCase()).toString());
+			try {
+				evolutionInternal.setFileDelim(Delimeters.valueOf(evolutionRequest.getFileDelim().toUpperCase()).toString());
+			} catch (Exception e) {
+				throw new IncorrectRequestException("Delimeter of EvolutionRequest object is incorrect.", e);
+			}
 		}
 
 		if (evolutionRequest.getCoverageThreshold() != null) {
 			try {
 				Integer.parseInt(evolutionRequest.getCoverageThreshold());
-
-			} catch (Exception ne) {
-				throw new IncorrectRequestException("String instead of integer in coverageThreshold field of EvolutionRequest object.", ne);
+			} catch (Exception e) {
+				throw new IncorrectRequestException("coverageThreshold field of EvolutionRequest object is incorrect.", e);
 			}
 			evolutionInternal.setCoverageThreshold(evolutionInternal.getCoverageThreshold());
 		}
@@ -86,9 +88,8 @@ public class ConverterMain {
 		if (evolutionRequest.getIdentityThreshold() != null) {
 			try {
 				Integer.parseInt(evolutionRequest.getIdentityThreshold());
-
-			} catch (Exception ne) {
-				throw new IncorrectRequestException("String instead of integer in identityThreshold field of EvolutionRequest object.", ne);
+			} catch (Exception e) {
+				throw new IncorrectRequestException("identityThreshold field of EvolutionRequest object is incorrect.", e);
 			}
 			evolutionInternal.setIdentityThreshold(evolutionInternal.getIdentityThreshold());
 		}
@@ -96,9 +97,8 @@ public class ConverterMain {
 		if (evolutionRequest.getEvalueThreshold() != null) {
 			try {
 				Integer.parseInt(evolutionRequest.getEvalueThreshold());
-
-			} catch (Exception ne) {
-				throw new IncorrectRequestException("String instead of integer in evalueThreshold field of EvolutionRequest object.", ne);
+			} catch (Exception e) {
+				throw new IncorrectRequestException("evalueThreshold field of EvolutionRequest object is incorrect.", e);
 			}
 			evolutionInternal.setEvalueThreshold(evolutionInternal.getEvalueThreshold());
 		}
