@@ -19,7 +19,7 @@ public class AppProperties {
     private String createCogsProgram = bioProgramsDir + "/createCOGs.py";
     private String pythonLocation = "/usr/bin/python";
     private String bashLocation = "/bin/bash";
-    private String blastpLocation = "/home/vadim/Soft/blast/ncbi-blast-2.2.31+/bin/blastp";
+    private String blastpLocation = "/usr/bin/blastp";
     private String resultFilePrefix = "/bio-universe-";
     private String postfix = ".txt";
 

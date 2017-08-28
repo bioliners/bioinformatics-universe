@@ -2,15 +2,16 @@ package model.request;
 
 import java.util.List;
 
+import javafx.beans.binding.DoubleExpression;
 import org.springframework.web.multipart.MultipartFile;
 
 public class EvolutionRequest {
 	private List<MultipartFile> listOfFiles;
 	private String fileDelim;
-	private String fileColumn;
-	private String identityThreshold;
-	private String coverageThreshold;
-	private String evalueThreshold;
+	private Integer fileColumn;
+	private Double identityThreshold;
+	private Double coverageThreshold;
+	private Double evalueThreshold;
 	private String commandToBeProcessedBy;
 
 	
@@ -30,11 +31,11 @@ public class EvolutionRequest {
 		this.fileDelim = fileDelim;
 	}
 
-	public String getFileColumn() {
+	public Integer getFileColumn() {
 		return fileColumn;
 	}
 
-	public void setFileColumn(String fileColumn) {
+	public void setFileColumn(Integer fileColumn) {
 		this.fileColumn = fileColumn;
 	}
 
@@ -46,27 +47,27 @@ public class EvolutionRequest {
 		this.commandToBeProcessedBy = commandToBeProcessedBy;
 	}
 
-	public String getIdentityThreshold() {
+	public Double getIdentityThreshold() {
 		return identityThreshold;
 	}
 
-	public void setIdentityThreshold(String identityThreshold) {
+	public void setIdentityThreshold(Double identityThreshold) {
 		this.identityThreshold = identityThreshold;
 	}
 
-	public String getCoverageThreshold() {
+	public Double getCoverageThreshold() {
 		return coverageThreshold;
 	}
 
-	public void setCoverageThreshold(String coverageThreshold) {
+	public void setCoverageThreshold(Double coverageThreshold) {
 		this.coverageThreshold = coverageThreshold;
 	}
 
-	public String getEvalueThreshold() {
+	public Double getEvalueThreshold() {
 		return evalueThreshold;
 	}
 
-	public void setEvalueThreshold(String evalueThreshold) {
+	public void setEvalueThreshold(Double evalueThreshold) {
 		this.evalueThreshold = evalueThreshold;
 	}
 }

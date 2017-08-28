@@ -24,6 +24,13 @@ public class ConverterMain {
 		}
 		return internalDelim;
 	}
+
+	private static String checkNumAndGetString(Number num) {
+		if (num != null) {
+			return String.valueOf(num);
+		}
+		return null;
+	}
 	
 	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName,
 															   String SecondFileName) throws IncorrectRequestException {
@@ -33,9 +40,10 @@ public class ConverterMain {
 		sequenceInternal.setSecondFileName(SecondFileName);
 		sequenceInternal.setCommandToBeProcessedBy(sequenceRequest.getCommandToBeProcessedBy());
 
-		sequenceInternal.setFirstFileColumn(Integer.toString(sequenceRequest.getFirstFileColumn()));
-		sequenceInternal.setSecondFileColumn(Integer.toString(sequenceRequest.getSecondFileColumn()));
-		
+		sequenceInternal.setFirstFileColumn(checkNumAndGetString(sequenceRequest.getFirstFileColumn()));
+		sequenceInternal.setSecondFileColumn(checkNumAndGetString(sequenceRequest.getSecondFileColumn()));
+
+
 		sequenceInternal.setFirstFileDelim(getInternalDelim(sequenceRequest.getFirstFileDelim()));
 		sequenceInternal.setSecondFileDelim(getInternalDelim(sequenceRequest.getSecondFileDelim()));
 		
@@ -44,49 +52,12 @@ public class ConverterMain {
 
 	public static EvolutionInternal fromEvolRequestToEvolInternal(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
 		EvolutionInternal evolutionInternal = new EvolutionInternal();
-		if (evolutionRequest.getFileColumn() != null) {
-			try {
-				Integer.parseInt(evolutionRequest.getFileColumn());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("fileColumn field of EvolutionRequest object is incorrect.", e);
-			}
-			evolutionInternal.setFileColumn(evolutionInternal.getFileColumn());
-		}
+		evolutionInternal.setFileColumn(checkNumAndGetString(evolutionRequest.getFileColumn()));
+		evolutionInternal.setCoverageThreshold(checkNumAndGetString(evolutionRequest.getCoverageThreshold()));
+		evolutionInternal.setIdentityThreshold(checkNumAndGetString(evolutionRequest.getIdentityThreshold()));
+		evolutionInternal.setEvalueThreshold(checkNumAndGetString(evolutionRequest.getEvalueThreshold()));
 
-		if (evolutionRequest.getFileDelim() != null) {
-			try {
-				evolutionInternal.setFileDelim(Delimeters.valueOf(evolutionRequest.getFileDelim().toUpperCase()).toString());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("Delimeter of EvolutionRequest object is incorrect.", e);
-			}
-		}
-
-		if (evolutionRequest.getCoverageThreshold() != null) {
-			try {
-				Integer.parseInt(evolutionRequest.getCoverageThreshold());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("coverageThreshold field of EvolutionRequest object is incorrect.", e);
-			}
-			evolutionInternal.setCoverageThreshold(evolutionInternal.getCoverageThreshold());
-		}
-
-		if (evolutionRequest.getIdentityThreshold() != null) {
-			try {
-				Integer.parseInt(evolutionRequest.getIdentityThreshold());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("identityThreshold field of EvolutionRequest object is incorrect.", e);
-			}
-			evolutionInternal.setIdentityThreshold(evolutionInternal.getIdentityThreshold());
-		}
-
-		if (evolutionRequest.getEvalueThreshold() != null) {
-			try {
-				Integer.parseInt(evolutionRequest.getEvalueThreshold());
-			} catch (Exception e) {
-				throw new IncorrectRequestException("evalueThreshold field of EvolutionRequest object is incorrect.", e);
-			}
-			evolutionInternal.setEvalueThreshold(evolutionInternal.getEvalueThreshold());
-		}
+		evolutionInternal.setFileDelim(getInternalDelim(evolutionRequest.getFileDelim()));
 
 		return evolutionInternal;
 	}

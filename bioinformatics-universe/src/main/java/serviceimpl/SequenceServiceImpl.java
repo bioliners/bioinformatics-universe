@@ -62,6 +62,8 @@ public class SequenceServiceImpl extends BioUniverseServiceImpl implements Seque
 		commandArguments.add(0, super.getPython());
 		commandArguments.add(1, commandName);
 
+		System.out.println(commandArguments.toString());
+
 		ProcessBuilder processBuilder = new ProcessBuilder(commandArguments);
 		processBuilder.directory(new File(super.getWorkingDir()));
 		try {
