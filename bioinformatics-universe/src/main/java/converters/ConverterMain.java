@@ -4,8 +4,10 @@ import model.internal.EvolutionInternal;
 import model.internal.SequenceInternal;
 import model.request.EvolutionRequest;
 import model.request.SequenceRequest;
-import service.Delimeters;
 import service.StorageService;
+import enums.Delimeters;
+import enums.ParamPrefixes;
+
 import exceptions.IncorrectRequestException;
 
 public class ConverterMain {
@@ -33,13 +35,13 @@ public class ConverterMain {
 
 	public static EvolutionInternal fromEvolRequestToEvolInternal(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
 		EvolutionInternal evolutionInternal = new EvolutionInternal();
-		evolutionInternal.setFileColumn(checkNumAndGetString(evolutionRequest.getFileColumn()));
-		evolutionInternal.setCoverageThreshold(checkNumAndGetString(evolutionRequest.getCoverageThreshold()));
-		evolutionInternal.setIdentityThreshold(checkNumAndGetString(evolutionRequest.getIdentityThreshold()));
-		evolutionInternal.setEvalueThreshold(checkNumAndGetString(evolutionRequest.getEvalueThreshold()));
-		evolutionInternal.setDoMerge(evolutionRequest.getDoMerge());
-
-		evolutionInternal.setFileDelim(getInternalDelim(evolutionRequest.getFileDelim()));
+		
+		evolutionInternal.setFileColumn(ParamPrefixes.COLUMN + checkNumAndGetString(evolutionRequest.getFileColumn()));
+		evolutionInternal.setCoverageThreshold(ParamPrefixes.COVERAGE_THRESH + checkNumAndGetString(evolutionRequest.getCoverageThreshold()));
+		evolutionInternal.setIdentityThreshold(ParamPrefixes.IDENTITY_THRESH + checkNumAndGetString(evolutionRequest.getIdentityThreshold()));
+		evolutionInternal.setEvalueThreshold(ParamPrefixes.EVAL_THRESH + checkNumAndGetString(evolutionRequest.getEvalueThreshold()));
+		evolutionInternal.setDoMerge(ParamPrefixes.MERGE + evolutionRequest.getDoMerge());
+		evolutionInternal.setFileDelim(ParamPrefixes.DELIM + getInternalDelim(evolutionRequest.getFileDelim()));
 
 		return evolutionInternal;
 	}

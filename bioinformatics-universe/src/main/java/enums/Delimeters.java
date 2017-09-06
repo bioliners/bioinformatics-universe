@@ -1,4 +1,4 @@
-package service;
+package enums;
 
 /**
  * Created by vadim on 7/27/17.
