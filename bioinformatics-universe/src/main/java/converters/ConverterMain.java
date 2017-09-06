@@ -13,25 +13,6 @@ public class ConverterMain {
 	public ConverterMain(StorageService storageService) {
 	}
 
-	private static String getInternalDelim(String field) throws IncorrectRequestException {
-		String internalDelim = null;
-		if (field != null) {
-			try {
-				internalDelim = Delimeters.valueOf(field.toUpperCase()).toString();
-			} catch (Exception e) {
-				throw new IncorrectRequestException("Delimeter of Request object is incorrect.", e);
-			}
-		}
-		return internalDelim;
-	}
-
-	private static String checkNumAndGetString(Number num) {
-		if (num != null) {
-			return String.valueOf(num);
-		}
-		return null;
-	}
-	
 	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName,
 															   String SecondFileName) throws IncorrectRequestException {
 		SequenceInternal sequenceInternal = new SequenceInternal();
@@ -56,9 +37,29 @@ public class ConverterMain {
 		evolutionInternal.setCoverageThreshold(checkNumAndGetString(evolutionRequest.getCoverageThreshold()));
 		evolutionInternal.setIdentityThreshold(checkNumAndGetString(evolutionRequest.getIdentityThreshold()));
 		evolutionInternal.setEvalueThreshold(checkNumAndGetString(evolutionRequest.getEvalueThreshold()));
+		evolutionInternal.setDoMerge(evolutionRequest.getDoMerge());
 
 		evolutionInternal.setFileDelim(getInternalDelim(evolutionRequest.getFileDelim()));
 
 		return evolutionInternal;
+	}
+	
+	private static String getInternalDelim(String field) throws IncorrectRequestException {
+		String internalDelim = null;
+		if (field != null) {
+			try {
+				internalDelim = Delimeters.valueOf(field.toUpperCase()).toString();
+			} catch (Exception e) {
+				throw new IncorrectRequestException("Delimeter of Request object is incorrect.", e);
+			}
+		}
+		return internalDelim;
+	}
+
+	private static String checkNumAndGetString(Number num) {
+		if (num != null) {
+			return String.valueOf(num);
+		}
+		return null;
 	}
 }

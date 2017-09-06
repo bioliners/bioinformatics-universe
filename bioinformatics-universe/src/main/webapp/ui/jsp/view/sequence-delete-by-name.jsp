@@ -58,3 +58,4 @@
 
 
 </div>
+<script src="${pageContext.request.contextPath}/ui/jsscripts/sequence.js"></script>

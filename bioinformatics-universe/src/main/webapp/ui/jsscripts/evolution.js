@@ -1,22 +1,10 @@
-$(document).ready(function (){
-	$('.result-container').hide();
-	takeCareOfValidators();
-	takeCareOfFields();
-
-    $('#Go').click(function() {
-    	getData();
-    });
-});
-
 function getOptions() {
-    var data = new FormData();
+    var options = new FormData();
 
 	if (typeof $('#first-file')[0] != 'undefined') {
-
 		$.each($('#first-file')[0].files, function(i, file) {
-            data.append('listOfFiles', file);
+			options.append('listOfFiles', file);
         });
-
     }
 
 	var fileDelim = $('#first-delim').val();
@@ -24,6 +12,10 @@ function getOptions() {
 	var identityThreshold = $('#identity-threshold').val();
 	var coverageThreshold = $('#coverage-threshold').val();
 	var evalueThreshold = $('#evalue-threshold').val();
+	var evalueThreshold = $('#evalue-threshold').val();
+	var merge = $('input[name="merge"]:checked').val();
+	
+	console.log("merge " + merge);
 
 
  	if (typeof fileDelim != 'undefined') {

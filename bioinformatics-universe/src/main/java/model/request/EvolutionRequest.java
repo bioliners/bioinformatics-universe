@@ -3,6 +3,7 @@ package model.request;
 import java.util.List;
 
 import javafx.beans.binding.DoubleExpression;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class EvolutionRequest {
@@ -13,6 +14,7 @@ public class EvolutionRequest {
 	private Double coverageThreshold;
 	private Double evalueThreshold;
 	private String commandToBeProcessedBy;
+	private String doMerge;
 
 	
 	public List<MultipartFile> getListOfFiles() {
@@ -69,5 +71,13 @@ public class EvolutionRequest {
 
 	public void setEvalueThreshold(Double evalueThreshold) {
 		this.evalueThreshold = evalueThreshold;
+	}
+	
+	public String getDoMerge() {
+		return doMerge;
+	}
+
+	public void setDoMerge(String doMerge) {
+		this.doMerge = doMerge;
 	}
 }

@@ -12,8 +12,10 @@ public class EvolutionInternal {
     private String identityThreshold;
     private String coverageThreshold;
     private String evalueThreshold;
-    private String  commandToBeProcessedBy;
-    private List<String> fieldsInfo = new LinkedList<>();
+    private String commandToBeProcessedBy;
+    private String doMerge;
+    
+	private List<String> fieldsInfo = new LinkedList<>();
     private List<String> allFields = new LinkedList<>();
 
     public String getFileDelim() {
@@ -30,10 +32,6 @@ public class EvolutionInternal {
 
     public void setFileColumn(String fileColumn) {
         this.fileColumn = fileColumn;
-    }
-
-    public void setCommandToBeProcessedBy(String commandToBeProcessedBy) {
-        this.commandToBeProcessedBy = commandToBeProcessedBy;
     }
 
     public List<String> getFieldsInfo() {
@@ -64,10 +62,22 @@ public class EvolutionInternal {
         this.evalueThreshold = evalueThreshold;
     }
 
+    public void setCommandToBeProcessedBy(String commandToBeProcessedBy) {
+        this.commandToBeProcessedBy = commandToBeProcessedBy;
+    }
+    
     public String getCommandToBeProcessedBy() {
         return commandToBeProcessedBy;
     }
+    
+    public String getDoMerge() {
+		return doMerge;
+	}
 
+	public void setDoMerge(String doMerge) {
+		this.doMerge = doMerge;
+	}
+	
     public List<String> getAllFields() {
         return allFields;
     }

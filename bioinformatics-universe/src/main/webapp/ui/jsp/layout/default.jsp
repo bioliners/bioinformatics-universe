@@ -25,5 +25,6 @@
 <script src="${pageContext.request.contextPath}/ui/jsscripts/navbar-tabs.js"></script>
 <script src="${pageContext.request.contextPath}/ui/jsscripts/fields-processing.js"></script>
 <script src="${pageContext.request.contextPath}/ui/jsscripts/send-and-process-data.js"></script>
-<script src="${pageContext.request.contextPath}/ui/jsscripts/sequence.js"></script>
+
+
 </html>

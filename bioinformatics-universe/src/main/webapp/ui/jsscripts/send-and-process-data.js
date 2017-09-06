@@ -1,5 +1,16 @@
-function getData() {
-	var options = getOptions();
+$(document).ready(function (){
+	$('.result-container').hide();
+	takeCareOfValidators();
+	takeCareOfFields();
+
+    $('#Go').click(function() {
+    	options = getOptions();
+    	getData(options);
+    });
+});
+
+
+function getData(options) {	
 	$.ajax({
 	      type: 'POST',
 	      url: 'process-request',

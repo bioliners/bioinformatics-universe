@@ -1,13 +1,3 @@
-$(document).ready(function (){
-	$('.result-container').hide();
-	takeCareOfValidators();
-	takeCareOfFields();
-
-    $('#Go').click(function() {
-    	getData();
-    });
-});
-
 function getOptions() {
 	var firstFile = $('#first-file')[0].files[0];
 	if (typeof $('#second-file')[0] != 'undefined') {
@@ -20,7 +10,7 @@ function getOptions() {
 	var firstFileColumn = $('#first-col').val();
 	var secondFileColumn = $('#second-col').val();
 
-
+	console.log("OPtions Seq");
 	var options = new FormData();
 
 	if (typeof firstFile != 'undefined') {
@@ -71,20 +61,3 @@ function getOptions() {
     }
 	return options;
 }
-
-
-function getData() {
-	var options = getOptions();
-	$.ajax({
-	      type: 'POST',
-	      url: 'process-request',
-	      data : options,
-	      success: processRetrievedData,
-	      error: error,
-	      contentType: false,
-	      processData: false,
-	      dataType:'text',
-	      enctype: 'multipart/form-data'
-	    });
-}
-

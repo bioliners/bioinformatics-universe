@@ -49,6 +49,13 @@
 								<input id="coverage-threshold" name="coverage-threshold" type="text" class="form-control input-sm">
 								<small>E-value threshold:</small>
 								<input id="evalue-threshold" name="evalue-threshold" type="text" class="form-control input-sm">
+								<small>Merge:</small>
+								<label class="radio-inline">
+      								<input name="merge" type="radio" value="yes" checked >yes
+    							</label>
+    							<label class="radio-inline">
+      								<input name="merge" type="radio" value="no">no
+    							</label>
 							</form>
 						</div>
 					</div>
@@ -68,6 +75,5 @@
 
 
 </div>
-
-
+<script src="${pageContext.request.contextPath}/ui/jsscripts/evolution.js"></script>
 
