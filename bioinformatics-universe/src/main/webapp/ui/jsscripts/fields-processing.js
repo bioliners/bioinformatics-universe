@@ -29,18 +29,21 @@ function takeCareOfValidators() {
     $("#first-col").keyup(function() {
         $("#first-col").valid();
     });
+
     $("#second-col").keyup(function() {
         $("#second-col").valid();
     });
+
     $("#first-col").focusout(function() {
-        valid1.resetForm();
-        valid2.resetForm();
+       typeof valid1 != 'undefined' ? valid1.resetForm() : valid1;
+       typeof valid2 != 'undefined' ? valid2.resetForm() : valid2;
     });
     $("#second-col").focusout(function() {
-        valid1.resetForm();
-        valid2.resetForm();
+       typeof valid1 != 'undefined' ? valid1.resetForm() : valid1;
+       typeof valid2 != 'undefined' ? valid2.resetForm() : valid2;
     });
 }
+
 
 function takeCareOfFields() {
 	$('#first-file').change(function() {

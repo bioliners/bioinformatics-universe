@@ -12,9 +12,10 @@ public class AppProperties {
      */
     private String workingDirLocation = "bioinformatics-programs-workingDir";
     private String bioProgramsDir = "../bioinformatics-programs";
+    private String pathToMainDirFromBioProgs = "../";
     private String getSeqByNameProgram = bioProgramsDir + "/getSequencesByNames.py";
     private String makeUniqueProgram = bioProgramsDir + "/getUniqueSeqs.py";
-    private String prepareNamesProgram = bioProgramsDir + "/prepareNamesProgram.sh";
+    private String prepareNamesProgram = bioProgramsDir + "/prepareNames.sh";
     private String blastAllVsAllProgram = bioProgramsDir + "/blast-all-vs-all.sh";
     private String createCogsProgram = bioProgramsDir + "/createCOGs.py";
     private String pythonLocation = "/usr/bin/python";
@@ -33,7 +34,7 @@ public class AppProperties {
     }
 
     public String getMultipleWorkingFilesLocation() {
-        return workingDirLocation + "/files-" + UUID.randomUUID().toString();
+        return "files-" + UUID.randomUUID().toString();
     }
 
     public String getBioProgramsDir() {
@@ -42,6 +43,14 @@ public class AppProperties {
 
     public void setBioProgramsDir(String bioProgramsDir) {
         this.bioProgramsDir = bioProgramsDir;
+    }
+
+    public String getPathToMainDirFromBioProgs() {
+        return pathToMainDirFromBioProgs;
+    }
+
+    public void setPathToMainDirFromBioProgs(String pathToMainDirFromBioProgs) {
+        this.pathToMainDirFromBioProgs = pathToMainDirFromBioProgs;
     }
 
     public String getGetSeqByNameProgram() {
@@ -123,4 +132,5 @@ public class AppProperties {
 	public void setPostfix(String postFix) {
 		this.postfix = postFix;
 	}
+
 }

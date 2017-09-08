@@ -8,12 +8,6 @@ import service.StorageService;
  * Created by vadim on 8/14/17.
  */
 public class BioUniverseServiceImpl implements BioUniverseService {
-    private final String workingDir;
-    private final String multipleWorkingFilesLocation;
-    private final String python;
-    private final String bash;
-    private final String prefix;
-    private final String postfix;
     private final AppProperties properties;
     private final StorageService storageService;
 
@@ -22,37 +16,31 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     public BioUniverseServiceImpl(StorageService storageService, AppProperties properties) {
         this.storageService = storageService;
         this.properties = properties;
-        this.workingDir = properties.getWorkingDirLocation();
-        this.multipleWorkingFilesLocation = properties.getMultipleWorkingFilesLocation();
-        this.bash = properties.getBashLocation();
-        this.python = properties.getPythonLocation();
-        this.prefix = properties.getResultFilePrefix();
-        this.postfix = properties.getPostfix();
     }
 
     @Override
     public String getWorkingDir() {
-        return workingDir;
+        return properties.getWorkingDirLocation();
     }
     @Override
     public String getMultipleWorkingFilesLocation() {
-        return multipleWorkingFilesLocation;
+        return properties.getMultipleWorkingFilesLocation();
     }
     @Override
     public String getBash() {
-        return bash;
+        return properties.getBashLocation();
     }
     @Override
     public String getPython() {
-        return python;
+        return properties.getPythonLocation();
     }
     @Override
     public String getPrefix() {
-        return prefix;
+        return properties.getResultFilePrefix();
     }
     @Override
     public String getPostfix() {
-        return postfix;
+        return properties.getPostfix();
     }
     @Override
     public AppProperties getProperties() {
@@ -61,6 +49,10 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     @Override
     public StorageService getStorageService() {
         return storageService;
+    }
+    @Override
+    public String getPathToMainDirFromBioProgs() {
+        return properties.getPathToMainDirFromBioProgs();
     }
 
 }

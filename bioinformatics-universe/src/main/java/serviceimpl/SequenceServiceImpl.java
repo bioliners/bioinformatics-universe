@@ -54,7 +54,7 @@ public class SequenceServiceImpl extends BioUniverseServiceImpl implements Seque
 		SequenceInternal sequenceInternal = storeFileAndGetInternalRepresentation(sequenceRequest);
 		sequenceInternal.setAllFields();
 
-		String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + ".txt";
+		String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix();
 		File outputFile = new File(super.getWorkingDir() + resultFileName);
 
 

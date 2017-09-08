@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+import enums.ParamPrefixes;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
 
@@ -42,7 +44,10 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		String inputFilesLocation2 = outputFilesLocation1;
 		String outputFilesLocation2 = super.getProperties().getMultipleWorkingFilesLocation();
 		String inputFilesLocation3 = outputFilesLocation2;
-		super.getStorageService().createMultipleDirs(Arrays.asList(new String[] {inputFilesLocation1, outputFilesLocation1, outputFilesLocation2}));
+		super.getStorageService().createMultipleDirs(Arrays.asList(inputFilesLocation1, outputFilesLocation1, outputFilesLocation2));
+
+
+		String resultFileName = UUID.randomUUID().toString() + super.getPostfix();
 
 		EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, inputFilesLocation1);
 		evolutionInternal.setFields();
@@ -50,56 +55,62 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		List<String> argsForPrepNames = new LinkedList<>();
 		List<String> argsForBlast = new LinkedList<>();
 		List<String> argsForCreateCogs = new LinkedList<>();
-		argsForPrepNames.addAll(Arrays.asList(new String[] {inputFilesLocation1, outputFilesLocation1}));
+		argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+inputFilesLocation1, ParamPrefixes.OUTPUT.getPreifx()+outputFilesLocation1));
 		argsForPrepNames.addAll(evolutionInternal.getFieldsInfo());
-		argsForBlast.addAll(Arrays.asList(new String[] {inputFilesLocation2, outputFilesLocation2}));
-		argsForCreateCogs.add(inputFilesLocation3);
+
+		argsForBlast.add(ParamPrefixes.WDIR.getPreifx() + super.getPathToMainDirFromBioProgs() + super.getWorkingDir()+"/");
+		argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx() +inputFilesLocation2, ParamPrefixes.OUTPUT.getPreifx()+outputFilesLocation2));
+
+		argsForCreateCogs.add(ParamPrefixes.INPUT.getPreifx()+inputFilesLocation3);
+		argsForCreateCogs.add(ParamPrefixes.OUTPUT.getPreifx() + resultFileName);
 		argsForCreateCogs.addAll(evolutionInternal.getAllFields());
 
 
 		String[] arrayOfPrograms = {super.getBash(), super.getBash(), super.getPython()};
 		String[] arrayOfCommands = {prepareNames, blastAllVsAll, createCogs};
-		List[] arrayOfArgumentLists = {argsForPrepNames, argsForBlast, argsForCreateCogs};
+		List<List<String>> listOfArgumentLists = new LinkedList<>(Arrays.asList(argsForPrepNames, argsForBlast, argsForCreateCogs));
 
-		List<String>[] commandsAndArguments = new LinkedList [arrayOfCommands.length];
-		for (int i=0; i<=arrayOfCommands.length; i++) {
-			commandsAndArguments[i].add(arrayOfPrograms[i]);
-			commandsAndArguments[i].add(arrayOfCommands[i]);
-			commandsAndArguments[i].addAll(arrayOfArgumentLists[i]);
+		List<List<String>> commandsAndArguments = new LinkedList<>();
+
+		for (int i=0; i<arrayOfCommands.length; i++) {
+			List<String> listOfCommandsAndArgs= new LinkedList<>();
+			listOfCommandsAndArgs.add(arrayOfPrograms[i]);
+			listOfCommandsAndArgs.add(arrayOfCommands[i]);
+			listOfCommandsAndArgs.addAll(listOfArgumentLists.get(i));
+			commandsAndArguments.add(listOfCommandsAndArgs);
 		}
-		return launchProcessAndGetResultFileName(commandsAndArguments);
+		launchProcessAndGetResultFileName(commandsAndArguments);
+
+		return resultFileName;
 	}
 
 
-	public String launchProcessAndGetResultFileName(final List<String>[] commandsAndArguments) throws IncorrectRequestException {
-		String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix();
-		File outputFile = new File(super.getWorkingDir() + resultFileName);
+	public void launchProcessAndGetResultFileName(final List<List<String>> commandsAndArguments) throws IncorrectRequestException {
 		Process process = null;
 		List<ProcessBuilder> listOfProcessBuilders = new LinkedList<>();
 
-		for (int i=0; i<=commandsAndArguments.length; i++) {
-			listOfProcessBuilders.add(new ProcessBuilder(commandsAndArguments[i]));
+		for (int i=0; i<commandsAndArguments.size(); i++) {
+			listOfProcessBuilders.add(new ProcessBuilder(commandsAndArguments.get(i)));
 			listOfProcessBuilders.get(i).directory(new File(super.getWorkingDir()));
 		}
 
 		try {
 			for (ProcessBuilder processBuilder : listOfProcessBuilders) {
-				process = processBuilder.start();
-			}
-			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line;
+					System.out.println("processBuilder.directory() " + processBuilder.directory());
+					System.out.println(processBuilder.command());
+					process = processBuilder.start();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        System.out.println(line);
+                        System.out.println("\n");
+                    }
+                    br.close();
 
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-			while ((line = br.readLine()) != null) {
-				bw.write(line);
-				bw.write("\n");
 			}
-			br.close();
-			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return outputFile.getName();
 	}
 
 	public EvolutionInternal storeFileAndGetInternalRepresentation(final EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException {

@@ -23,4 +23,6 @@ public interface BioUniverseService {
 
     StorageService getStorageService();
 
+    String getPathToMainDirFromBioProgs();
+
 }

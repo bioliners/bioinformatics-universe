@@ -4,6 +4,7 @@ import model.internal.EvolutionInternal;
 import model.internal.SequenceInternal;
 import model.request.EvolutionRequest;
 import model.request.SequenceRequest;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import service.StorageService;
 import enums.Delimeters;
 import enums.ParamPrefixes;
@@ -36,12 +37,12 @@ public class ConverterMain {
 	public static EvolutionInternal fromEvolRequestToEvolInternal(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
 		EvolutionInternal evolutionInternal = new EvolutionInternal();
 		
-		evolutionInternal.setFileColumn(ParamPrefixes.COLUMN + checkNumAndGetString(evolutionRequest.getFileColumn()));
-		evolutionInternal.setCoverageThreshold(ParamPrefixes.COVERAGE_THRESH + checkNumAndGetString(evolutionRequest.getCoverageThreshold()));
-		evolutionInternal.setIdentityThreshold(ParamPrefixes.IDENTITY_THRESH + checkNumAndGetString(evolutionRequest.getIdentityThreshold()));
-		evolutionInternal.setEvalueThreshold(ParamPrefixes.EVAL_THRESH + checkNumAndGetString(evolutionRequest.getEvalueThreshold()));
-		evolutionInternal.setDoMerge(ParamPrefixes.MERGE + evolutionRequest.getDoMerge());
-		evolutionInternal.setFileDelim(ParamPrefixes.DELIM + getInternalDelim(evolutionRequest.getFileDelim()));
+		evolutionInternal.setFileColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPreifx(), checkNumAndGetString(evolutionRequest.getFileColumn() - 1)));
+		evolutionInternal.setCoverageThreshold(checkForNullAndGet(ParamPrefixes.COVERAGE_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getCoverageThreshold())));
+		evolutionInternal.setIdentityThreshold(checkForNullAndGet(ParamPrefixes.IDENTITY_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getIdentityThreshold())));
+		evolutionInternal.setEvalueThreshold(checkForNullAndGet(ParamPrefixes.EVAL_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getEvalueThreshold())));
+		evolutionInternal.setDoMerge(checkForNullAndGet(ParamPrefixes.MERGE.getPreifx(), evolutionRequest.getDoMerge()));
+		evolutionInternal.setFileDelim(checkForNullAndGet(ParamPrefixes.DELIM.getPreifx(), getInternalDelim(evolutionRequest.getFileDelim())));
 
 		return evolutionInternal;
 	}
@@ -57,6 +58,14 @@ public class ConverterMain {
 		}
 		return internalDelim;
 	}
+
+	private static String checkForNullAndGet(String paramPrefix, String param) {
+		if (param != null) {
+			return paramPrefix + param;
+		}
+		return null;
+	}
+
 
 	private static String checkNumAndGetString(Number num) {
 		if (num != null) {

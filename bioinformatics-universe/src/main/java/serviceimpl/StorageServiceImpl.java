@@ -71,17 +71,17 @@ public class StorageServiceImpl implements StorageService {
             throw new StorageException("fileList is empty");
         }
 
-        Path filesLocation = Paths.get(filesLocationAsString);
+        Path filesLocation = workingDirLocation.resolve(filesLocationAsString);
         for (MultipartFile file : fileList) {
             String randomFileName = UUID.randomUUID().toString() + postfix;
-            Path readyName = filesLocation.resolve(randomFileName);
+            Path newFileName = filesLocation.resolve(randomFileName);
             try {
                 if (file.isEmpty()) {
-                    throw new StorageException("Failed to store empty file " + readyName);
+                    throw new StorageException("Failed to store empty file " + newFileName);
                 }
-                Files.copy(file.getInputStream(), readyName);
+                Files.copy(file.getInputStream(), newFileName);
             } catch (IOException e) {
-                throw new StorageException("Failed to store file " + readyName, e);
+                throw new StorageException("Failed to store file " + newFileName, e);
             }
         }
     }
@@ -125,9 +125,9 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public void createMultipleDirs(List<String> dirAsString) {
-        dirAsString.stream().forEach(dir -> {
+        dirAsString.forEach(dir -> {
             try {
-                Files.createDirectory(Paths.get(dir));
+                Files.createDirectory(workingDirLocation.resolve(dir));
             } catch (IOException e) {
                 throw new StorageException("Could not create directory " + dir, e);
             }
@@ -139,7 +139,7 @@ public class StorageServiceImpl implements StorageService {
         try {
             Files.createDirectory(Paths.get(dirAsString));
         } catch (IOException e) {
-            throw new StorageException("Could not initialize serviceimpl", e);
+            throw new StorageException("Could not create directory " + dirAsString, e);
         }
     }
 
