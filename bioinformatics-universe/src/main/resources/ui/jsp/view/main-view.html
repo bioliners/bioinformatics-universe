@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bio</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css}"/>
+    <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+    <div th:replace="~{fragments :: main-navbar}"></div>
+
+    <div style="display: none">
+        <span id="subnavigation-tab" th:text="${subnavigationTab}"></span>
+    </div>
+
+    <div class="jumbotron backgroundtheme">
+        <div class="container">
+            <div></div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="form-group col-md-12">
+            <div class="col-md-10">
+                <div class="row">
+                    <div th:switch="${tab}">
+                        <div th:case:="${sequece}">
+                            <div th:switch="${subnavigationTab}">
+                                <div th:case:="${get-by-name}">
+                                    <div th:insert="~{fragments :: sequence-get-by-name}"></div>
+                                    <div th:insert="~{fragments :: sequence-getByName-filter}"></div>
+                                </div>
+                                <div th:case:="${make-unique}" th:insert="~{fragments :: sequence-make-unique}"></div>
+                                <div th:case:="${delete-by-name}" th:insert="~{fragments :: sequence-delete-by-name}"></div>
+                            </div>
+                        </div>
+                        <div th:case:="${evolution}">
+                            <div th:switch="${subnavigationTab}">
+                                <div th:case:="${create-cogs}">
+                                    <div th:insert="~{fragments :: evolution-create-cogs}"></div>
+                                    <div th:insert="~{fragments :: evolution-createCogs-filter}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center result-container">
+                <a id="results-load" class="btn btn-info btn-lg" href="#">
+                    Download Results <span class="glyphicon glyphicon-download-alt"> </span>
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+
+    <p th:text="${tab}"></p>
+    <p th:text="${subnavigationTab}"></p>
+
+    <div th:switch="${tab}">
+        <div th:case:="'sequece'">
+            <div th:switch="${subnavigationTab}">
+                <div th:case:="'get-by-name'">
+                    <p>I'm here</p>
+                    <div th:insert="~{fragments :: sequence-get-by-name}"></div>
+                    <div th:insert="~{fragments :: sequence-getByName-filter}"></div>
+                </div>
+                <div th:case:="'make-unique'" th:insert="~{fragments :: sequence-make-unique}"></div>
+                <div th:case:="'delete-by-name'" th:insert="~{fragments :: sequence-delete-by-name}"></div>
+
+                <script th:src="@{/js/sequence.js}"></script>
+            </div>
+        </div>
+        <div th:case:="'evolution'">
+            <div th:switch="${subnavigationTab}">
+                <div th:case:="'create-cogs'">
+                    <div th:insert="~{fragments :: evolution-create-cogs}"></div>
+                    <div th:insert="~{fragments :: evolution-createCogs-filter}"></div>
+                    <script th:src="@{/js/evolution.js}"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js}"></script>
+    <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+    <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js}"></script>
+    <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js}"></script>
+    <script th:src="@{/js/navbar-tabs.js}"></script>
+    <script th:src="@{/js/fields-processing.js}"></script>
+    <script th:src="@{/js/send-and-process-data.js}"></script>
+</body>
+</html>

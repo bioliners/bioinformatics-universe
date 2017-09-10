@@ -36,21 +36,28 @@ public class SequenceController extends BioUniverseController {
     public String makeUniquePage(Model model) throws IOException {
         model.addAttribute("tab", "sequence");
         model.addAttribute("subnavigationTab", "make-unique");
-        return "sequence-make-unique";
+        return "main-view  :: addContent(" +
+                "fragmentsMain='sequence-fragments', searchArea='sequence-make-unique', " +
+                "tab='sequence-navbar')";
     }
     
     @GetMapping("/get-by-name")
     public String getByNamePage(Model model) throws IOException {
         model.addAttribute("tab", "sequence");
         model.addAttribute("subnavigationTab", "get-by-name");
-        return "sequence-get-by-name";
+
+        return "main-view :: addContent(" +
+                "fragmentsMain='sequence-fragments', searchArea='sequence-get-by-name', " +
+                "tab='sequence-navbar', filter='sequence-getByName-filter')";
     }
 
     @GetMapping("/delete-by-name")
     public String deleteByNamePage(Model model) throws IOException {
         model.addAttribute("tab", "sequence");
         model.addAttribute("subnavigationTab", "delete-by-name");
-        return "sequence-delete-by-name";
+        return "main-view  :: addContent(" +
+                "fragmentsMain='sequence-fragments', searchArea='sequence-delete-by-name', " +
+                "tab='sequence-navbar')";
     }
  
     @PostMapping(value="/process-request", produces="text/plain")
