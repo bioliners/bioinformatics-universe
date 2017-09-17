@@ -34,7 +34,7 @@ public class SequenceController extends BioUniverseController {
     
     @GetMapping({"", "/", "/make-unique"})
     public String makeUniquePage(Model model) throws IOException {
-        model.addAttribute("tab", "sequence");
+        addToModelCommon(model);
         model.addAttribute("subnavigationTab", "make-unique");
         return "main-view  :: addContent(" +
                 "fragmentsMain='sequence-fragments', searchArea='sequence-make-unique', " +
@@ -43,7 +43,7 @@ public class SequenceController extends BioUniverseController {
     
     @GetMapping("/get-by-name")
     public String getByNamePage(Model model) throws IOException {
-        model.addAttribute("tab", "sequence");
+        addToModelCommon(model);
         model.addAttribute("subnavigationTab", "get-by-name");
 
         return "main-view :: addContent(" +
@@ -53,7 +53,7 @@ public class SequenceController extends BioUniverseController {
 
     @GetMapping("/delete-by-name")
     public String deleteByNamePage(Model model) throws IOException {
-        model.addAttribute("tab", "sequence");
+        addToModelCommon(model);
         model.addAttribute("subnavigationTab", "delete-by-name");
         return "main-view  :: addContent(" +
                 "fragmentsMain='sequence-fragments', searchArea='sequence-delete-by-name', " +
@@ -72,11 +72,16 @@ public class SequenceController extends BioUniverseController {
         }
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
     }
-    
+
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
 
+    @Override
+    void addToModelCommon(Model model) {
+        model.addAttribute("mainTab", "sequence");
+        model.addAttribute("specificJs", "/js/sequence.js");
+    }
 
 }

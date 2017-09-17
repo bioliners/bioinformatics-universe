@@ -1,8 +1,12 @@
 $(document).ready( function() {
-	var tab = "#" + $('#tab').text();
+	var mainTab = "#" + $('#mainTab').text();
 	var subnavigationTab = "#" + $('#subnavigation-tab').text();
-	mainNavbar(tab);
+	mainNavbar(mainTab);
 	sequnceNavbar(subnavigationTab);
+	console.log("tab ");
+	console.log(tab);
+	console.log("subnavigationTab ");
+	console.log(subnavigationTab);
 });
 
 function mainNavbar(tab) {

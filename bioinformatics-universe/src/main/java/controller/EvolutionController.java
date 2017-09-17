@@ -33,9 +33,11 @@ public class EvolutionController extends BioUniverseController {
 
     @GetMapping(value={"", "/", "/create-cogs"})
     public String getByNamePage(Model model) {
-        model.addAttribute("tab", "evolution");
+        addToModelCommon(model);
         model.addAttribute("subnavigationTab", "create-cogs");
-        return "evolution-create-cogs";
+        return "main-view  :: addContent(" +
+                "fragmentsMain='evolution-fragments', searchArea='evolution-create-cogs', " +
+                "tab='evolution-navbar', filter='evolution-createCogs-filter')";
     }
 
 
@@ -49,5 +51,10 @@ public class EvolutionController extends BioUniverseController {
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
     }
 
+    @Override
+    void addToModelCommon(Model model) {
+        model.addAttribute("mainTab", "evolution");
+        model.addAttribute("specificJs", "/js/evolution.js");
+    }
 
 }
