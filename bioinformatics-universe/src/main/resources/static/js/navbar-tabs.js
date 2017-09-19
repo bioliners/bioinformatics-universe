@@ -3,10 +3,6 @@ $(document).ready( function() {
 	var subnavigationTab = "#" + $('#subnavigation-tab').text();
 	mainNavbar(mainTab);
 	sequnceNavbar(subnavigationTab);
-	console.log("tab ");
-	console.log(tab);
-	console.log("subnavigationTab ");
-	console.log(subnavigationTab);
 });
 
 function mainNavbar(tab) {

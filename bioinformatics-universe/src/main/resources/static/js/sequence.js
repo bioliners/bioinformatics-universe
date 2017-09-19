@@ -10,7 +10,7 @@ function getOptions() {
 	var firstFileColumn = $('#first-col').val();
 	var secondFileColumn = $('#second-col').val();
 
-	console.log("OPtions Seq");
+
 	var options = new FormData();
 
 	if (typeof firstFile != 'undefined') {

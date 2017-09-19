@@ -37,7 +37,7 @@ public class ConverterMain {
 	public static EvolutionInternal fromEvolRequestToEvolInternal(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
 		EvolutionInternal evolutionInternal = new EvolutionInternal();
 		
-		evolutionInternal.setFileColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPreifx(), checkNumAndGetString(evolutionRequest.getFileColumn() - 1)));
+		evolutionInternal.setFileColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPreifx(), checkClmnAndGetString(evolutionRequest.getFileColumn())));
 		evolutionInternal.setCoverageThreshold(checkForNullAndGet(ParamPrefixes.COVERAGE_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getCoverageThreshold())));
 		evolutionInternal.setIdentityThreshold(checkForNullAndGet(ParamPrefixes.IDENTITY_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getIdentityThreshold())));
 		evolutionInternal.setEvalueThreshold(checkForNullAndGet(ParamPrefixes.EVAL_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getEvalueThreshold())));
@@ -67,6 +67,13 @@ public class ConverterMain {
 	}
 
 
+	private static String checkClmnAndGetString(Number num) {
+		if (num != null) {
+			return String.valueOf(num.intValue()-1);
+		}
+		return null;
+
+	}
 	private static String checkNumAndGetString(Number num) {
 		if (num != null) {
 			return String.valueOf(num);

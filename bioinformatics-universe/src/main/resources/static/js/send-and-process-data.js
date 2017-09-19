@@ -4,6 +4,7 @@ $(document).ready(function (){
 	takeCareOfFields();
 
     $('#Go').click(function() {
+
     	options = getOptions();
     	getData(options);
     });

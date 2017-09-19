@@ -44,7 +44,6 @@ function getOptions() {
  		}
 	}
 
-
     if ($('#subnavigation-tab').text() == "create-cogs") {
         options.append("commandToBeProcessedBy", "create-cogs");
     }
