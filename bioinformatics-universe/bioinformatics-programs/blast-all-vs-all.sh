@@ -63,7 +63,7 @@ main() {
 	for eachFile in ${arrayOfFiles[@]}; do
 		for anotherFile in ${arrayOfFiles[@]}; do
 			if [[ $eachFile != $anotherFile ]]; then
-				blastp -num_threads 4 -db $anotherFile -query $eachFile -outfmt "6 std qcovs"  -out $workingDir"$output_dir"/$(basename ${eachFile%.*})_vs_$(basename ${anotherFile%.*}).$finalExt
+				blastp -num_threads 4 -biojobs $anotherFile -query $eachFile -outfmt "6 std qcovs"  -out $workingDir"$output_dir"/$(basename ${eachFile%.*})_vs_$(basename ${anotherFile%.*}).$finalExt
 			fi
 		done
 	done
