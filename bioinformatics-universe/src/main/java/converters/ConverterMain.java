@@ -1,15 +1,13 @@
 package converters;
 
+import enums.Delimeters;
+import enums.ParamPrefixes;
+import exceptions.IncorrectRequestException;
 import model.internal.EvolutionInternal;
 import model.internal.SequenceInternal;
 import model.request.EvolutionRequest;
 import model.request.SequenceRequest;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import service.StorageService;
-import enums.Delimeters;
-import enums.ParamPrefixes;
-
-import exceptions.IncorrectRequestException;
 
 public class ConverterMain {
 

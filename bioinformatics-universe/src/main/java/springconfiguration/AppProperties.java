@@ -1,15 +1,16 @@
-package serviceimpl;
+package springconfiguration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 import java.util.UUID;
 
-@ConfigurationProperties("serviceimpl")
+@ConfigurationProperties("program")
+@PropertySource("classpath:application.properties")
 public class AppProperties {
 
-    /**
-     * Folders locations
-     */
     private String workingDirLocation = "bioinformatics-programs-workingDir";
     private String bioProgramsDir = "../bioinformatics-programs";
     private String pathToMainDirFromBioProgs = "../";
@@ -25,7 +26,7 @@ public class AppProperties {
     private String postfix = ".txt";
 
 
-	public String getWorkingDirLocation() {
+    public String getWorkingDirLocation() {
         return workingDirLocation;
     }
 
@@ -126,11 +127,11 @@ public class AppProperties {
     }
 
     public String getPostfix() {
-		return postfix;
-	}
+        return postfix;
+    }
 
-	public void setPostfix(String postFix) {
-		this.postfix = postFix;
-	}
+    public void setPostfix(String postFix) {
+        this.postfix = postFix;
+    }
 
 }

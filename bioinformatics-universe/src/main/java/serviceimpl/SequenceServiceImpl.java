@@ -2,7 +2,6 @@ package serviceimpl;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static converters.ConverterMain.fromSeqRequestToSeqInternal;
-import static org.apache.naming.SelectorContext.prefix;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,13 +13,13 @@ import java.util.List;
 import java.util.UUID;
 
 import exceptions.IncorrectRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import model.internal.SequenceInternal;
 import model.request.SequenceRequest;
 import service.SequenceService;
 import service.StorageService;
+import springconfiguration.AppProperties;
 
 @Service
 public class SequenceServiceImpl extends BioUniverseServiceImpl implements SequenceService {

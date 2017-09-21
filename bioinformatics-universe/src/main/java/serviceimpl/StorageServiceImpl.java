@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import service.StorageService;
 import exceptions.StorageException;
 import exceptions.StorageFileNotFoundException;
+import springconfiguration.AppProperties;
 
 @Service
 public class StorageServiceImpl implements StorageService {

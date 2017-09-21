@@ -19,6 +19,7 @@ import service.SequenceService;
 import service.StorageService;
 import exceptions.IncorrectRequestException;
 import exceptions.StorageFileNotFoundException;
+import springconfiguration.AppProperties;
 
 @Controller
 @RequestMapping("/sequence")
@@ -26,6 +27,9 @@ public class SequenceController extends BioUniverseController {
 
     @Autowired
     private final SequenceService sequenceService;
+
+    @Autowired
+    AppProperties properties;
     
     public SequenceController(StorageService storageService, SequenceService sequenceService) {
     	super(storageService);

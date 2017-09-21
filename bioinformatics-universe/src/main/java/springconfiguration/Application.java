@@ -10,11 +10,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import service.StorageService;
-import serviceimpl.AppProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(AppProperties.class)
-@ComponentScan({"service*", "controller", "springconfiguration"})
+@ComponentScan({"service*", "controller", "springconfiguration", "biojobs"})
 public class Application extends SpringBootServletInitializer {
 
 	private static Class applicationClass = Application.class;

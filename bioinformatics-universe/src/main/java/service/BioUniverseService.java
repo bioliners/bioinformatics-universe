@@ -1,6 +1,6 @@
 package service;
 
-import serviceimpl.AppProperties;
+import springconfiguration.AppProperties;
 
 /**
  * Created by vadim on 8/14/17.

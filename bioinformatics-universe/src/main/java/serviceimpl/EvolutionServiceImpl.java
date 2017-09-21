@@ -3,9 +3,7 @@ package serviceimpl;
 import static converters.ConverterMain.fromEvolRequestToEvolInternal;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -13,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import enums.ParamPrefixes;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
@@ -23,6 +20,7 @@ import org.springframework.stereotype.Service;
 import service.EvolutionService;
 import service.StorageService;
 import exceptions.IncorrectRequestException;
+import springconfiguration.AppProperties;
 
 @Service
 public class EvolutionServiceImpl extends BioUniverseServiceImpl implements EvolutionService {

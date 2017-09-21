@@ -1,12 +1,15 @@
 package serviceimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import service.BioUniverseService;
 import service.StorageService;
+import springconfiguration.AppProperties;
 
 /**
  * Created by vadim on 8/14/17.
  */
+@Service
 public class BioUniverseServiceImpl implements BioUniverseService {
     private final AppProperties properties;
     private final StorageService storageService;
