@@ -41,6 +41,7 @@ public class ConverterMain {
 		evolutionInternal.setEvalueThreshold(checkForNullAndGet(ParamPrefixes.EVAL_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getEvalueThreshold())));
 		evolutionInternal.setDoMerge(checkForNullAndGet(ParamPrefixes.MERGE.getPreifx(), evolutionRequest.getDoMerge()));
 		evolutionInternal.setFileDelim(checkForNullAndGet(ParamPrefixes.DELIM.getPreifx(), getInternalDelim(evolutionRequest.getFileDelim())));
+		evolutionInternal.setCommandToBeProcessedBy(evolutionRequest.getCommandToBeProcessedBy());
 
 		return evolutionInternal;
 	}

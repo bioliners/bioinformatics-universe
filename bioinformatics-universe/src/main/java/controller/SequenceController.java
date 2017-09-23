@@ -19,7 +19,7 @@ import service.SequenceService;
 import service.StorageService;
 import exceptions.IncorrectRequestException;
 import exceptions.StorageFileNotFoundException;
-import springconfiguration.AppProperties;
+import enums.BioPrograms;
 
 @Controller
 @RequestMapping("/sequence")
@@ -28,18 +28,16 @@ public class SequenceController extends BioUniverseController {
     @Autowired
     private final SequenceService sequenceService;
 
-    @Autowired
-    AppProperties properties;
-    
+
     public SequenceController(StorageService storageService, SequenceService sequenceService) {
-    	super(storageService);
+        super(storageService);
         this.sequenceService = sequenceService;
     }
     
     @GetMapping({"", "/", "/make-unique"})
     public String makeUniquePage(Model model) throws IOException {
         addToModelCommon(model);
-        model.addAttribute("subnavigationTab", "make-unique");
+        model.addAttribute("subnavigationTab", BioPrograms.MAKE_UNIQUE.getProgramName());
         return "main-view  :: addContent(" +
                 "fragmentsMain='sequence-fragments', searchArea='sequence-make-unique', " +
                 "tab='sequence-navbar')";
@@ -48,7 +46,7 @@ public class SequenceController extends BioUniverseController {
     @GetMapping("/get-by-name")
     public String getByNamePage(Model model) throws IOException {
         addToModelCommon(model);
-        model.addAttribute("subnavigationTab", "get-by-name");
+        model.addAttribute("subnavigationTab", BioPrograms.GET_SEQ_BYNAME.getProgramName());
 
         return "main-view :: addContent(" +
                 "fragmentsMain='sequence-fragments', searchArea='sequence-get-by-name', " +
@@ -69,9 +67,9 @@ public class SequenceController extends BioUniverseController {
     public String processRequest(SequenceRequest sequence) throws IncorrectRequestException {
         String fileName = "";
         //Needs to be refactored
-        if (sequence.getCommandToBeProcessedBy().equals("get-by-name")) {
+        if (sequence.getCommandToBeProcessedBy().equals("getSeqByNameProgram")) {
             fileName = sequenceService.getByName(sequence);
-        } else if (sequence.getCommandToBeProcessedBy().equals("make-unique")) {
+        } else if (sequence.getCommandToBeProcessedBy().equals("makeUniqueProgram")) {
             fileName = sequenceService.makeUnique(sequence);
         }
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();

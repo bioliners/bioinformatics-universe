@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.UUID;
 
+import biojobs.BioJobDao;
 import exceptions.IncorrectRequestException;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,8 @@ public class SequenceServiceImpl extends BioUniverseServiceImpl implements Seque
 
 
 
-	public SequenceServiceImpl(StorageService storageService, AppProperties properties) {
-		super(storageService, properties);
+	public SequenceServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioProgramsServiceImpl bioProgramsServiceImpl) {
+		super(storageService, properties, bioJobDao, bioProgramsServiceImpl);
 		this.getSeqByName = super.getProperties().getGetSeqByNameProgram();
 		this.makeUnique = super.getProperties().getMakeUniqueProgram();
 	}

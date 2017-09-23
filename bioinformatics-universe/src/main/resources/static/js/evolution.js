@@ -12,8 +12,8 @@ function getOptions() {
 	var identityThreshold = $('#identity-threshold').val();
 	var coverageThreshold = $('#coverage-threshold').val();
 	var evalueThreshold = $('#evalue-threshold').val();
-	var evalueThreshold = $('#evalue-threshold').val();
 	var merge = $('input[name="merge"]:checked').val();
+	var commandToBeProcessedBy = $('#subnavigation-tab').text();
 	
 	console.log("merge " + merge);
 
@@ -44,8 +44,10 @@ function getOptions() {
  		}
 	}
 
-    if ($('#subnavigation-tab').text() == "create-cogs") {
-        options.append("commandToBeProcessedBy", "create-cogs");
+    if (typeof commandToBeProcessedBy != 'undefined') {
+        if (commandToBeProcessedBy != '') {
+            options.append("commandToBeProcessedBy", commandToBeProcessedBy);
+        }
     }
 
 	return options;

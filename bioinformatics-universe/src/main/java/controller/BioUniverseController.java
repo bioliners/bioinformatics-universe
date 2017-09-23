@@ -11,15 +11,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import service.StorageService;
 
+
 /**
  * Created by vadim on 8/13/17.
  */
 
 public abstract class BioUniverseController {
 
-    @Autowired
     private final StorageService storageService;
 
+    @Autowired
     public BioUniverseController(StorageService storageService) {
         this.storageService = storageService;
     }

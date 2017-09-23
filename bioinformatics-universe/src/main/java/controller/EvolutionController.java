@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import service.EvolutionService;
 import service.StorageService;
 import exceptions.IncorrectRequestException;
+import enums.BioPrograms;
 
 /**
  * Created by vadim on 8/13/17.
@@ -23,9 +24,10 @@ import exceptions.IncorrectRequestException;
 @RequestMapping("/evolution")
 public class EvolutionController extends BioUniverseController {
 
-	@Autowired
+    @Autowired
 	public final EvolutionService evolutionService;
-    
+
+
 	public EvolutionController(StorageService storageService, EvolutionService evolutionService) {
     	super(storageService);
     	this.evolutionService = evolutionService;
@@ -34,7 +36,7 @@ public class EvolutionController extends BioUniverseController {
     @GetMapping(value={"", "/", "/create-cogs"})
     public String getByNamePage(Model model) {
         addToModelCommon(model);
-        model.addAttribute("subnavigationTab", "create-cogs");
+        model.addAttribute("subnavigationTab", BioPrograms.CREATE_COGS.getProgramName());
         return "main-view  :: addContent(" +
                 "fragmentsMain='evolution-fragments', searchArea='evolution-create-cogs', " +
                 "tab='evolution-navbar', filter='evolution-createCogs-filter')";
@@ -45,7 +47,7 @@ public class EvolutionController extends BioUniverseController {
     @ResponseBody
     public String processRequest(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
         String fileName = "";
-        if (evolutionRequest.getCommandToBeProcessedBy().equals("create-cogs")) {
+        if (evolutionRequest.getCommandToBeProcessedBy().equals("createCogsProgram")) {
             fileName = evolutionService.createCogs(evolutionRequest);
         }
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();

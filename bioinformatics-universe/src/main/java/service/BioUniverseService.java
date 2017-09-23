@@ -2,6 +2,9 @@ package service;
 
 import springconfiguration.AppProperties;
 
+import java.text.ParseException;
+import java.util.Date;
+
 /**
  * Created by vadim on 8/14/17.
  */
@@ -24,5 +27,9 @@ public interface BioUniverseService {
     StorageService getStorageService();
 
     String getPathToMainDirFromBioProgs();
+
+    String getProgram(String programName);
+
+    Integer getMaxJobId();
 
 }

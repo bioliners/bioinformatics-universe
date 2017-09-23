@@ -1,10 +1,12 @@
 package serviceimpl;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.BioUniverseService;
 import service.StorageService;
 import springconfiguration.AppProperties;
+import biojobs.BioJobDao;
 
 /**
  * Created by vadim on 8/14/17.
@@ -13,12 +15,17 @@ import springconfiguration.AppProperties;
 public class BioUniverseServiceImpl implements BioUniverseService {
     private final AppProperties properties;
     private final StorageService storageService;
+    private final BioJobDao bioJobDao;
+    private final BioProgramsServiceImpl bioProgramsServiceImpl;
+
 
 
     @Autowired
-    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties) {
+    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties, BioJobDao bioJobDao, BioProgramsServiceImpl bioProgramsServiceImpl) {
         this.storageService = storageService;
         this.properties = properties;
+        this.bioJobDao = bioJobDao;
+        this.bioProgramsServiceImpl = bioProgramsServiceImpl;
     }
 
     @Override
@@ -57,5 +64,17 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     public String getPathToMainDirFromBioProgs() {
         return properties.getPathToMainDirFromBioProgs();
     }
+    @Override
+    public String getProgram(String programName) {
+        return bioProgramsServiceImpl.getProgram(programName);
+    }
+
+    @Override
+    public Integer getMaxJobId() {
+        Integer maxJobId = bioJobDao.getMaxIdOfJob();
+        return maxJobId != null ? maxJobId : 0;
+    }
+
+
 
 }

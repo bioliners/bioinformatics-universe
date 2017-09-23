@@ -6,33 +6,32 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
+import biojobs.BioJobDao;
 import enums.ParamPrefixes;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
-
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import service.EvolutionService;
 import service.StorageService;
 import exceptions.IncorrectRequestException;
 import springconfiguration.AppProperties;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED)
 public class EvolutionServiceImpl extends BioUniverseServiceImpl implements EvolutionService {
 	private final String prepareNames;
 	private final String blastAllVsAll;
-	private final String createCogs;
 
-	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties) {
-		super(storageService, properties);
+
+	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioProgramsServiceImpl bioProgramsServiceImpl) {
+		super(storageService, properties, bioJobDao, bioProgramsServiceImpl);
 		this.prepareNames = properties.getPrepareNamesProgram();
 		this.blastAllVsAll = properties.getBlastAllVsAllProgram();
-		this.createCogs = properties.getCreateCogsProgram();
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 
 
 		String[] arrayOfPrograms = {super.getBash(), super.getBash(), super.getPython()};
-		String[] arrayOfCommands = {prepareNames, blastAllVsAll, createCogs};
+		String[] arrayOfCommands = {prepareNames, blastAllVsAll, super.getProgram(evolutionInternal.getCommandToBeProcessedBy())};
 		List<List<String>> listOfArgumentLists = new LinkedList<>(Arrays.asList(argsForPrepNames, argsForBlast, argsForCreateCogs));
 
 		List<List<String>> commandsAndArguments = new LinkedList<>();
@@ -77,6 +76,14 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 			listOfCommandsAndArgs.addAll(listOfArgumentLists.get(i));
 			commandsAndArguments.add(listOfCommandsAndArgs);
 		}
+
+//        BioJob bioJob = new BioJob();
+//        bioJob.setJobId(super.getMaxJobId());
+//        bioJob.setProgramNameName(super.getProgram(evolutionInternal.getCommandToBeProcessedBy()));
+//        bioJob.setJobDate(new Date());
+//        bioJob.setFinished(false);
+//        bioJob.setResultFileName(resultFileName);
+
 		launchProcessAndGetResultFileName(commandsAndArguments);
 
 		return resultFileName;
@@ -86,6 +93,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	public void launchProcessAndGetResultFileName(final List<List<String>> commandsAndArguments) throws IncorrectRequestException {
 		Process process = null;
 		List<ProcessBuilder> listOfProcessBuilders = new LinkedList<>();
+
 
 		for (int i=0; i<commandsAndArguments.size(); i++) {
 			listOfProcessBuilders.add(new ProcessBuilder(commandsAndArguments.get(i)));

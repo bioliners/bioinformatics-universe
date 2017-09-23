@@ -9,6 +9,7 @@ function getOptions() {
 	var secondFileDelim = $('#second-delim').val();
 	var firstFileColumn = $('#first-col').val();
 	var secondFileColumn = $('#second-col').val();
+	var commandToBeProcessedBy = $('#subnavigation-tab').text();
 
 
 	var options = new FormData();
@@ -53,11 +54,11 @@ function getOptions() {
 		}
 	}
 
-    if ($('#subnavigation-tab').text() == "make-unique") {
-        options.append("commandToBeProcessedBy", "make-unique");
+    if (typeof commandToBeProcessedBy != 'undefined') {
+        if (commandToBeProcessedBy != '') {
+            options.append("commandToBeProcessedBy", commandToBeProcessedBy);
+        }
     }
-    if ($('#subnavigation-tab').text() == "get-by-name") {
-        options.append("commandToBeProcessedBy", "get-by-name");
-    }
+
 	return options;
 }
