@@ -2,7 +2,7 @@ package biojobs;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="biojobs")
@@ -41,7 +41,7 @@ public class BioJob {
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "JOB_DATE", columnDefinition= "TIMESTAMP WITH TIME ZONE")
-    private Date jobDate;
+    private LocalDateTime jobDate;
 
 
 
@@ -85,11 +85,11 @@ public class BioJob {
         this.resultFileName = resultFileName;
     }
 
-    public Date getJobDate() {
+    public LocalDateTime getJobDate() {
         return jobDate;
     }
 
-    public void setJobDate(Date jobDate) {
+    public void setJobDate(LocalDateTime jobDate) {
         this.jobDate = jobDate;
     }
 
