@@ -28,8 +28,8 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	private final String blastAllVsAll;
 
 
-	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioProgramsServiceImpl bioProgramsServiceImpl) {
-		super(storageService, properties, bioJobDao, bioProgramsServiceImpl);
+	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao) {
+		super(storageService, properties, bioJobDao);
 		this.prepareNames = properties.getPrepareNamesProgram();
 		this.blastAllVsAll = properties.getBlastAllVsAllProgram();
 	}

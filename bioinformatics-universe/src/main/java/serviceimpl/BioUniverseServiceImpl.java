@@ -1,12 +1,16 @@
 package serviceimpl;
 
 
+import enums.BioPrograms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.BioUniverseService;
 import service.StorageService;
 import springconfiguration.AppProperties;
 import biojobs.BioJobDao;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by vadim on 8/14/17.
@@ -16,16 +20,20 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     private final AppProperties properties;
     private final StorageService storageService;
     private final BioJobDao bioJobDao;
-    private final BioProgramsServiceImpl bioProgramsServiceImpl;
+
+    private final Map<String, String> programs = new HashMap<>();
 
 
 
     @Autowired
-    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties, BioJobDao bioJobDao, BioProgramsServiceImpl bioProgramsServiceImpl) {
+    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties, BioJobDao bioJobDao) {
         this.storageService = storageService;
         this.properties = properties;
         this.bioJobDao = bioJobDao;
-        this.bioProgramsServiceImpl = bioProgramsServiceImpl;
+
+        programs.put(BioPrograms.CREATE_COGS.getProgramName(), properties.getCreateCogs());
+        programs.put(BioPrograms.MAKE_UNIQUE.getProgramName(), properties.getMakeUnique());
+        programs.put(BioPrograms.GET_SEQ_BYNAME.getProgramName(), properties.getGetSeqByName());
     }
 
     @Override
@@ -66,7 +74,7 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     }
     @Override
     public String getProgram(String programName) {
-        return bioProgramsServiceImpl.getProgram(programName);
+        return programs.get(programName);
     }
 
     @Override

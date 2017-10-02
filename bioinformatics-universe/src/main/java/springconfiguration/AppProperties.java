@@ -1,9 +1,7 @@
 package springconfiguration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 
 import java.util.UUID;
 
@@ -14,11 +12,11 @@ public class AppProperties {
     private String workingDirLocation = "bioinformatics-programs-workingDir";
     private String bioProgramsDir = "../bioinformatics-programs";
     private String pathToMainDirFromBioProgs = "../";
-    private String getSeqByNameProgram = bioProgramsDir + "/getSequencesByNames.py";
-    private String makeUniqueProgram = bioProgramsDir + "/getUniqueSeqs.py";
+    private String getSeqByName = bioProgramsDir + "/getSequencesByNames.py";
+    private String makeUnique = bioProgramsDir + "/getUniqueSeqs.py";
     private String prepareNamesProgram = bioProgramsDir + "/prepareNames.sh";
     private String blastAllVsAllProgram = bioProgramsDir + "/blast-all-vs-all.sh";
-    private String createCogsProgram = bioProgramsDir + "/createCOGs.py";
+    private String createCogs = bioProgramsDir + "/createCOGs.py";
     private String pythonLocation = "/usr/bin/python";
     private String bashLocation = "/bin/bash";
     private String blastpLocation = "/usr/bin/blastp";
@@ -54,12 +52,12 @@ public class AppProperties {
         this.pathToMainDirFromBioProgs = pathToMainDirFromBioProgs;
     }
 
-    public String getGetSeqByNameProgram() {
-        return getSeqByNameProgram;
+    public String getGetSeqByName() {
+        return getSeqByName;
     }
 
-    public void setGetSeqByNameProgram(String getSeqByNameProgram) {
-        this.getSeqByNameProgram = getSeqByNameProgram;
+    public void setGetSeqByName(String getSeqByName) {
+        this.getSeqByName = getSeqByName;
     }
 
     public String getPythonLocation() {
@@ -78,12 +76,12 @@ public class AppProperties {
         this.resultFilePrefix = resultFilePrefix;
     }
 
-    public String getMakeUniqueProgram() {
-        return makeUniqueProgram;
+    public String getMakeUnique() {
+        return makeUnique;
     }
 
-    public void setMakeUniqueProgram(String makeUniqueProgram) {
-        this.makeUniqueProgram = makeUniqueProgram;
+    public void setMakeUnique(String makeUnique) {
+        this.makeUnique = makeUnique;
     }
 
     public String getBashLocation() {
@@ -118,12 +116,12 @@ public class AppProperties {
         this.blastAllVsAllProgram = blastAllVsAllProgram;
     }
 
-    public String getCreateCogsProgram() {
-        return createCogsProgram;
+    public String getCreateCogs() {
+        return createCogs;
     }
 
-    public void setCreateCogsProgram(String createCogsProgram) {
-        this.createCogsProgram = createCogsProgram;
+    public void setCreateCogs(String createCogs) {
+        this.createCogs = createCogs;
     }
 
     public String getPostfix() {

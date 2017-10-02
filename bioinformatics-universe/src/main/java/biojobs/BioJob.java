@@ -31,9 +31,19 @@ public class BioJob {
     private String resultFileName;
 
     @NotNull
+    @Column(name="RESULT_FILE")
+    private String resultFile;
+
+    @Column(name="EMAIL")
+    private String email;
+
+
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "JOB_DATE", columnDefinition= "TIMESTAMP WITH TIME ZONE")
     private Date jobDate;
+
+
 
     public int getId() {
         return id;
@@ -81,5 +91,13 @@ public class BioJob {
 
     public void setJobDate(Date jobDate) {
         this.jobDate = jobDate;
+    }
+
+    public String getResultFile() {
+        return resultFile;
+    }
+
+    public void setResultFile(String resultFile) {
+        this.resultFile = resultFile;
     }
 }

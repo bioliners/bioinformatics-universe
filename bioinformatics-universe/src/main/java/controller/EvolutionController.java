@@ -47,7 +47,7 @@ public class EvolutionController extends BioUniverseController {
     @ResponseBody
     public String processRequest(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
         String fileName = "";
-        if (evolutionRequest.getCommandToBeProcessedBy().equals("createCogsProgram")) {
+        if (evolutionRequest.getCommandToBeProcessedBy().equals(BioPrograms.CREATE_COGS.getProgramName())) {
             fileName = evolutionService.createCogs(evolutionRequest);
         }
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();

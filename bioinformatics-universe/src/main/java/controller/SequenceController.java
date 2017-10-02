@@ -67,9 +67,9 @@ public class SequenceController extends BioUniverseController {
     public String processRequest(SequenceRequest sequence) throws IncorrectRequestException {
         String fileName = "";
         //Needs to be refactored
-        if (sequence.getCommandToBeProcessedBy().equals("getSeqByNameProgram")) {
+        if (sequence.getCommandToBeProcessedBy().equals(BioPrograms.GET_SEQ_BYNAME.getProgramName())) {
             fileName = sequenceService.getByName(sequence);
-        } else if (sequence.getCommandToBeProcessedBy().equals("makeUniqueProgram")) {
+        } else if (sequence.getCommandToBeProcessedBy().equals(BioPrograms.MAKE_UNIQUE.getProgramName())) {
             fileName = sequenceService.makeUnique(sequence);
         }
         return MvcUriComponentsBuilder.fromMethodName(SequenceController.class, "handleFileDownload", fileName).build().toString();
