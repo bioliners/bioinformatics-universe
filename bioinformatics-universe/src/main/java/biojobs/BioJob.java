@@ -37,10 +37,9 @@ public class BioJob {
     @Column(name="EMAIL")
     private String email;
 
-
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "JOB_DATE", columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "JOB_DATE", columnDefinition= "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime jobDate;
 
 
@@ -85,6 +84,22 @@ public class BioJob {
         this.resultFileName = resultFileName;
     }
 
+    public String getResultFile() {
+        return resultFile;
+    }
+
+    public void setResultFile(String resultFile) {
+        this.resultFile = resultFile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public LocalDateTime getJobDate() {
         return jobDate;
     }
@@ -93,11 +108,4 @@ public class BioJob {
         this.jobDate = jobDate;
     }
 
-    public String getResultFile() {
-        return resultFile;
-    }
-
-    public void setResultFile(String resultFile) {
-        this.resultFile = resultFile;
-    }
 }
