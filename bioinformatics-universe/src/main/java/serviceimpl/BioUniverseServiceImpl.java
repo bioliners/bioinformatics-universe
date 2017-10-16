@@ -19,17 +19,13 @@ import java.util.Map;
 public class BioUniverseServiceImpl implements BioUniverseService {
     private final AppProperties properties;
     private final StorageService storageService;
-    private final BioJobDao bioJobDao;
 
     private final Map<String, String> programs = new HashMap<>();
 
-
-
     @Autowired
-    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties, BioJobDao bioJobDao) {
+    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties) {
         this.storageService = storageService;
         this.properties = properties;
-        this.bioJobDao = bioJobDao;
 
         programs.put(BioPrograms.CREATE_COGS.getProgramName(), properties.getCreateCogs());
         programs.put(BioPrograms.MAKE_UNIQUE.getProgramName(), properties.getMakeUnique());
@@ -76,13 +72,6 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     public String getProgram(String programName) {
         return programs.get(programName);
     }
-
-    @Override
-    public Integer getMaxJobId() {
-        Integer maxJobId = bioJobDao.getMaxIdOfJob();
-        return maxJobId != null ? maxJobId : 0;
-    }
-
 
 
 }

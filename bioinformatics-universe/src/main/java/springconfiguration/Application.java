@@ -11,13 +11,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import service.StorageService;
+
+import java.util.concurrent.Executor;
 
 @SpringBootApplication
 @EnableConfigurationProperties(AppProperties.class)
 @EnableJpaRepositories("biojobs")
-@ComponentScan({"service*", "controller", "springconfiguration"})
 @EntityScan("biojobs")
+@ComponentScan({"service*", "controller", "springconfiguration"})
+@EnableAsync
 public class Application extends SpringBootServletInitializer {
 
 	private static Class applicationClass = Application.class;
@@ -30,6 +35,17 @@ public class Application extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(applicationClass);
     }
+
+	@Bean
+	public Executor asyncExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(2);
+		executor.setMaxPoolSize(2);
+		executor.setQueueCapacity(10);
+		executor.setThreadNamePrefix("LongRunnigJob-");
+		executor.initialize();
+		return executor;
+	}
     
 	@Bean
 	CommandLineRunner init(StorageService storageService) {

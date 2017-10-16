@@ -2,16 +2,20 @@ package serviceimpl;
 
 import static converters.ConverterMain.fromEvolRequestToEvolInternal;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
+import biojobs.BioJob;
 import biojobs.BioJobDao;
+import biojobs.BioJobResult;
+import biojobs.BioJobResultDao;
 import enums.ParamPrefixes;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Propagation;
@@ -26,23 +30,36 @@ import springconfiguration.AppProperties;
 public class EvolutionServiceImpl extends BioUniverseServiceImpl implements EvolutionService {
 	private final String prepareNames;
 	private final String blastAllVsAll;
+	@Autowired
+	private final BioJobDao bioJobDao;
+	@Autowired
+	private final BioJobResultDao bioJobResultDao;
 
 
-	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao) {
-		super(storageService, properties, bioJobDao);
+
+	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao, final StorageService storageService1) {
+		super(storageService, properties);
 		this.prepareNames = properties.getPrepareNamesProgram();
 		this.blastAllVsAll = properties.getBlastAllVsAllProgram();
+		this.bioJobDao = bioJobDao;
+		this.bioJobResultDao = bioJobResultDao;
 	}
 
 	@Override
-	public String createCogs(final EvolutionRequest evolutionRequest) throws IncorrectRequestException {
+	public BioJob getBioJobIfFinished(int jobId) {
+		BioJob bioJob = bioJobDao.findByJobId(jobId);
+		return bioJob.isFinished() ? bioJob : null;
+	}
+
+	@Override
+	@Async
+	public CompletableFuture<Integer> createCogs(final EvolutionRequest evolutionRequest) throws IncorrectRequestException {
 		String inputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
 		String outputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
 		String inputFilesLocation2 = outputFilesLocation1;
 		String outputFilesLocation2 = super.getProperties().getMultipleWorkingFilesLocation();
 		String inputFilesLocation3 = outputFilesLocation2;
 		super.getStorageService().createMultipleDirs(Arrays.asList(inputFilesLocation1, outputFilesLocation1, outputFilesLocation2));
-
 
 		String resultFileName = UUID.randomUUID().toString() + super.getPostfix();
 
@@ -77,18 +94,60 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 			commandsAndArguments.add(listOfCommandsAndArgs);
 		}
 
-//        BioJob bioJob = new BioJob();
-//        bioJob.setJobId(super.getMaxJobId());
-//        bioJob.setProgramNameName(super.getProgram(evolutionInternal.getCommandToBeProcessedBy()));
-//        bioJob.setJobDate(new Date());
-//        bioJob.setFinished(false);
-//        bioJob.setResultFileName(resultFileName);
-
+		int jobId = saveBioJobToDB(evolutionInternal, resultFileName);
 		launchProcessAndGetResultFileName(commandsAndArguments);
+		saveResultFileToDB(resultFileName, jobId);
 
-		return resultFileName;
+		return CompletableFuture.completedFuture(jobId);
 	}
 
+	public int saveBioJobToDB(EvolutionInternal evolutionInternal, String resultFileName) {
+		int jobId = getLastJobId();
+		BioJob bioJob = new BioJob();
+		bioJob.setProgramNameName(super.getProgram(evolutionInternal.getCommandToBeProcessedBy()));
+		bioJob.setJobId(jobId);
+		bioJob.setJobDate(LocalDateTime.now());
+		bioJob.setFinished(false);
+
+		BioJobResult bioJobResult = new BioJobResult();
+		bioJobResult.setResultFile("placeholder");
+		bioJobResult.setResultFileName(resultFileName);
+
+		List<BioJobResult> bioJobResultList = new ArrayList<BioJobResult>();
+		bioJobResultList.add(bioJobResult);
+		bioJob.setBioJobResultList(bioJobResultList);
+		bioJobDao.save(bioJob);
+		return jobId;
+	}
+
+	public void saveResultFileToDB(String resultFileName, int jobId) {
+		File file = null;
+		try {
+			file = getStorageService().loadAsResource(resultFileName).getFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		StringBuilder fileAsStringBuilder = null;
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				fileAsStringBuilder.append(line);
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Can't find file " + file.toString());
+		} catch (IOException e) {
+			System.out.println("Unable to read file " + file.toString());
+		}
+
+		BioJobResult bioJobResult = bioJobResultDao.findByFileName(resultFileName);
+		bioJobResult.setResultFile(fileAsStringBuilder.toString());
+		bioJobResultDao.save(bioJobResult);
+
+		BioJob bioJob = bioJobDao.findByJobId(jobId);
+		bioJob.setFinished(true);
+		bioJobDao.save(bioJob);
+	}
 
 	public void launchProcessAndGetResultFileName(final List<List<String>> commandsAndArguments) throws IncorrectRequestException {
 		Process process = null;
@@ -117,6 +176,11 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Integer getLastJobId() {
+		Integer lastJobId = bioJobDao.getLastJobId();
+		return lastJobId != null ? lastJobId : 0;
 	}
 
 	public EvolutionInternal storeFileAndGetInternalRepresentation(final EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException {

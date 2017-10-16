@@ -12,14 +12,14 @@ import java.util.List;
 @Repository
 public interface BioJobDao extends JpaRepository<BioJob, Long> {
 
-    List<BioJob> findByJobId(int jobId);
+    BioJob findById(int id);
+
+    BioJob findByJobId(int jobId);
 
     BioJob save(BioJob bioJob);
 
-    void deleteByJobId(long roleId);
-
     @Query("select max(b.jobId) from BioJob b")
-    Integer getMaxIdOfJob();
+    Integer getLastJobId();
 
     @Query("delete from BioJob b where b.jobDate < :maxDate")
     void deleteIfOlderThan(@Param("maxDate") LocalDateTime maxDate);

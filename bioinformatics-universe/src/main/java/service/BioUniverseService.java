@@ -1,5 +1,6 @@
 package service;
 
+import biojobs.BioJobDao;
 import springconfiguration.AppProperties;
 
 import java.text.ParseException;
@@ -29,7 +30,5 @@ public interface BioUniverseService {
     String getPathToMainDirFromBioProgs();
 
     String getProgram(String programName);
-
-    Integer getMaxJobId();
 
 }

@@ -3,6 +3,7 @@ package biojobs;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="biojobs")
@@ -15,8 +16,11 @@ public class BioJob {
     private int id;
 
     @NotNull
-    @Column(name="JOBID")
-    private int jobId;
+    @Column(name="JOB_ID")
+    private Integer jobId;
+
+    @Column(name="COOKIE_ID")
+    private String cookieId;
 
     @NotNull
     @Column(name="FINISHED")
@@ -26,14 +30,6 @@ public class BioJob {
     @Column(name="PROGRAM_NAME")
     private String programName;
 
-    @NotNull
-    @Column(name="RESULT_FILE_NAME")
-    private String resultFileName;
-
-    @NotNull
-    @Column(name="RESULT_FILE")
-    private String resultFile;
-
     @Column(name="EMAIL")
     private String email;
 
@@ -41,6 +37,10 @@ public class BioJob {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "JOB_DATE", columnDefinition= "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime jobDate;
+
+    @OneToMany(mappedBy="biojob", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+    @org.hibernate.annotations.Cascade( {org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<BioJobResult> bioJobResultList;
 
 
 
@@ -50,14 +50,6 @@ public class BioJob {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
     }
 
     public boolean isFinished() {
@@ -76,22 +68,6 @@ public class BioJob {
         this.programName = programName;
     }
 
-    public String getResultFileName() {
-        return resultFileName;
-    }
-
-    public void setResultFileName(String resultFileName) {
-        this.resultFileName = resultFileName;
-    }
-
-    public String getResultFile() {
-        return resultFile;
-    }
-
-    public void setResultFile(String resultFile) {
-        this.resultFile = resultFile;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -108,4 +84,27 @@ public class BioJob {
         this.jobDate = jobDate;
     }
 
+    public List<BioJobResult> getBioJobResultList() {
+        return bioJobResultList;
+    }
+
+    public void setBioJobResultList(List<BioJobResult> bioJobResultList) {
+        this.bioJobResultList = bioJobResultList;
+    }
+
+    public Integer isJobId() {
+        return jobId;
+    }
+
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getCookieId() {
+        return cookieId;
+    }
+
+    public void setCookieId(String cookieId) {
+        this.cookieId = cookieId;
+    }
 }
