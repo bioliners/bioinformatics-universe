@@ -20,7 +20,7 @@ import java.util.concurrent.Executor;
 @SpringBootApplication
 @EnableConfigurationProperties(AppProperties.class)
 @EnableJpaRepositories({"biojobs", "converters"})
-@EntityScan({"biojobs", "converters"})
+@EntityScan("biojobs")
 @ComponentScan({"service*", "controller", "springconfiguration"})
 @EnableAsync
 public class Application extends SpringBootServletInitializer {
