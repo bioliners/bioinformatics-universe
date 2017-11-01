@@ -8,9 +8,15 @@ import javax.validation.constraints.NotNull;
 @Table(name="biojob_results")
 public class BioJobResult {
 
-    @MapsId("id")
+    @Id
+    @SequenceGenerator(name="pk_sequence", sequenceName="biojobs_res_id_seq", allocationSize=1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk_sequence")
+    @Column(name="BIOJOB_RES_ID")
+    private int BIOJOB_RES_ID;
+
+    @MapsId("biojobId")
     @ManyToOne
-    @JoinColumn(name="ID")
+    @JoinColumn(name="BIOJOB_ID")
     private BioJob biojob;
 
     @NotNull
@@ -43,5 +49,13 @@ public class BioJobResult {
 
     public void setResultFileName(String resultFileName) {
         this.resultFileName = resultFileName;
+    }
+
+    public int getBIOJOB_RES_ID() {
+        return BIOJOB_RES_ID;
+    }
+
+    public void setBIOJOB_RES_ID(int BIOJOB_RES_ID) {
+        this.BIOJOB_RES_ID = BIOJOB_RES_ID;
     }
 }

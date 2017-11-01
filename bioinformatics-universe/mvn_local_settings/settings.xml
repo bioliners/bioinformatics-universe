@@ -9,11 +9,11 @@
       </activation>
       <repositories>
         <repository>
-          <id>clojars_maven_repo</id>
+          <biojobId>clojars_maven_repo</biojobId>
           <url>http://clojars.org/repo/</url>
         </repository>
       </repositories>
-      <id>biouniverse</id>
+      <biojobId>biouniverse</biojobId>
     </profile>
   </profiles>
 

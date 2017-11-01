@@ -29,8 +29,8 @@ public class SequenceServiceImpl extends BioUniverseServiceImpl implements Seque
 
 
 
-	public SequenceServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao) {
-		super(storageService, properties, bioJobDao);
+	public SequenceServiceImpl(final StorageService storageService, final AppProperties properties) {
+		super(storageService, properties);
 		this.getSeqByName = super.getProperties().getGetSeqByName();
 		this.makeUnique = super.getProperties().getMakeUnique();
 	}

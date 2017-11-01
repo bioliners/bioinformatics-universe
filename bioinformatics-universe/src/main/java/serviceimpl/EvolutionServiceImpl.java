@@ -140,7 +140,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 			System.out.println("Unable to read file " + file.toString());
 		}
 
-		BioJobResult bioJobResult = bioJobResultDao.findByFileName(resultFileName);
+		BioJobResult bioJobResult = bioJobResultDao.findByResultFileName(resultFileName);
 		bioJobResult.setResultFile(fileAsStringBuilder.toString());
 		bioJobResultDao.save(bioJobResult);
 

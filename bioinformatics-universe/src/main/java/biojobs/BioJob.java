@@ -1,5 +1,7 @@
 package biojobs;
 
+import converters.LocalDateTimeConverter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -12,8 +14,8 @@ public class BioJob {
     @Id
     @SequenceGenerator(name="pk_sequence", sequenceName="biojobs_id_seq", allocationSize=1)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk_sequence")
-    @Column(name="ID")
-    private int id;
+    @Column(name="BIOJOB_ID")
+    private int biojobId;
 
     @NotNull
     @Column(name="JOB_ID")
@@ -34,22 +36,21 @@ public class BioJob {
     private String email;
 
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "JOB_DATE", columnDefinition= "TIMESTAMP WITHOUT TIME ZONE")
+    @Convert(converter = LocalDateTimeConverter.class)
+    //@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "JOB_DATE", columnDefinition="TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime jobDate;
 
     @OneToMany(mappedBy="biojob", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
     @org.hibernate.annotations.Cascade( {org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     private List<BioJobResult> bioJobResultList;
 
-
-
-    public int getId() {
-        return id;
+    public int getBiojobId() {
+        return biojobId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setBiojobId(int biojobId) {
+        this.biojobId = biojobId;
     }
 
     public boolean isFinished() {

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BioJobResultDao extends JpaRepository<BioJobResult, Long> {
 
-    BioJobResult findByFileName(String fileName);
+    BioJobResult findByResultFileName(String fileName);
 }

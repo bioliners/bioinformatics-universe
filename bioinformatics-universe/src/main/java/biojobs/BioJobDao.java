@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface BioJobDao extends JpaRepository<BioJob, Long> {
 
-    BioJob findById(int id);
+    BioJob findByBiojobId(int id);
 
     BioJob findByJobId(int jobId);
 
