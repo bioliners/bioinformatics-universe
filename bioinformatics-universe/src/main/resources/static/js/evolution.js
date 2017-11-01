@@ -1,4 +1,5 @@
 function getOptions() {
+    console.log("getOptions() called!")
     var options = new FormData();
 
 	if (typeof $('#first-file')[0] != 'undefined') {

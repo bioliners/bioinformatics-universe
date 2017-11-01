@@ -65,7 +65,7 @@ public class BioJob {
         return programName;
     }
 
-    public void setProgramNameName(String jobName) {
+    public void setProgramNameName(String programName) {
         this.programName = programName;
     }
 

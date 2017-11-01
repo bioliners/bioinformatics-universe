@@ -50,6 +50,7 @@ function getData(options) {
 }
 
 function getDataAsync(options) {
+    console.log("getDataAsync() called!")
 	$.ajax({
 	      type: 'POST',
 	      url: 'process-request',
