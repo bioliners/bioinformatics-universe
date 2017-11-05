@@ -50,15 +50,16 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	}
 
     @Override
-	public List<String> createDirs() {
-        String inputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
-        String outputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
-        String inputFilesLocation2 = outputFilesLocation1;
-        String outputFilesLocation2 = super.getProperties().getMultipleWorkingFilesLocation();
-        String inputFilesLocation3 = outputFilesLocation2;
-        super.getStorageService().createMultipleDirs(Arrays.asList(inputFilesLocation1, outputFilesLocation1, outputFilesLocation2));
-        return new ArrayList<>(Arrays.asList(inputFilesLocation1, outputFilesLocation1, inputFilesLocation2, outputFilesLocation2,
-                inputFilesLocation3));
+	public String[] createDirs() {
+	    //i-input, o-output
+        String iFilesLocatPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
+        String oFilesLocatPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
+        String iFilesLocatBlast = oFilesLocatPrepNames;
+        String oFilesLocatBlast = super.getProperties().getMultipleWorkingFilesLocation();
+        String iFilesLocatCreateCogs = oFilesLocatBlast;
+        super.getStorageService().createMultipleDirs(Arrays.asList(iFilesLocatPrepNames, oFilesLocatPrepNames, oFilesLocatBlast));
+        return new String[] {iFilesLocatPrepNames, oFilesLocatPrepNames, iFilesLocatBlast, oFilesLocatBlast,
+                iFilesLocatCreateCogs};
     }
 
     @Override
@@ -70,19 +71,19 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 
 	@Override
 	@Async
-	public void createCogs(EvolutionInternal evolutionInternal, List<String> locations) throws IncorrectRequestException {
+	public void createCogs(EvolutionInternal evolutionInternal, String[] locations) throws IncorrectRequestException {
 		String resultFileName = UUID.randomUUID().toString() + super.getPostfix();
 
 		List<String> argsForPrepNames = new LinkedList<>();
 		List<String> argsForBlast = new LinkedList<>();
 		List<String> argsForCreateCogs = new LinkedList<>();
-		argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+locations.get(0), ParamPrefixes.OUTPUT.getPreifx()+locations.get(1)));
+		argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+locations[0], ParamPrefixes.OUTPUT.getPreifx()+locations[1]));
 		argsForPrepNames.addAll(evolutionInternal.getFieldsInfo());
 
 		argsForBlast.add(ParamPrefixes.WDIR.getPreifx() + super.getPathToMainDirFromBioProgs() + super.getWorkingDir()+"/");
-		argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx() +locations.get(2), ParamPrefixes.OUTPUT.getPreifx()+locations.get(3)));
+		argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+locations[2], ParamPrefixes.OUTPUT.getPreifx()+locations[3]));
 
-		argsForCreateCogs.add(ParamPrefixes.INPUT.getPreifx()+locations.get(4));
+		argsForCreateCogs.add(ParamPrefixes.INPUT.getPreifx()+locations[4]);
 		argsForCreateCogs.add(ParamPrefixes.OUTPUT.getPreifx() + resultFileName);
 		argsForCreateCogs.addAll(evolutionInternal.getAllFields());
 
@@ -104,8 +105,6 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		int jobId = saveBioJobToDB(evolutionInternal, resultFileName);
 		launchProcess(commandsAndArguments);
 		saveResultFileToDB(resultFileName, jobId);
-
-		//return CompletableFuture.completedFuture(jobId);
 	}
 
 	public int saveBioJobToDB(EvolutionInternal evolutionInternal, String resultFileName) {

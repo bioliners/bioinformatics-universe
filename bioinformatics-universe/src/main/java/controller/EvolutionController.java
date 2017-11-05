@@ -62,8 +62,8 @@ public class EvolutionController extends BioUniverseController {
         if (evolutionRequest.getCommandToBeProcessedBy().equals(BioPrograms.CREATE_COGS.getProgramName())) {
             //Split it to several functions because 'createCogs' method is asynchronous
             //and files in 'listOfFiles' field of evolutionRequest are got cleared at the end of request processing.
-            List<String> locations = evolutionService.createDirs();
-            EvolutionInternal evolutionInternal = evolutionService.storeFiles(evolutionRequest, locations.get(0));
+            String[] locations = evolutionService.createDirs();
+            EvolutionInternal evolutionInternal = evolutionService.storeFiles(evolutionRequest, locations[0]);
             evolutionService.createCogs(evolutionInternal, locations);
         }
         return 999;

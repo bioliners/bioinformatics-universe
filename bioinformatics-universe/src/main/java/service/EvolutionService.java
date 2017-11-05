@@ -8,9 +8,9 @@ import exceptions.IncorrectRequestException;
 import java.util.List;
 
 public interface EvolutionService {
-	void createCogs(EvolutionInternal evolutionInternal, List<String> locations) throws IncorrectRequestException;
+	void createCogs(EvolutionInternal evolutionInternal, String[] locations) throws IncorrectRequestException;
 
-	List<String> createDirs();
+	String[] createDirs();
 
 	EvolutionInternal storeFiles(EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException;
 
