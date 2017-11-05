@@ -5,7 +5,6 @@ import static converters.ConverterMain.fromEvolRequestToEvolInternal;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 import biojobs.BioJob;
 import biojobs.BioJobDao;
@@ -15,7 +14,6 @@ import enums.ParamPrefixes;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +29,11 @@ import springconfiguration.AppProperties;
 public class EvolutionServiceImpl extends BioUniverseServiceImpl implements EvolutionService {
 	private final String prepareNames;
 	private final String blastAllVsAll;
-
 	private final int defaultLastJobId = 1;
 	@Autowired
 	private final BioJobDao bioJobDao;
 	@Autowired
 	private final BioJobResultDao bioJobResultDao;
-
-
 
 	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao) {
 		super(storageService, properties);
@@ -54,31 +49,40 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		return bioJob.isFinished() ? bioJob : null;
 	}
 
+    @Override
+	public List<String> createDirs() {
+        String inputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
+        String outputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
+        String inputFilesLocation2 = outputFilesLocation1;
+        String outputFilesLocation2 = super.getProperties().getMultipleWorkingFilesLocation();
+        String inputFilesLocation3 = outputFilesLocation2;
+        super.getStorageService().createMultipleDirs(Arrays.asList(inputFilesLocation1, outputFilesLocation1, outputFilesLocation2));
+        return new ArrayList<>(Arrays.asList(inputFilesLocation1, outputFilesLocation1, inputFilesLocation2, outputFilesLocation2,
+                inputFilesLocation3));
+    }
+
+    @Override
+    public EvolutionInternal storeFiles(final EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException {
+        EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, inputFilesLocation1);
+        evolutionInternal.setFields();
+        return evolutionInternal;
+    }
+
 	@Override
 	@Async
-	public CompletableFuture<Integer> createCogs(final EvolutionRequest evolutionRequest) throws IncorrectRequestException {
-		String inputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
-		String outputFilesLocation1 = super.getProperties().getMultipleWorkingFilesLocation();
-		String inputFilesLocation2 = outputFilesLocation1;
-		String outputFilesLocation2 = super.getProperties().getMultipleWorkingFilesLocation();
-		String inputFilesLocation3 = outputFilesLocation2;
-		super.getStorageService().createMultipleDirs(Arrays.asList(inputFilesLocation1, outputFilesLocation1, outputFilesLocation2));
-
+	public void createCogs(EvolutionInternal evolutionInternal, List<String> locations) throws IncorrectRequestException {
 		String resultFileName = UUID.randomUUID().toString() + super.getPostfix();
-
-		EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, inputFilesLocation1);
-		evolutionInternal.setFields();
 
 		List<String> argsForPrepNames = new LinkedList<>();
 		List<String> argsForBlast = new LinkedList<>();
 		List<String> argsForCreateCogs = new LinkedList<>();
-		argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+inputFilesLocation1, ParamPrefixes.OUTPUT.getPreifx()+outputFilesLocation1));
+		argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+locations.get(0), ParamPrefixes.OUTPUT.getPreifx()+locations.get(1)));
 		argsForPrepNames.addAll(evolutionInternal.getFieldsInfo());
 
 		argsForBlast.add(ParamPrefixes.WDIR.getPreifx() + super.getPathToMainDirFromBioProgs() + super.getWorkingDir()+"/");
-		argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx() +inputFilesLocation2, ParamPrefixes.OUTPUT.getPreifx()+outputFilesLocation2));
+		argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx() +locations.get(2), ParamPrefixes.OUTPUT.getPreifx()+locations.get(3)));
 
-		argsForCreateCogs.add(ParamPrefixes.INPUT.getPreifx()+inputFilesLocation3);
+		argsForCreateCogs.add(ParamPrefixes.INPUT.getPreifx()+locations.get(4));
 		argsForCreateCogs.add(ParamPrefixes.OUTPUT.getPreifx() + resultFileName);
 		argsForCreateCogs.addAll(evolutionInternal.getAllFields());
 
@@ -98,9 +102,10 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		}
 
 		int jobId = saveBioJobToDB(evolutionInternal, resultFileName);
-		launchProcessAndGetResultFileName(commandsAndArguments);
+		launchProcess(commandsAndArguments);
 		saveResultFileToDB(resultFileName, jobId);
-		return CompletableFuture.completedFuture(jobId);
+
+		//return CompletableFuture.completedFuture(jobId);
 	}
 
 	public int saveBioJobToDB(EvolutionInternal evolutionInternal, String resultFileName) {
@@ -150,7 +155,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		bioJobDao.save(bioJob);
 	}
 
-	public void launchProcessAndGetResultFileName(final List<List<String>> commandsAndArguments) throws IncorrectRequestException {
+	public void launchProcess(final List<List<String>> commandsAndArguments) throws IncorrectRequestException {
 		Process process = null;
 		List<ProcessBuilder> listOfProcessBuilders = new LinkedList<>();
 
@@ -177,12 +182,12 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		}
 	}
 
-	public Integer getLastJobId() {
-		Integer lastJobId = bioJobDao.getLastJobId() + 1;
-		return lastJobId != null ? lastJobId : defaultLastJobId;
+	private Integer getLastJobId() {
+        Integer lastJobId = bioJobDao.getLastJobId() + 1;
+        return lastJobId != null ? lastJobId : defaultLastJobId;
 	}
 
-	public EvolutionInternal storeFileAndGetInternalRepresentation(final EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException {
+	private EvolutionInternal storeFileAndGetInternalRepresentation(final EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException {
 		super.getStorageService().storeMultipleFiles(evolutionRequest.getListOfFiles(), inputFilesLocation1);
 		return fromEvolRequestToEvolInternal(evolutionRequest);
 	}

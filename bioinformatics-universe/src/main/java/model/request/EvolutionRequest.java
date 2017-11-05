@@ -1,5 +1,6 @@
 package model.request;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javafx.beans.binding.DoubleExpression;
@@ -15,7 +16,6 @@ public class EvolutionRequest {
 	private Double evalueThreshold;
 	private String commandToBeProcessedBy;
 	private String doMerge;
-
 	
 	public List<MultipartFile> getListOfFiles() {
 		return listOfFiles;
@@ -80,4 +80,5 @@ public class EvolutionRequest {
 	public void setDoMerge(String doMerge) {
 		this.doMerge = doMerge;
 	}
+
 }

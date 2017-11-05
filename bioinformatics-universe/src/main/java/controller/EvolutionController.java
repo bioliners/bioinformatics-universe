@@ -2,6 +2,7 @@ package controller;
 
 import biojobs.BioJob;
 import biojobs.BioJobResult;
+import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import service.EvolutionService;
 import service.StorageService;
@@ -24,7 +24,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -58,16 +58,20 @@ public class EvolutionController extends BioUniverseController {
     @ResponseBody
     public Integer processRequest(EvolutionRequest evolutionRequest) throws IncorrectRequestException, ExecutionException, InterruptedException {
         Integer jobId = null;
+
         if (evolutionRequest.getCommandToBeProcessedBy().equals(BioPrograms.CREATE_COGS.getProgramName())) {
-            jobId = evolutionService.createCogs(evolutionRequest).get();
-            System.out.println("jobId " + jobId);
+            //Split it to several functions because 'createCogs' method is asynchronous
+            //and files in 'listOfFiles' field of evolutionRequest are got cleared at the end of request processing.
+            List<String> locations = evolutionService.createDirs();
+            EvolutionInternal evolutionInternal = evolutionService.storeFiles(evolutionRequest, locations.get(0));
+            evolutionService.createCogs(evolutionInternal, locations);
         }
-        return jobId;
+        return 999;
     }
 
     @GetMapping(value="/get-filename", produces="text/plain")
     @ResponseBody
-    public String getFileNameIfReady(int jobId, HttpServletResponse response) {
+    public String getFileNameIfReady(int jobId) {
         BioJob bioJob = evolutionService.getBioJobIfFinished(jobId);
         return bioJob != null ? bioJob.getBioJobResultList().get(0).getResultFileName() : "notReady";
 	}
