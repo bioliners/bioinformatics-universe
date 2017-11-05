@@ -41,7 +41,7 @@ public class Application extends SpringBootServletInitializer {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(2);
 		executor.setMaxPoolSize(2);
-		executor.setQueueCapacity(10);
+		executor.setQueueCapacity(5);
 		executor.setThreadNamePrefix("LongRunnigJob-");
 		executor.initialize();
 		return executor;

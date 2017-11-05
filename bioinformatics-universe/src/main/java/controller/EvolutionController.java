@@ -60,6 +60,7 @@ public class EvolutionController extends BioUniverseController {
         Integer jobId = null;
         if (evolutionRequest.getCommandToBeProcessedBy().equals(BioPrograms.CREATE_COGS.getProgramName())) {
             jobId = evolutionService.createCogs(evolutionRequest).get();
+            System.out.println("jobId " + jobId);
         }
         return jobId;
     }

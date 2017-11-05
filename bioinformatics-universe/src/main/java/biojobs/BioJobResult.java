@@ -9,14 +9,13 @@ import javax.validation.constraints.NotNull;
 public class BioJobResult {
 
     @Id
-    @SequenceGenerator(name="pk_sequence", sequenceName="biojobs_res_id_seq", allocationSize=1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk_sequence")
+    @SequenceGenerator(name="pk_sequence_biojobs_res", sequenceName="biojobs_res_id_seq", allocationSize=1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk_sequence_biojobs_res")
     @Column(name="BIOJOB_RES_ID")
     private int BIOJOB_RES_ID;
 
-    @MapsId("biojobId")
     @ManyToOne
-    @JoinColumn(name="BIOJOB_ID")
+    @JoinColumn(name="BIOJOB_ID", nullable = false)
     private BioJob biojob;
 
     @NotNull

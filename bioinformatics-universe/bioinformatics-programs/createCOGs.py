@@ -52,7 +52,7 @@ def initialyze(argv):
 		elif opt in ("-i", "--inputDir"):
 			INPUT_DIR = arg.strip()
 		elif opt in ("-o", "--outputFileName"):
-			OUTPUT_FILENAME = arg
+			OUTPUT_FILENAME = str(arg).strip()
 		elif opt in ("-d", "--delimeter"):
 			DELIM = arg
 		elif opt in ("-c", "--columnNumber"):

@@ -15,6 +15,7 @@ import enums.ParamPrefixes;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ import springconfiguration.AppProperties;
 public class EvolutionServiceImpl extends BioUniverseServiceImpl implements EvolutionService {
 	private final String prepareNames;
 	private final String blastAllVsAll;
+
+	private final int defaultLastJobId = 1;
 	@Autowired
 	private final BioJobDao bioJobDao;
 	@Autowired
@@ -37,7 +40,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 
 
 
-	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao, final StorageService storageService1) {
+	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao) {
 		super(storageService, properties);
 		this.prepareNames = properties.getPrepareNamesProgram();
 		this.blastAllVsAll = properties.getBlastAllVsAllProgram();
@@ -97,7 +100,6 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		int jobId = saveBioJobToDB(evolutionInternal, resultFileName);
 		launchProcessAndGetResultFileName(commandsAndArguments);
 		saveResultFileToDB(resultFileName, jobId);
-
 		return CompletableFuture.completedFuture(jobId);
 	}
 
@@ -112,10 +114,9 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		BioJobResult bioJobResult = new BioJobResult();
 		bioJobResult.setResultFile("placeholder");
 		bioJobResult.setResultFileName(resultFileName);
+        bioJobResult.setBiojob(bioJob);
 
-		List<BioJobResult> bioJobResultList = new ArrayList<BioJobResult>();
-		bioJobResultList.add(bioJobResult);
-		bioJob.setBioJobResultList(bioJobResultList);
+        bioJob.addToBioJobResultList(bioJobResult);
 		bioJobDao.save(bioJob);
 		return jobId;
 	}
@@ -128,7 +129,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 			e.printStackTrace();
 		}
 
-		StringBuilder fileAsStringBuilder = null;
+		StringBuilder fileAsStringBuilder = new StringBuilder();
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -153,7 +154,6 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		Process process = null;
 		List<ProcessBuilder> listOfProcessBuilders = new LinkedList<>();
 
-
 		for (int i=0; i<commandsAndArguments.size(); i++) {
 			listOfProcessBuilders.add(new ProcessBuilder(commandsAndArguments.get(i)));
 			listOfProcessBuilders.get(i).directory(new File(super.getWorkingDir()));
@@ -161,17 +161,16 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 
 		try {
 			for (ProcessBuilder processBuilder : listOfProcessBuilders) {
-					System.out.println("processBuilder.directory() " + processBuilder.directory());
-					System.out.println(processBuilder.command());
-					process = processBuilder.start();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        System.out.println(line);
-                        System.out.println("\n");
-                    }
-                    br.close();
-
+				System.out.println("processBuilder.directory() " + processBuilder.directory());
+				System.out.println(processBuilder.command());
+				process = processBuilder.start();
+                BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                String line;
+                while ((line = br.readLine()) != null) {
+                	System.out.println(line);
+                    System.out.println("\n");
+				}
+                br.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -179,8 +178,8 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	}
 
 	public Integer getLastJobId() {
-		Integer lastJobId = bioJobDao.getLastJobId();
-		return lastJobId != null ? lastJobId : 0;
+		Integer lastJobId = bioJobDao.getLastJobId() + 1;
+		return lastJobId != null ? lastJobId : defaultLastJobId;
 	}
 
 	public EvolutionInternal storeFileAndGetInternalRepresentation(final EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException {

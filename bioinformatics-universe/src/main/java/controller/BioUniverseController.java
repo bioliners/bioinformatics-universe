@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.css.StyleableStringProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,8 @@ public abstract class BioUniverseController {
     @ResponseBody
     public ResponseEntity<Resource> handleFileDownload(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename);
-
+        System.out.println("filename " + filename);
+        System.out.println("file" + file.toString());
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+file.getFilename()+"\"")
