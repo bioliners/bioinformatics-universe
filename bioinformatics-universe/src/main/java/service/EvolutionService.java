@@ -8,11 +8,11 @@ import exceptions.IncorrectRequestException;
 import java.util.List;
 
 public interface EvolutionService {
-	void createCogs(EvolutionInternal evolutionInternal, String[] locations) throws IncorrectRequestException;
+	void createCogs(EvolutionInternal evolutionInternal) throws IncorrectRequestException;
 
 	String[] createDirs();
 
-	EvolutionInternal storeFiles(EvolutionRequest evolutionRequest, String inputFilesLocation1) throws IncorrectRequestException;
+	EvolutionInternal storeFilesAndPrepareCommandArguments (EvolutionRequest evolutionRequest, String[] locations) throws IncorrectRequestException;
 
 	BioJob getBioJobIfFinished(int jobId);
 

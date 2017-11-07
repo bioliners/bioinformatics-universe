@@ -11,16 +11,13 @@ $(document).ready(function (){
     $('#GoAsync').click(function() {
     	options = getOptions();
     	getDataAsync(options);
-    	getIfReady();
     });
 });
 
-function getIfReady() {
-    var jobId = $("#jobId").text();
-    var fileGetter = setInterval(function() {tryToGetFileName(jobId)}, 60000);
-    if ($('#results-load').attr("href") != '#') {
-        clearInterval(fileGetter);
-    }
+function getIfReady(jobId) {
+    console.log("Job is launched");
+    console.log('jobId ' + jobId);
+    fileGetter = setInterval(function() {tryToGetFileName(jobId)}, 5000);
 }
 
 function tryToGetFileName(jobId) {
@@ -29,7 +26,7 @@ function tryToGetFileName(jobId) {
       url: 'get-filename',
       dataType:'text',
       contentType: 'application/json',
-      data: jobId,
+      data: {"jobId": jobId},
       success: processRetrievedDataAsync,
       error: error
     });
@@ -49,16 +46,13 @@ function getData(options) {
 	    });
 }
 
-function getDataAsync(options) {
-    console.log("getDataAsync() called!")
+function getDataAsync(options, jobId) {
+    console.log("getDataAsync() called!");
 	$.ajax({
 	      type: 'POST',
 	      url: 'process-request',
 	      data : options,
-	      success: function (data) {
-	        $("#jobId").text(data);
-	        console.log("Job is launched");
-	      },
+	      success: getIfReady,
 	      error: error,
 	      contentType: false,
 	      processData: false,
@@ -68,6 +62,7 @@ function getDataAsync(options) {
 }
 
 function processRetrievedData(data) {
+    console.log("file name is " + data)
 	$('#results-load').attr("href", data);
 	$('.result-container').show();
 }
@@ -76,6 +71,7 @@ function processRetrievedDataAsync(data) {
     if (data != 'notReady') {
         $('#results-load').attr('href', data);
         $('.result-container').show();
+        clearInterval(fileGetter);
 	}
 }
 
