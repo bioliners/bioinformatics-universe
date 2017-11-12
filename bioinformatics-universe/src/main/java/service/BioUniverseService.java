@@ -1,6 +1,8 @@
 package service;
 
 import biojobs.BioJobDao;
+import biojobs.BioJobResult;
+import biojobs.BioJobResultDao;
 import springconfiguration.AppProperties;
 
 import java.text.ParseException;
@@ -30,5 +32,9 @@ public interface BioUniverseService {
     String getPathToMainDirFromBioProgs();
 
     String getProgram(String programName);
+
+    BioJobDao getBioJobDao();
+
+    BioJobResultDao getBioJobResultDao();
 
 }

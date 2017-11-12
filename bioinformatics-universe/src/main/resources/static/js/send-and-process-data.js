@@ -24,7 +24,7 @@ function tryToGetFileName(jobId) {
     $.ajax({
       type: 'GET',
       url: 'get-filename',
-      dataType:'text',
+      dataType:'json',
       contentType: 'application/json',
       data: {"jobId": jobId},
       success: processRetrievedDataAsync,
@@ -68,8 +68,11 @@ function processRetrievedData(data) {
 }
 
 function processRetrievedDataAsync(data) {
-    if (data != 'notReady') {
-        $('#results-load').attr('href', data);
+    if (data.status[0] != 'notReady') {
+        if (data.result.length === 1) {
+            $('#results-load').attr('href', data.result[0]);
+        }
+
         $('.result-container').show();
         clearInterval(fileGetter);
 	}

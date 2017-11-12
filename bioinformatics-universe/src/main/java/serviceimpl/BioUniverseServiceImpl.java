@@ -1,6 +1,8 @@
 package serviceimpl;
 
 
+import biojobs.BioJobResult;
+import biojobs.BioJobResultDao;
 import enums.BioPrograms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +21,16 @@ import java.util.Map;
 public class BioUniverseServiceImpl implements BioUniverseService {
     private final AppProperties properties;
     private final StorageService storageService;
-
+    private final BioJobResultDao bioJobResultDao;
+    private final BioJobDao bioJobDao;
     private final Map<String, String> programs = new HashMap<>();
 
     @Autowired
-    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties) {
+    public BioUniverseServiceImpl(StorageService storageService, AppProperties properties, BioJobResultDao bioJobResultDao, BioJobDao bioJobDao) {
         this.storageService = storageService;
         this.properties = properties;
-
+        this.bioJobResultDao = bioJobResultDao;
+        this.bioJobDao = bioJobDao;
         programs.put(BioPrograms.CREATE_COGS.getProgramName(), properties.getCreateCogs());
         programs.put(BioPrograms.MAKE_UNIQUE.getProgramName(), properties.getMakeUnique());
         programs.put(BioPrograms.GET_SEQ_BYNAME.getProgramName(), properties.getGetSeqByName());
@@ -72,6 +76,12 @@ public class BioUniverseServiceImpl implements BioUniverseService {
     public String getProgram(String programName) {
         return programs.get(programName);
     }
-
-
+    @Override
+    public BioJobDao getBioJobDao() {
+        return bioJobDao;
+    }
+    @Override
+    public BioJobResultDao getBioJobResultDao() {
+        return bioJobResultDao;
+    }
 }

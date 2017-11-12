@@ -5,23 +5,32 @@ import biojobs.BioJobResult;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import service.BioUniverseService;
 import service.EvolutionService;
 import service.StorageService;
 import exceptions.IncorrectRequestException;
 import enums.BioPrograms;
+
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * Created by vadim on 8/13/17.
@@ -32,7 +41,12 @@ import java.util.concurrent.ExecutionException;
 public class EvolutionController extends BioUniverseController {
 
     @Autowired
-	public final EvolutionService evolutionService;
+    public final EvolutionService evolutionService;
+
+    private static final Log logger = LogFactory.getLog(EvolutionController.class);
+
+    private final List<String> statusReady = Arrays.asList("ready");
+    private final List<String> statusNotReady = Arrays.asList("notReady");
 
 
 	public EvolutionController(StorageService storageService, EvolutionService evolutionService) {
@@ -66,22 +80,32 @@ public class EvolutionController extends BioUniverseController {
         return String.valueOf(jobId);
     }
 
-    @GetMapping(value="/get-filename", produces="text/plain")
+    @GetMapping(value="/get-filename", produces="application/json")
     @ResponseBody
-    public String getFileNameIfReady(@RequestParam("jobId") Integer jobId) {
-        BioJob bioJob = null;
-	    if (jobId != null ) {
-            bioJob = evolutionService.getBioJobIfFinished(jobId);
-        }
-        return bioJob != null ? bioJob.getBioJobResultList().get(0).getResultFileName() : "notReady";
-	}
+    public Map<String, List<String>> getFileNameIfReady(@RequestParam("jobId") Integer jobId) {
+        BioJob bioJob;
+        String urlPath = ServletUriComponentsBuilder.fromCurrentContextPath().path("/evolution/univ_files/").build().toString();
 
-    @GetMapping(value="/get-result")
-    public void getFileIfReady(int jobId, HttpServletResponse response) throws IOException {
-	    BioJob bioJob = evolutionService.getBioJobIfFinished(jobId);
+        Map<String, List<String>> result = new HashMap<>();
+        result.put("status", statusNotReady);
+
+        List<String> listOfResultFileNames = null;
+
+	     if (jobId != null ) {
+            bioJob = evolutionService.getBioJobIfFinished(jobId);
+            if (bioJob != null)
+                listOfResultFileNames = bioJob.getBioJobResultList().stream().map(bjResult -> urlPath + bjResult.getResultFileName()).collect(Collectors.toList());
+                result.put("result", listOfResultFileNames);
+                result.put("status", statusReady);
+        }
+        return result;
+    }
+
+    @GetMapping("/univ_files/{filename:.+}")
+    public void getFileFromDb(@PathVariable String filename, HttpServletResponse response) throws IOException {
+        BioJobResult bioJobResult = ((BioUniverseService) evolutionService).getBioJobResultDao().findByResultFileName(filename);
 
         response.setContentType("text/plain");
-        BioJobResult bioJobResult = bioJob.getBioJobResultList().get(0);
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + bioJobResult.getResultFileName());
 
         OutputStream outputStream = response.getOutputStream();
@@ -92,7 +116,6 @@ public class EvolutionController extends BioUniverseController {
         outputwriter.flush();
         outputwriter.close();
     }
-
 
     @Override
     void addToModelCommon(Model model) {

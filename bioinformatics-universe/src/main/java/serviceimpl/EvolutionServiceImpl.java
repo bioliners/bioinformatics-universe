@@ -30,24 +30,20 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	private final String prepareNames;
 	private final String blastAllVsAll;
 	private final int defaultLastJobId = 1;
-	@Autowired
-	private final BioJobDao bioJobDao;
-	@Autowired
-	private final BioJobResultDao bioJobResultDao;
+
 
 	public EvolutionServiceImpl(final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao) {
-		super(storageService, properties);
+		super(storageService, properties, bioJobResultDao, bioJobDao);
 		this.prepareNames = properties.getPrepareNamesProgram();
 		this.blastAllVsAll = properties.getBlastAllVsAllProgram();
-		this.bioJobDao = bioJobDao;
-		this.bioJobResultDao = bioJobResultDao;
 	}
 
 	@Override
 	public BioJob getBioJobIfFinished(int jobId) {
-		BioJob bioJob = bioJobDao.findByJobId(jobId);
+		BioJob bioJob = super.getBioJobDao().findByJobId(jobId);
 		return bioJob.isFinished() ? bioJob : null;
 	}
+
 
     @Override
 	public String[] createDirs() {
@@ -128,7 +124,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
         bioJobResult.setBiojob(bioJob);
 
         bioJob.addToBioJobResultList(bioJobResult);
-		bioJobDao.save(bioJob);
+        super.getBioJobDao().save(bioJob);
 		return jobId;
 	}
 
@@ -144,7 +140,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				fileAsStringBuilder.append(line);
+				fileAsStringBuilder.append(line + "\n");
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("Can't find file " + file.toString());
@@ -152,13 +148,13 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 			System.out.println("Unable to read file " + file.toString());
 		}
 
-		BioJobResult bioJobResult = bioJobResultDao.findByResultFileName(evolutionInternal.getResultFileName());
+		BioJobResult bioJobResult = super.getBioJobResultDao().findByResultFileName(evolutionInternal.getResultFileName());
 		bioJobResult.setResultFile(fileAsStringBuilder.toString());
-		bioJobResultDao.save(bioJobResult);
+        super.getBioJobResultDao().save(bioJobResult);
 
-		BioJob bioJob = bioJobDao.findByJobId(evolutionInternal.getJobId());
+		BioJob bioJob = super.getBioJobDao().findByJobId(evolutionInternal.getJobId());
 		bioJob.setFinished(true);
-		bioJobDao.save(bioJob);
+        super.getBioJobDao().save(bioJob);
 	}
 
 	public void launchProcess(final List<List<String>> commandsAndArguments) throws IncorrectRequestException {
@@ -189,7 +185,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	}
 
 	private Integer getLastJobId() {
-        Integer lastJobId = bioJobDao.getLastJobId();
+        Integer lastJobId = super.getBioJobDao().getLastJobId();
         return lastJobId != null ? lastJobId + 1 : defaultLastJobId;
 	}
 

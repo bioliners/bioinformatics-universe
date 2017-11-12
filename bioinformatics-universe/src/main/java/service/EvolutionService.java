@@ -5,7 +5,6 @@ import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
 import exceptions.IncorrectRequestException;
 
-import java.util.List;
 
 public interface EvolutionService {
 	void createCogs(EvolutionInternal evolutionInternal) throws IncorrectRequestException;
