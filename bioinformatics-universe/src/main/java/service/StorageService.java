@@ -13,6 +13,8 @@ public interface StorageService {
 
     String store(MultipartFile file);
 
+    void storeProgram(MultipartFile file, String programName);
+
     void storeMultipleFiles(List<MultipartFile> fileList, String filesLocationAsString);
 
     String createAndStore(String inputAreaContent);

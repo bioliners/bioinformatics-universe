@@ -28,11 +28,13 @@ import springconfiguration.AppProperties;
 public class StorageServiceImpl implements StorageService {
     private final Path workingDirLocation;
     private final String postfix;
+    private final Path bioProgramsDir;
 
  
     @Autowired
     public StorageServiceImpl(AppProperties properties) {
         this.workingDirLocation = Paths.get(properties.getWorkingDirLocation());
+        this.bioProgramsDir = Paths.get(properties.getBioProgramsDir());
         this.postfix = properties.getPostfix();
     }
 
@@ -48,6 +50,20 @@ public class StorageServiceImpl implements StorageService {
             throw new StorageException("Failed to store file " + readyName, e);
         }
         return randomFileName;
+    }
+
+
+    @Override
+    public void storeProgram(MultipartFile file, String programName) {
+        Path readyName = bioProgramsDir.resolve(programName);
+        try {
+            if (file.isEmpty()) {
+                throw new StorageException("Failed to store empty file " + readyName);
+            }
+            Files.copy(file.getInputStream(), readyName);
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file " + readyName, e);
+        }
     }
 
     @Override
