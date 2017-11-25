@@ -2,6 +2,7 @@ package service;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
@@ -13,7 +14,11 @@ public interface StorageService {
 
     String store(MultipartFile file);
 
+    void storeSetOfProgram(Map<String, MultipartFile> nameToProgram);
+
     void storeProgram(MultipartFile file, String programName);
+
+    List<String> storeMultipleFilesBio(List<MultipartFile> fileList);
 
     void storeMultipleFiles(List<MultipartFile> fileList, String filesLocationAsString);
 

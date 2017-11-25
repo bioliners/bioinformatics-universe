@@ -20,7 +20,7 @@ import java.util.*;
 @Transactional(propagation = Propagation.REQUIRED)
 public class SoftManagementServiceImpl implements SoftManagementService {
 
-    private final String defaultTab = "otherPrograms";
+    private final String defaultTab = "defaultPrograms";
     private final BioDropDao bioDropDao;
     private final StorageService storageService;
 
@@ -68,7 +68,10 @@ public class SoftManagementServiceImpl implements SoftManagementService {
         BioDrop bioDropNew = new BioDrop();
         bioDropNew.setLongRunning(bioDropRequest.isLongRunning());
         bioDropNew.setProgram(programNameBuilder.toString());
-        bioDropNew.setProgramName(!Objects.equals(bioDrop.getProgramName(), bioDropRequest.getProgramName()) ? bioDropRequest.getProgramName() : bioDropRequest.getProgramName()+"_"+UUID.randomUUID().toString());
+        String programName = bioDropRequest.getProgramName()+"_"+UUID.randomUUID().toString();
+        bioDropNew.setProgramName(programName);
+        bioDropNew.setScriptName(programName);
+        bioDropNew.setNumberOfInputs(bioDropRequest.getNumberOfInputs());
         bioDropNew.setTab(bioDropRequest.getTab() != null ? bioDropRequest.getTab() : defaultTab);
         bioDropNew.setSubTab(bioDropRequest.getSubTab());
         bioDropNew.setProgramLanguage(bioDropRequest.getProgramLanguage());

@@ -24,6 +24,18 @@ public class BioDrop {
     private String programName;
 
     @NotNull
+    @Column(name="SCRIPT_NAME")
+    private String scriptName;
+
+    @NotNull
+    @Column(name="NUMBER_OF_INPUTS")
+    private Integer numberOfInputs;
+
+    @NotNull
+    @Column(name="OUTPUT_PARAM_PREFIX")
+    private Integer outputFilePrefix;
+
+    @NotNull
     @Column(name="TAB")
     private String tab;
 
@@ -127,5 +139,29 @@ public class BioDrop {
 
     public void setProgramInstallInstructs(String programInstallInstructs) {
         this.programInstallInstructs = programInstallInstructs;
+    }
+
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    public void setScriptName(String scriptName) {
+        this.scriptName = scriptName;
+    }
+
+    public int getNumberOfInputs() {
+        return numberOfInputs;
+    }
+
+    public void setNumberOfInputs(int numberOfInputs) {
+        this.numberOfInputs = numberOfInputs;
+    }
+
+    public Integer getOutputFilePrefix() {
+        return outputFilePrefix;
+    }
+
+    public void setOutputFilePrefix(Integer outputFilePrefix) {
+        this.outputFilePrefix = outputFilePrefix;
     }
 }

@@ -11,6 +11,8 @@ import java.util.List;
 public class BioDropRequest {
     private MultipartFile program;
     private String programName;
+    private String scriptName;
+    private Integer numberOfInputs;
     private String tab;
     private String subTab;
     private String programParameters;
@@ -89,5 +91,21 @@ public class BioDropRequest {
 
     public void setProgramInstallInstructs(String programInstallInstructs) {
         this.programInstallInstructs = programInstallInstructs;
+    }
+
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    public void setScriptName(String scriptName) {
+        this.scriptName = scriptName;
+    }
+
+    public Integer getNumberOfInputs() {
+        return numberOfInputs;
+    }
+
+    public void setNumberOfInputs(Integer numberOfInputs) {
+        this.numberOfInputs = numberOfInputs;
     }
 }

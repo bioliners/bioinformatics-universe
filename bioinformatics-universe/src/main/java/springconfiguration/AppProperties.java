@@ -11,6 +11,7 @@ public class AppProperties {
 
     private String workingDirLocation = "bioinformatics-programs-workingDir";
     private String bioProgramsDir = "../bioinformatics-programs";
+    private String pipeProgramsDir = "../pipe-bio-programs";
     private String pathToMainDirFromBioProgs = "../";
     private String getSeqByName = bioProgramsDir + "/getSequencesByNames.py";
     private String makeUnique = bioProgramsDir + "/getUniqueSeqs.py";
@@ -132,4 +133,11 @@ public class AppProperties {
         this.postfix = postFix;
     }
 
+    public String getPipeProgramsDir() {
+        return pipeProgramsDir;
+    }
+
+    public void setPipeProgramsDir(String pipeProgramsDir) {
+        this.pipeProgramsDir = pipeProgramsDir;
+    }
 }

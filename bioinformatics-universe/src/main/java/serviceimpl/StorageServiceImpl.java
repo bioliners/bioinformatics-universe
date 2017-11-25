@@ -8,7 +8,9 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import java.util.UUID;
 
@@ -29,6 +31,7 @@ public class StorageServiceImpl implements StorageService {
     private final Path workingDirLocation;
     private final String postfix;
     private final Path bioProgramsDir;
+    private final Path pipeProgramsDir;
 
  
     @Autowired
@@ -36,6 +39,7 @@ public class StorageServiceImpl implements StorageService {
         this.workingDirLocation = Paths.get(properties.getWorkingDirLocation());
         this.bioProgramsDir = Paths.get(properties.getBioProgramsDir());
         this.postfix = properties.getPostfix();
+        this.pipeProgramsDir = Paths.get(properties.getPipeProgramsDir());
     }
 
     @Override
@@ -52,6 +56,20 @@ public class StorageServiceImpl implements StorageService {
         return randomFileName;
     }
 
+    @Override
+    public void storeSetOfProgram(Map<String, MultipartFile> nameToProgram) {
+        for (Map.Entry<String, MultipartFile> entry: nameToProgram.entrySet()) {
+            Path name = pipeProgramsDir.resolve(entry.getKey());
+            try {
+                if (entry.getValue().isEmpty()) {
+                    throw new StorageException("Failed to store empty file " + name);
+                }
+                Files.copy(entry.getValue().getInputStream(), name);
+            } catch (IOException e) {
+                throw new StorageException("Failed to store file " + name, e);
+            }
+        }
+    }
 
     @Override
     public void storeProgram(MultipartFile file, String programName) {
@@ -80,6 +98,18 @@ public class StorageServiceImpl implements StorageService {
             throw new StorageException("Failed to store file " + readyName, e);
         }
         return randomFileName;
+    }
+
+    @Override
+    public List<String> storeMultipleFilesBio(List<MultipartFile> fileList) {
+        List<String> storedFilesNames = new LinkedList<>();
+        if (fileList.isEmpty()) {
+            throw new StorageException("fileList is empty");
+        }
+        for (MultipartFile file : fileList) {
+            storedFilesNames.add(store(file));
+        }
+        return storedFilesNames;
     }
 
     @Override
