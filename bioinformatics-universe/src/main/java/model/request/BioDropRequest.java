@@ -2,8 +2,6 @@ package model.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 /**
  * Created by vadim on 11/22/17.
  */
@@ -13,6 +11,8 @@ public class BioDropRequest {
     private String programName;
     private String scriptName;
     private Integer numberOfInputs;
+    private String inputFilePrefixes;
+    private String outputFilePrefixes;
     private String tab;
     private String subTab;
     private String programParameters;
@@ -107,5 +107,21 @@ public class BioDropRequest {
 
     public void setNumberOfInputs(Integer numberOfInputs) {
         this.numberOfInputs = numberOfInputs;
+    }
+
+    public String getInputFilePrefixes() {
+        return inputFilePrefixes;
+    }
+
+    public void setInputFilePrefixes(String inputFilePrefixes) {
+        this.inputFilePrefixes = inputFilePrefixes;
+    }
+
+    public String getOutputFilePrefixes() {
+        return outputFilePrefixes;
+    }
+
+    public void setOutputFilePrefixes(String outputFilePrefixes) {
+        this.outputFilePrefixes = outputFilePrefixes;
     }
 }

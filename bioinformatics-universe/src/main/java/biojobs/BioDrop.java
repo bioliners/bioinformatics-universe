@@ -32,8 +32,12 @@ public class BioDrop {
     private Integer numberOfInputs;
 
     @NotNull
-    @Column(name="OUTPUT_PARAM_PREFIX")
-    private Integer outputFilePrefix;
+    @Column(name="INPUT_PARAM_PREFIXES")
+    private String inputFilePrefixes;
+
+    @NotNull
+    @Column(name="OUTPUT_PARAM_PREFIXES")
+    private String outputFilePrefixes;
 
     @NotNull
     @Column(name="TAB")
@@ -157,11 +161,19 @@ public class BioDrop {
         this.numberOfInputs = numberOfInputs;
     }
 
-    public Integer getOutputFilePrefix() {
-        return outputFilePrefix;
+    public String getOutputFilePrefixes() {
+        return outputFilePrefixes;
     }
 
-    public void setOutputFilePrefix(Integer outputFilePrefix) {
-        this.outputFilePrefix = outputFilePrefix;
+    public void setOutputFilePrefixes(String outputFilePrefixes) {
+        this.outputFilePrefixes = outputFilePrefixes;
+    }
+
+    public String getInputFilePrefixes() {
+        return inputFilePrefixes;
+    }
+
+    public void setInputFilePrefixes(String inputFilePrefixes) {
+        this.inputFilePrefixes = inputFilePrefixes;
     }
 }

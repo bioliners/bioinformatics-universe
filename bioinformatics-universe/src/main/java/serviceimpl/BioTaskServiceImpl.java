@@ -2,36 +2,32 @@ package serviceimpl;
 
 import biojobs.BioDrop;
 import biojobs.BioDropDao;
-import biojobs.BioJobDao;
-import biojobs.BioJobResultDao;
 import exceptions.IncorrectRequestException;
 import model.request.BioTaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import service.BioTaskService;
 import service.StorageService;
 import springconfiguration.AppProperties;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional(propagation = Propagation.REQUIRED)
-public class BioTaskServiceImpl extends BioUniverseServiceImpl implements BioTaskService {
+public class BioTaskServiceImpl extends BioDropServiceImpl implements BioTaskService {
+    //TODO: Maybe delete?
+    private final static String precaution = " ";
 
-    @Autowired
-    private final BioDropDao bioDropDao;
-
-    public BioTaskServiceImpl(final BioDropDao bioDropDao, final StorageService storageService, final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao) {
-        super(storageService, properties, bioJobResultDao, bioJobDao);
-        this.bioDropDao = bioDropDao;
+    public BioTaskServiceImpl(final BioDropDao bioDropDao, final StorageService storageService, final AppProperties properties) {
+        super(bioDropDao, storageService, properties);
     }
 
-    public void storeFilesAndPrepareCommandArguments(final BioTaskRequest bioTaskRequest) throws IncorrectRequestException {
+    //TODO: Maybe check the number of input and output files before entering loops?
+    @Override
+    public List<String> runProgram(final BioTaskRequest bioTaskRequest) throws IncorrectRequestException {
         if (bioTaskRequest.getSubTab() == null ) {
             throw new IncorrectRequestException("Subtab of BioTaskRequest can not be empty.");
         } else if (bioTaskRequest.getParameters() == null) {
@@ -39,53 +35,39 @@ public class BioTaskServiceImpl extends BioUniverseServiceImpl implements BioTas
         } else if (bioTaskRequest.getListOfFiles() == null) {
             throw new IncorrectRequestException("List of input files of BioTaskRequest can not be empty.");
         }
-        BioDrop bioDrop = bioDropDao.findBySubTab(bioTaskRequest.getSubTab());
+        BioDrop bioDrop = super.getBioDropDao().findBySubTab(bioTaskRequest.getSubTab());
         if (bioDrop.getNumberOfInputs() < bioTaskRequest.getListOfFiles().size()) {
             throw new IncorrectRequestException("Number of input files can not be less than " +  bioDrop.getNumberOfInputs());
         }
 
-        String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix();
+        List<String> inputFilePrefixes = bioTaskRequest.getListOfFilesParamPrefixes();
+        List<String> iFileNames = super.storeFiles(bioTaskRequest);
+        List<String> inputFileNames = new ArrayList<>();
+        for (int i = 0; i < inputFilePrefixes.size(); i++) {
+            inputFileNames.add(i, inputFilePrefixes.get(i) + precaution + iFileNames.get(i));
+        }
 
-        List<String> filesParamPrefixes = bioTaskRequest.getListOfFilesParamPrefixes();
-        List<String> inputFileNames = storeFile(bioTaskRequest);
-
-        for (int i = 0; i < filesParamPrefixes.size(); i++) {
-            inputFileNames.add(i, filesParamPrefixes.get(i) + inputFileNames.get(i));
+        String[] outputFilePrefixes = bioDrop.getOutputFilePrefixes().split(";");
+        List<String> oFileNames = new LinkedList<>();
+        List<String> outputFileNames = new ArrayList<>();
+        if (outputFilePrefixes.length > 1) {
+            String name;
+            for (int i = 0; i < outputFilePrefixes.length; i++) {
+                name = super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix();
+                oFileNames.add(name);
+                outputFileNames.add(outputFilePrefixes[i] + precaution + name);
+            }
         }
 
         List<String> commandArguments = new LinkedList<>();
         commandArguments.add(bioDrop.getProgramLanguage());
         commandArguments.add(bioDrop.getProgramName());
         commandArguments.addAll(inputFileNames);
-        commandArguments.add(bioDrop.getOutputFilePrefix() + " " + resultFileName);
+        commandArguments.addAll(outputFileNames);
         commandArguments.addAll(bioTaskRequest.getParameters().get(bioDrop.getProgramName()));
-        launchProcess(commandArguments);
-    }
 
-
-    private void launchProcess(List<String> commandArguments) {
-        ProcessBuilder processBuilder = new ProcessBuilder(commandArguments);
-        processBuilder.directory(new File(super.getWorkingDir()));
-        try {
-            System.out.println("processBuilder.directory() " + processBuilder.directory());
-            System.out.println(processBuilder.command());
-
-            Process process = processBuilder.start();
-            BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String line;
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-                System.out.println("\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public List<String> storeFile(final BioTaskRequest bioTaskRequest) throws IncorrectRequestException {
-        return super.getStorageService().storeMultipleFilesBio(bioTaskRequest.getListOfFiles());
+        super.launchProcess(commandArguments);
+        return oFileNames;
     }
 
 }

@@ -72,6 +72,8 @@ public class SoftManagementServiceImpl implements SoftManagementService {
         bioDropNew.setProgramName(programName);
         bioDropNew.setScriptName(programName);
         bioDropNew.setNumberOfInputs(bioDropRequest.getNumberOfInputs());
+        bioDropNew.setInputFilePrefixes(bioDropRequest.getInputFilePrefixes());
+        bioDropNew.setOutputFilePrefixes(bioDropRequest.getOutputFilePrefixes());
         bioDropNew.setTab(bioDropRequest.getTab() != null ? bioDropRequest.getTab() : defaultTab);
         bioDropNew.setSubTab(bioDropRequest.getSubTab());
         bioDropNew.setProgramLanguage(bioDropRequest.getProgramLanguage());

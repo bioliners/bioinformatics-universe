@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 public class BioTaskRequest {
-    private List<MultipartFile> listOfFiles;
     private List<String> listOfFilesParamPrefixes;
+    private List<MultipartFile> listOfFiles;
     private Map<String, List<String>> parameters;
     private String subTab;
-    private String isBatch;
 
     public List<MultipartFile> getListOfFiles() {
         return listOfFiles;
@@ -34,14 +33,6 @@ public class BioTaskRequest {
 
     public void setSubTab(String subTab) {
         this.subTab = subTab;
-    }
-
-    public String getIsBatch() {
-        return isBatch;
-    }
-
-    public void setIsBatch(String isBatch) {
-        this.isBatch = isBatch;
     }
 
     public List<String> getListOfFilesParamPrefixes() {
