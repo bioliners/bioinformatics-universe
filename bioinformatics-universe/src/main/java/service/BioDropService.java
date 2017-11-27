@@ -1,8 +1,11 @@
 package service;
 
+import biojobs.BioDrop;
 import biojobs.BioDropDao;
 import biojobs.BioJobDao;
 import biojobs.BioJobResultDao;
+import exceptions.IncorrectRequestException;
+import model.internal.BioTaskRequestInternal;
 import model.request.BioTaskRequest;
 import springconfiguration.AppProperties;
 
@@ -23,7 +26,11 @@ public interface BioDropService {
 
     String getPathToMainDirFromBioProgs();
 
-    List<String> storeFiles(final BioTaskRequest bioTaskRequest);
+    List<String> storeFiles(BioTaskRequest bioTaskRequest);
 
     void launchProcess(List<String> commandArguments);
+
+    BioDrop checkInputAndGetBioDrop(BioTaskRequest bioTaskRequest) throws IncorrectRequestException;
+
+    BioTaskRequestInternal prepareCommandArguments(BioTaskRequest bioTaskRequest, BioDrop bioDrop);
 }

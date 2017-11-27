@@ -7,10 +7,9 @@ public class BioTaskRequestInternal {
     private List<String> outputFileNames;
     private Integer jobId;
 
-    public BioTaskRequestInternal(List<String> commandArguments, List<String> outputFileNames, int jobId) {
+    public BioTaskRequestInternal(List<String> commandArguments, List<String> outputFileNames) {
         this.commandArguments = commandArguments;
         this.outputFileNames = outputFileNames;
-        this.jobId = jobId;
     }
     public List<String> getCommandArguments() {
         return commandArguments;
