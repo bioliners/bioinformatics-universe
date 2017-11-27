@@ -6,7 +6,7 @@ import model.internal.BioTaskRequestInternal;
 import model.request.BioTaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import service.BioTaskLongRunnigService;
+import service.BioTaskLongRunningService;
 import service.StorageService;
 import springconfiguration.AppProperties;
 
@@ -14,7 +14,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BioTaskLongRunnigServiceImpl extends BioDropServiceImpl implements BioTaskLongRunnigService {
+public class BioTaskLongRunningServiceImpl extends BioDropServiceImpl implements BioTaskLongRunningService {
     @Autowired
     final BioJobDao bioJobDao;
     @Autowired
@@ -23,8 +23,8 @@ public class BioTaskLongRunnigServiceImpl extends BioDropServiceImpl implements 
     private final int defaultLastJobId = 1;
 
 
-    public BioTaskLongRunnigServiceImpl(final BioDropDao bioDropDao, final StorageService storageService,
-                                        final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao) {
+    public BioTaskLongRunningServiceImpl(final BioDropDao bioDropDao, final StorageService storageService,
+                                         final AppProperties properties, final BioJobDao bioJobDao, final BioJobResultDao bioJobResultDao) {
         super(bioDropDao, storageService, properties);
         this.bioJobDao = bioJobDao;
         this.bioJobResultDao = bioJobResultDao;
@@ -107,6 +107,6 @@ public class BioTaskLongRunnigServiceImpl extends BioDropServiceImpl implements 
 
     private Integer getLastJobId() {
         Integer lastJobId = bioJobDao.getLastJobId();
-        return lastJobId != null ? lastJobId + 1 : defaultLastJobId;
+        return lastJobId != null ? ++lastJobId : defaultLastJobId;
     }
 }

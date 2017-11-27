@@ -7,7 +7,7 @@ import model.request.BioTaskRequest;
 
 import java.util.List;
 
-public interface BioTaskLongRunnigService {
+public interface BioTaskLongRunningService {
     BioTaskRequestInternal storeFilesAndPrepareCommandArguments (final BioTaskRequest bioTaskRequest) throws IncorrectRequestException;
     void runProgram(BioTaskRequestInternal bioTaskRequestInternal) throws IncorrectRequestException;
     BioJob getBioJobIfFinished(int jobId);
