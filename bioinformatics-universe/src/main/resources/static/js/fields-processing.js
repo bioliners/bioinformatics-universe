@@ -70,4 +70,13 @@ function takeCareOfFields() {
 	    $('.result-container').hide();
 
 	});
+
+    $('#first, #second').on({
+        keyup: function() {
+            $('.result-container').hide();
+        },
+        change: function() {
+            $('.result-container').hide();
+        }
+    });
 }
