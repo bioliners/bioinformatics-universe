@@ -57,6 +57,10 @@ public class EvolutionController extends BioUniverseController {
     @GetMapping(value={"", "/", "/create-cogs"})
     public String getByNamePage(Model model) {
         addToModelCommon(model);
+        Map<String, String> myMap = new HashMap<>();
+        myMap.put("href", "http://www.google.com");
+        myMap.put("text", "My Link");
+        model.addAttribute("tempMap", myMap);
         model.addAttribute("subnavigationTab", BioPrograms.CREATE_COGS.getProgramName());
         return "main-view  :: addContent(" +
                 "fragmentsMain='evolution-fragments', searchArea='evolution-create-cogs', " +

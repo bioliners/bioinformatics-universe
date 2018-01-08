@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import biojobs.BioJobDao;
 import biojobs.BioJobResultDao;
+import enums.ParamPrefixes;
 import exceptions.IncorrectRequestException;
 import org.springframework.stereotype.Service;
 
@@ -53,37 +54,18 @@ public class SequenceServiceImpl extends BioUniverseServiceImpl implements Seque
 
 	public String launchProcessAndGetResultFileName(SequenceRequest sequenceRequest, String commandName) throws IncorrectRequestException {
 		SequenceInternal sequenceInternal = storeFileAndGetInternalRepresentation(sequenceRequest);
-		sequenceInternal.setAllFields();
-
-		String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix();
-		File outputFile = new File(super.getWorkingDir() + resultFileName);
-
+        String resultFileName = super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix();
+        sequenceInternal.setAllFields();
 
 		List<String> commandArguments = sequenceInternal.getAllFields();
 		commandArguments.add(0, super.getPython());
 		commandArguments.add(1, commandName);
+        commandArguments.add(ParamPrefixes.OUTPUT.getPrefix() + resultFileName);
 
-		System.out.println(commandArguments.toString());
+        System.out.println(commandArguments.toString());
 
-		ProcessBuilder processBuilder = new ProcessBuilder(commandArguments);
-		processBuilder.directory(new File(super.getWorkingDir()));
-		try {
-			Process process = processBuilder.start();
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line;
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
-			while ((line = br.readLine()) != null) {
-				bw.write(line);
-				bw.write("\n");
-			}
-			br.close();
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return outputFile.getName();
+		super.launchProcess(commandArguments);
+		return resultFileName;
 	}
 
 	public SequenceInternal storeFileAndGetInternalRepresentation(SequenceRequest sequenceRequest) throws IncorrectRequestException {

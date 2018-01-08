@@ -1,9 +1,6 @@
 package model.request;
 
-import java.io.Serializable;
 import java.util.List;
-
-import javafx.beans.binding.DoubleExpression;
 
 import org.springframework.web.multipart.MultipartFile;
 

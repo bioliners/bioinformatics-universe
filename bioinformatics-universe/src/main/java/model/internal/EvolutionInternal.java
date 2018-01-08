@@ -14,8 +14,8 @@ public class EvolutionInternal {
     private String evalueThreshold;
     private String commandToBeProcessedBy;
     private String doMerge;
-    private String resultFileName;
     private int jobId;
+    private String outputFileName;
 
     private List<List<String>> commandsAndArguments;
 
@@ -106,14 +106,6 @@ public class EvolutionInternal {
         }
     }
 
-    public String getResultFileName() {
-        return resultFileName;
-    }
-
-    public void setResultFileName(String resultFileName) {
-        this.resultFileName = resultFileName;
-    }
-
     public int getJobId() {
         return jobId;
     }
@@ -128,5 +120,13 @@ public class EvolutionInternal {
 
     public void setCommandsAndArguments(List<List<String>> commandsAndArguments) {
         this.commandsAndArguments = commandsAndArguments;
+    }
+
+    public String getOutputFileName() {
+        return outputFileName;
+    }
+
+    public void setOutputFileName(String outputFileName) {
+        this.outputFileName = outputFileName;
     }
 }

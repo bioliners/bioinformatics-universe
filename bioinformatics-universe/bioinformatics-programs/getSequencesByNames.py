@@ -1,64 +1,83 @@
 #!/usr/bin/python
 
-import fileinput, sys
+import fileinput, sys, getopt
 from Bio import SeqIO
 
+INPUT_FILENAME1="names.txt"
+INPUT_FILENAME2="names_and_sequences.fa"
 
-if sys.argv[1] == "help":
-	print "Script extractes sequences from the second file according to sequence names in the first file."
-	print "Usage: " + sys.argv[0] + " input-file1 input-file2 > output-file"
-	sys.exit(0)
+OUTPUT_FILENAME="result.txt"
+DELIM1=None
+COLUMN_NUM1=None
+DELIM2=None
+COLUMN_NUM2=None
 
-proteinNames = sys.argv[1]
-protNamesAndSequences = sys.argv[2]
-firstFileDelim = None
-secondFileDelim = None
-firstFileCol = None
-secondFileCol = None
+protein_names = set()
+result_proteins = []
 
-if len(sys.argv) > 3 and (sys.argv[3] != ""):
-	firstFileDelim = sys.argv[3]
-if len(sys.argv) > 4 and (sys.argv[4] != ""):
-	firstFileCol = int(sys.argv[4])
-if len(sys.argv) > 5 and (sys.argv[5] != ""):
-	secondFileDelim = sys.argv[5]
-if len(sys.argv) > 6 and (sys.argv[6] != ""):
-	secondFileCol = int(sys.argv[6])
+USAGE = "Script extractes sequences from the second file according to sequence names in the first file." + "\n" + sys.argv[0] + ''' [
+-i first input file name (default -names.txt) 
+-s  second input file name (default -"names_and_sequences.fa") 
+-o output file name (default - result.txt) 
+-d delimeter in the first file 
+-c column number in the first file
+-t delimeter in the second file 
+-l column number in the second file]
+When delimeter and column numbers are not specified the whole name will be used.'''
 
 
-my_proteins = set()
+def initialyze(argv):
+	global INPUT_FILENAME1, INPUT_FILENAME2, OUTPUT_FILENAME, DELIM1, COLUMN_NUM1, DELIM2, COLUMN_NUM2
+	try:
+		opts, args = getopt.getopt(argv[1:],"hi:s:o:d:c:t:l:",["inputFileName1=", "inputFileName2=", "outputFileName=", "delimeter1=", "columnNumber1=", "delimeter2=", "columnNumber2="])
+	except getopt.GetoptError:
+		print USAGE + " Error"
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt == '-h':
+			print USAGE
+			sys.exit()
+		elif opt in ("-i", "--inputFileName1"):
+			INPUT_FILENAME1 = str(arg).strip()
+		elif opt in ("-s", "--inputFileName2"):
+			INPUT_FILENAME2 = str(arg).strip()
+		elif opt in ("-o", "--outputFileName"):
+			OUTPUT_FILENAME = str(arg).strip()
+		elif opt in ("-d", "--delimeter1"):
+			DELIM1 = str(arg)
+		elif opt in ("-c", "--columnNumber1"):
+			COLUMN_NUM1 = int(arg)
+		elif opt in ("-t", "--delimeter2"):
+			DELIM2 = str(arg)
+		elif opt in ("-l", "--columnNumber2"):
+			COLUMN_NUM2 = int(arg)
 
-currentProtName =  ''
-isMatch = False
+def process():
+	with open(INPUT_FILENAME1, 'r') as inputFile1:
+		for line in inputFile1:
+			if DELIM1 != None and COLUMN_NUM1 != None:
+				line = line.split(DELIM1)[COLUMN_NUM1].strip()
+			else:
+				line = line.strip()
+			protein_names.add(line)
 
-try:
-	for line in fileinput.input(proteinNames):
-		if (firstFileDelim != None and firstFileCol == None) or (firstFileDelim == None and firstFileCol != None):
-			raise ValueError("firstFileCol is None!")
-		elif firstFileDelim != None:
-			line = line.split(firstFileDelim)[firstFileCol-1]
-		my_proteins.add(line.strip())
-	fileinput.close()
+	with open(OUTPUT_FILENAME, "w") as outputFile:
+		with open(INPUT_FILENAME2, "r") as inputFile2:
+			for record in SeqIO.parse(inputFile2, "fasta"):
+				if DELIM2 != None and COLUMN_NUM2 != None:
+					currentProtName = record.description.split(DELIM2)[COLUMN_NUM2].strip()
+				else:
+					currentProtName = record.description.strip()
+				if currentProtName in protein_names:
+					outputFile.write(">" + currentProtName + "\n")
+					outputFile.write(str(record.seq) + "\n")
 
-	with open(protNamesAndSequences, "r") as currentFile:
-		for record in SeqIO.parse(currentFile, "fasta"):
-			currentProtName  = record.description
-            		if (secondFileDelim != None and secondFileCol == None) or (secondFileDelim == None and secondFileCol != None):
-                		raise ValueError("secondFileCol is None!")
-			elif secondFileDelim != None:
-				currentProtName = currentProtName.split(secondFileDelim)[secondFileCol-1]
-				#currentProtName  = record.description.split("|")[3]
-				#currentProtName = "_".join(record.description.split("_")[:2]) 
-				#currentProtName  = record.description.split("|")[1].split(":")[1]
-			if currentProtName in my_proteins:
-				print ">" + record.description
-				print  record.seq
 
-except Exception, e:
-	print "Problem occured: ", e
-finally:
-	fileinput.close()
-
-		
+def main(argv):
+	initialyze(argv)
+	process()
+	
+main(sys.argv)
+	
 	
 	

@@ -1,16 +1,18 @@
 package enums;
 
 public enum  ParamPrefixes {
-    INPUT("-i "), OUTPUT("-o "),  DELIM("-d "), COLUMN("-c "), WDIR("-w "), IDENTITY_THRESH("-t "), EVAL_THRESH("-e "), COVERAGE_THRESH("-v "), MERGE("-m ");
+    INPUT("-i "), INPUT_SECOND("-s "), OUTPUT("-o "),  DELIM("-d "),
+    COLUMN("-c "), DELIM_SECOND("-t "), COLUMN_SECOND("-p "), WDIR("-w "),
+    IDENTITY_THRESH("-t "), EVAL_THRESH("-e "), COVERAGE_THRESH("-v "), MERGE("-m ");
 
-    private String paramPreifx;
+    private String paramPrefix;
 
-    ParamPrefixes(String paramPreifx) {
-        this.paramPreifx = paramPreifx;
+    ParamPrefixes(String paramPrefix) {
+        this.paramPrefix = paramPrefix;
     }
 
-    public String getPreifx() {
-        return paramPreifx;
+    public String getPrefix() {
+        return paramPrefix;
     }
 
 }

@@ -13,7 +13,6 @@ import biojobs.BioJobResultDao;
 import enums.ParamPrefixes;
 import model.internal.EvolutionInternal;
 import model.request.EvolutionRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -59,21 +58,21 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 
     @Override
     public EvolutionInternal storeFilesAndPrepareCommandArguments (final EvolutionRequest evolutionRequest, String[] locations) throws IncorrectRequestException {
-        EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, locations[0]);
+	    EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, locations[0]);
         evolutionInternal.setFields();
-        evolutionInternal.setResultFileName(UUID.randomUUID().toString() + super.getPostfix());
+        evolutionInternal.setOutputFileName(super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
 
         List<String> argsForPrepNames = new LinkedList<>();
         List<String> argsForBlast = new LinkedList<>();
         List<String> argsForCreateCogs = new LinkedList<>();
-        argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+locations[0], ParamPrefixes.OUTPUT.getPreifx()+locations[1]));
+        argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[0], ParamPrefixes.OUTPUT.getPrefix()+locations[1]));
         argsForPrepNames.addAll(evolutionInternal.getFieldsInfo());
 
-        argsForBlast.add(ParamPrefixes.WDIR.getPreifx() + super.getPathToMainDirFromBioProgs() + super.getWorkingDir()+"/");
-        argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPreifx()+locations[2], ParamPrefixes.OUTPUT.getPreifx()+locations[3]));
+        argsForBlast.add(ParamPrefixes.WDIR.getPrefix() + super.getPathToMainDirFromBioProgs() + super.getWorkingDir()+"/");
+        argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[2], ParamPrefixes.OUTPUT.getPrefix()+locations[3]));
 
-        argsForCreateCogs.add(ParamPrefixes.INPUT.getPreifx()+locations[4]);
-        argsForCreateCogs.add(ParamPrefixes.OUTPUT.getPreifx() + evolutionInternal.getResultFileName());
+        argsForCreateCogs.add(ParamPrefixes.INPUT.getPrefix()+locations[4]);
+        argsForCreateCogs.add(ParamPrefixes.OUTPUT.getPrefix() + evolutionInternal.getOutputFileName());
         argsForCreateCogs.addAll(evolutionInternal.getAllFields());
 
 
@@ -103,7 +102,9 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
     @Override
     @Async
     public void createCogs(EvolutionInternal evolutionInternal) throws IncorrectRequestException {
-        launchProcess(evolutionInternal.getCommandsAndArguments());
+        for (List<String> commandArgument : evolutionInternal.getCommandsAndArguments()) {
+            super.launchProcess(commandArgument);
+        }
         saveResultFileToDB(evolutionInternal);
 
     }
@@ -120,7 +121,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 
 		BioJobResult bioJobResult = new BioJobResult();
 		bioJobResult.setResultFile("placeholder");
-		bioJobResult.setResultFileName(evolutionInternal.getResultFileName());
+		bioJobResult.setResultFileName(evolutionInternal.getOutputFileName());
         bioJobResult.setBiojob(bioJob);
 
         bioJob.addToBioJobResultList(bioJobResult);
@@ -131,7 +132,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	public void saveResultFileToDB(EvolutionInternal evolutionInternal) {
 		File file = null;
 		try {
-			file = getStorageService().loadAsResource(evolutionInternal.getResultFileName()).getFile();
+			file = getStorageService().loadAsResource(evolutionInternal.getOutputFileName()).getFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -148,40 +149,13 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 			System.out.println("Unable to read file " + file.toString());
 		}
 
-		BioJobResult bioJobResult = super.getBioJobResultDao().findByResultFileName(evolutionInternal.getResultFileName());
+		BioJobResult bioJobResult = super.getBioJobResultDao().findByResultFileName(evolutionInternal.getOutputFileName());
 		bioJobResult.setResultFile(fileAsStringBuilder.toString());
         super.getBioJobResultDao().save(bioJobResult);
 
 		BioJob bioJob = super.getBioJobDao().findByJobId(evolutionInternal.getJobId());
 		bioJob.setFinished(true);
         super.getBioJobDao().save(bioJob);
-	}
-
-	public void launchProcess(final List<List<String>> commandsAndArguments) throws IncorrectRequestException {
-		Process process = null;
-		List<ProcessBuilder> listOfProcessBuilders = new LinkedList<>();
-
-		for (int i=0; i<commandsAndArguments.size(); i++) {
-			listOfProcessBuilders.add(new ProcessBuilder(commandsAndArguments.get(i)));
-			listOfProcessBuilders.get(i).directory(new File(super.getWorkingDir()));
-		}
-
-		try {
-			for (ProcessBuilder processBuilder : listOfProcessBuilders) {
-				System.out.println("processBuilder.directory() " + processBuilder.directory());
-				System.out.println(processBuilder.command());
-				process = processBuilder.start();
-                BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                String line;
-                while ((line = br.readLine()) != null) {
-                	System.out.println(line);
-                    System.out.println("\n");
-				}
-                br.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private Integer getLastJobId() {

@@ -20,7 +20,7 @@ public class AppProperties {
     private String pythonLocation = "/usr/bin/python";
     private String bashLocation = "/bin/bash";
     private String blastpLocation = "/usr/bin/blastp";
-    private String resultFilePrefix = "/bio-universe-";
+    private String resultFilePrefix = "bio-universe-";
     private String postfix = ".txt";
 
 

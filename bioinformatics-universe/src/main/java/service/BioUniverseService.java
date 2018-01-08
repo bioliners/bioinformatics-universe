@@ -7,6 +7,7 @@ import springconfiguration.AppProperties;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by vadim on 8/14/17.
@@ -36,5 +37,7 @@ public interface BioUniverseService {
     BioJobDao getBioJobDao();
 
     BioJobResultDao getBioJobResultDao();
+
+    void launchProcess(List<String> commandArguments);
 
 }

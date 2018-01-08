@@ -6,6 +6,7 @@ import java.util.List;
 public class SequenceInternal {
 	private String firstFileName;
 	private String secondFileName;
+	private String outputFileName;
 	private String firstFileDelim;
 	private String firstFileColumn;
 	private String secondFileDelim;
@@ -80,4 +81,11 @@ public class SequenceInternal {
 		return allFields;
 	}
 
+	public String getOutputFileName() {
+		return outputFileName;
+	}
+
+	public void setOutputFileName(String outputFileName) {
+		this.outputFileName = outputFileName;
+	}
 }

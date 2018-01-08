@@ -15,32 +15,26 @@ public class ConverterMain {
 	}
 
 	public static SequenceInternal fromSeqRequestToSeqInternal(SequenceRequest sequenceRequest, String firstFileName,
-															   String SecondFileName) throws IncorrectRequestException {
+															   String secondFileName) throws IncorrectRequestException {
 		SequenceInternal sequenceInternal = new SequenceInternal();
-
-		sequenceInternal.setFirstFileName(firstFileName);
-		sequenceInternal.setSecondFileName(SecondFileName);
+		sequenceInternal.setFirstFileName(checkForNullAndGet(ParamPrefixes.INPUT.getPrefix(), firstFileName));
+		sequenceInternal.setSecondFileName(checkForNullAndGet(ParamPrefixes.INPUT_SECOND.getPrefix(), secondFileName));
 		sequenceInternal.setCommandToBeProcessedBy(sequenceRequest.getCommandToBeProcessedBy());
-
-		sequenceInternal.setFirstFileColumn(checkNumAndGetString(sequenceRequest.getFirstFileColumn()));
-		sequenceInternal.setSecondFileColumn(checkNumAndGetString(sequenceRequest.getSecondFileColumn()));
-
-
-		sequenceInternal.setFirstFileDelim(getInternalDelim(sequenceRequest.getFirstFileDelim()));
-		sequenceInternal.setSecondFileDelim(getInternalDelim(sequenceRequest.getSecondFileDelim()));
-		
-		return sequenceInternal;
+		sequenceInternal.setFirstFileColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPrefix(), checkClmnAndGetString(sequenceRequest.getFirstFileColumn())));
+        sequenceInternal.setSecondFileColumn(checkForNullAndGet(ParamPrefixes.COLUMN_SECOND.getPrefix(), checkClmnAndGetString(sequenceRequest.getSecondFileColumn())));
+        sequenceInternal.setFirstFileDelim(checkForNullAndGet(ParamPrefixes.DELIM.getPrefix(), getInternalDelim(sequenceInternal.getFirstFileDelim())));
+        sequenceInternal.setSecondFileColumn(checkForNullAndGet(ParamPrefixes.DELIM_SECOND.getPrefix(), getInternalDelim(sequenceInternal.getSecondFileDelim())));
+        return sequenceInternal;
 	}
 
 	public static EvolutionInternal fromEvolRequestToEvolInternal(EvolutionRequest evolutionRequest) throws IncorrectRequestException {
 		EvolutionInternal evolutionInternal = new EvolutionInternal();
-		
-		evolutionInternal.setFileColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPreifx(), checkClmnAndGetString(evolutionRequest.getFileColumn())));
-		evolutionInternal.setCoverageThreshold(checkForNullAndGet(ParamPrefixes.COVERAGE_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getCoverageThreshold())));
-		evolutionInternal.setIdentityThreshold(checkForNullAndGet(ParamPrefixes.IDENTITY_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getIdentityThreshold())));
-		evolutionInternal.setEvalueThreshold(checkForNullAndGet(ParamPrefixes.EVAL_THRESH.getPreifx(), checkNumAndGetString(evolutionRequest.getEvalueThreshold())));
-		evolutionInternal.setDoMerge(checkForNullAndGet(ParamPrefixes.MERGE.getPreifx(), evolutionRequest.getDoMerge()));
-		evolutionInternal.setFileDelim(checkForNullAndGet(ParamPrefixes.DELIM.getPreifx(), getInternalDelim(evolutionRequest.getFileDelim())));
+		evolutionInternal.setFileColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPrefix(), checkClmnAndGetString(evolutionRequest.getFileColumn())));
+		evolutionInternal.setCoverageThreshold(checkForNullAndGet(ParamPrefixes.COVERAGE_THRESH.getPrefix(), checkNumAndGetString(evolutionRequest.getCoverageThreshold())));
+		evolutionInternal.setIdentityThreshold(checkForNullAndGet(ParamPrefixes.IDENTITY_THRESH.getPrefix(), checkNumAndGetString(evolutionRequest.getIdentityThreshold())));
+		evolutionInternal.setEvalueThreshold(checkForNullAndGet(ParamPrefixes.EVAL_THRESH.getPrefix(), checkNumAndGetString(evolutionRequest.getEvalueThreshold())));
+		evolutionInternal.setDoMerge(checkForNullAndGet(ParamPrefixes.MERGE.getPrefix(), evolutionRequest.getDoMerge()));
+		evolutionInternal.setFileDelim(checkForNullAndGet(ParamPrefixes.DELIM.getPrefix(), getInternalDelim(evolutionRequest.getFileDelim())));
 		evolutionInternal.setCommandToBeProcessedBy(evolutionRequest.getCommandToBeProcessedBy());
 
 		return evolutionInternal;
@@ -52,7 +46,7 @@ public class ConverterMain {
 			try {
 				internalDelim = Delimeters.valueOf(field.toUpperCase()).toString();
 			} catch (Exception e) {
-				throw new IncorrectRequestException("Delimeter of Request object is incorrect.", e);
+				throw new IncorrectRequestException("Delimiter of Request object is incorrect.", e);
 			}
 		}
 		return internalDelim;
