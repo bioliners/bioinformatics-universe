@@ -34,6 +34,32 @@
         </div>
     </div>
 
+
+    <div th:fragment="evolution-concatenate">
+        <div class="col-md-8 my-textarea">
+            <div class="row">
+                <label class="btn btn-default btn-lg">
+                    Choose files to be aligned and concatenated <input id="first-file" type="file" style="display: none" multiple/>
+                </label>
+            </div>
+            <div class="row">
+                <label class="btn btn-default btn-lg">
+                    Provide files with COGs <input id="second-file" type="file" style="display: none" multiple/>
+                </label>
+            </div>
+            <div class="row">
+                <label class="btn btn-default btn-lg">
+                    Provide list of organism names <input id="organisms-file" type="file" style="display: none" multiple/>
+                </label>
+            </div>
+            <div class="row">
+                <button id="GoAsync" class="btn btn-primary btn-md pull-right" type="button">
+                    <span>Go!</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div th:fragment="evolution-createCogs-filter">
         <div class="col-md-2 panel panel-default">
             <div class="panel-body">
@@ -63,6 +89,32 @@
                         <label class="radio-inline">
                             <input name="merge" type="radio" value="no"/>no
                         </label>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="evolution-concatenate-filter">
+        <div class="col-md-2 panel panel-default">
+            <div class="panel-body">
+                <p class="text-primary">Set options (in case you provide your set of sequences to be concatenated):</p>
+                <div class="form-group">
+                    <form id="first">
+                        <small>File delimiter:</small>
+                        <select id="first-delim" class="form-control input-sm">
+                            <option selected='selected' disabled="disabled">select</option>
+                            <option>tab</option>
+                            <option>comma</option>
+                            <option>semicolon</option>
+                            <option>vertical bar</option>
+                        </select>
+                        <small>Organism name column:</small>
+                        <input id="organism-name-col" name="organism-name-col" type="text" class="form-control input-sm"/>
+                        <small>Protein name column:</small>
+                        <input id="protein-name-col" name="protein-name-col" type="text" class="form-control input-sm"/>
+                        <small>COG identifier column:</small>
+                        <input id="cogId-col" name="cogId-col" type="text" class="form-control input-sm"/>
                     </form>
                 </div>
             </div>

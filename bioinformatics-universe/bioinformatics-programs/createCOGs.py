@@ -34,7 +34,7 @@ CLUSTER_TO_PROTSET = collections.defaultdict(set)
 GENOME_PAIRS = list()
 GENOME_SET = set()
 
-USAGE = sys.argv[0] + ' [-i input directory -o output file name -d delimeter -c column number -t identity threshold -e E-value threashold -v coverage threshold -m merge clusters or not (yes|no)]'
+USAGE = sys.argv[0] + ' -i input directory -o output file name -d delimeter -c column number -t identity threshold -e E-value threashold -v coverage threshold -m merge clusters or not (yes|no)'
 #DEFAULT_PARAMS = ["INPUT_DIR ", "OUTPUT_FILENAME ", "DELIM ", "COLUMN_NUM ", "IDENTITY_THRESHOLD ", "EVAL_THRESHOLD ", "COVERAGE_THRESHOLD ", "DO_MERGE "]
 #DEFAULT_VALUES = [INPUT_DIR, OUTPUT_FILENAME, DELIM, COLUMN_NUM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE]
 

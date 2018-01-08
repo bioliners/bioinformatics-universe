@@ -55,18 +55,23 @@ public class EvolutionController extends BioUniverseController {
     }
 
     @GetMapping(value={"", "/", "/create-cogs"})
-    public String getByNamePage(Model model) {
+    public String createCogsPage(Model model) {
+
         addToModelCommon(model);
-        Map<String, String> myMap = new HashMap<>();
-        myMap.put("href", "http://www.google.com");
-        myMap.put("text", "My Link");
-        model.addAttribute("tempMap", myMap);
         model.addAttribute("subnavigationTab", BioPrograms.CREATE_COGS.getProgramName());
         return "main-view  :: addContent(" +
                 "fragmentsMain='evolution-fragments', searchArea='evolution-create-cogs', " +
                 "tab='evolution-navbar', filter='evolution-createCogs-filter')";
     }
 
+    @GetMapping(value={"/concatenate"})
+    public String concatenatePage(Model model) {
+        addToModelCommon(model);
+        model.addAttribute("subnavigationTab", BioPrograms.CONCATENATE.getProgramName());
+        return "main-view  :: addContent(" +
+                "fragmentsMain='evolution-fragments', searchArea='evolution-concatenate', " +
+                "tab='evolution-navbar', filter='evolution-concatenate-filter')";
+    }
 
     @PostMapping(value="/process-request", produces="text/plain")
     @ResponseBody

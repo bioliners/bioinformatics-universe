@@ -21,8 +21,24 @@ CREATE TABLE biojob_results(
 	RESULT_FILE text NOT NUll
 );
 
+#FULL_TAXONOMY is JSON object
+CREATE TABLE cogs(
+    COG_TABLE_ID integer PRIMARY KEY NOT NULL,
+    COG_ID integer NOT NULL,
+    REF_ID integer NOT NULL,
+    ORGANISM_NAME text NOT NULL,
+    FULL_TAXONOMY text NOT NULL,
+    PROTEIN_NAME text NOT NULL,
+    SEQUENCE text NOT NULL,
+    NAME text NOT NULL,
+    ALTERNATIVE_NAME text NOT NULL
+);
+
 CREATE SEQUENCE biojobs_id_seq;
 ALTER TABLE biojobs ALTER BIOJOB_ID SET DEFAULT NEXTVAL('biojobs_id_seq');
 
 CREATE SEQUENCE biojobs_res_id_seq;
 ALTER TABLE biojob_results ALTER BIOJOB_RES_ID SET DEFAULT NEXTVAL('biojobs_res_id_seq');
+
+CREATE SEQUENCE cogs_id_seq;
+ALTER TABLE cogs ALTER COG_TABLE_ID SET DEFAULT NEXTVAL('cogs_id_seq');

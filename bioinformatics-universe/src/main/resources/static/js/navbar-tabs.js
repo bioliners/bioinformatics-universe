@@ -5,13 +5,13 @@ $(document).ready( function() {
     console.log("subnavigationTab " + subnavigationTab);
 	mainNavbar(mainTab);
 
-	sequnceNavbar(subnavigationTab);
+	subTabNavbar(subnavigationTab);
 });
 
 function mainNavbar(tab) {
 	$(tab).addClass('active');
 }
 
-function sequnceNavbar(tab) {
+function subTabNavbar(tab) {
 	$(tab).addClass('active');
 }
