@@ -13,7 +13,11 @@ public class EvolutionRequest {
 	private Double evalueThreshold;
 	private String commandToBeProcessedBy;
 	private String doMerge;
-	
+
+	private Integer organismNameColumn;
+	private Integer proteinNameColumn;
+	private Integer cogIdColumn;
+
 	public List<MultipartFile> getListOfFiles() {
 		return listOfFiles;
 	}
@@ -78,4 +82,27 @@ public class EvolutionRequest {
 		this.doMerge = doMerge;
 	}
 
+	public Integer getOrganismNameColumn() {
+		return organismNameColumn;
+	}
+
+	public void setOrganismNameColumn(Integer organismNameColumn) {
+		this.organismNameColumn = organismNameColumn;
+	}
+
+	public Integer getProteinNameColumn() {
+		return proteinNameColumn;
+	}
+
+	public void setProteinNameColumn(Integer proteinNameColumn) {
+		this.proteinNameColumn = proteinNameColumn;
+	}
+
+	public Integer getCogIdColumn() {
+		return cogIdColumn;
+	}
+
+	public void setCogIdColumn(Integer cogIdColumn) {
+		this.cogIdColumn = cogIdColumn;
+	}
 }

@@ -98,22 +98,16 @@
     <div th:fragment="evolution-concatenate-filter">
         <div class="col-md-2 panel panel-default">
             <div class="panel-body">
-                <p class="text-primary">Set options (in case you provide your set of sequences to be concatenated):</p>
+                <p class="text-primary" data-toggle="tooltip" title="In case you provide your set of sequences to be concatenated">
+                    Set options <span class="fa fa-question"></span>
+                </p>
                 <div class="form-group">
                     <form id="first">
-                        <small>File delimiter:</small>
-                        <select id="first-delim" class="form-control input-sm">
-                            <option selected='selected' disabled="disabled">select</option>
-                            <option>tab</option>
-                            <option>comma</option>
-                            <option>semicolon</option>
-                            <option>vertical bar</option>
-                        </select>
-                        <small>Organism name column:</small>
+                        <small>Organism name column (default 2):</small>
                         <input id="organism-name-col" name="organism-name-col" type="text" class="form-control input-sm"/>
-                        <small>Protein name column:</small>
+                        <small>Protein name column (default 1):</small>
                         <input id="protein-name-col" name="protein-name-col" type="text" class="form-control input-sm"/>
-                        <small>COG identifier column:</small>
+                        <small>COG identifier column(if present):</small>
                         <input id="cogId-col" name="cogId-col" type="text" class="form-control input-sm"/>
                     </form>
                 </div>

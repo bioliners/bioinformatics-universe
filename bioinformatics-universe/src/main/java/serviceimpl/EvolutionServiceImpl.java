@@ -28,6 +28,8 @@ import springconfiguration.AppProperties;
 public class EvolutionServiceImpl extends BioUniverseServiceImpl implements EvolutionService {
 	private final String prepareNames;
 	private final String blastAllVsAll;
+	private final String alignMultiple;
+
 	private final int defaultLastJobId = 1;
 
 
@@ -35,6 +37,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		super(storageService, properties, bioJobResultDao, bioJobDao);
 		this.prepareNames = properties.getPrepareNamesProgram();
 		this.blastAllVsAll = properties.getBlastAllVsAllProgram();
+		this.alignMultiple = properties.getAlignMultiple();
 	}
 
 	@Override
@@ -43,18 +46,79 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		return bioJob.isFinished() ? bioJob : null;
 	}
 
+    @Override
+	public String[] createDirsConcat() {
+		//i-input, o-output
+		String iFilesLocationAlign= super.getProperties().getMultipleWorkingFilesLocation();
+		String oFilesLocationAlign = super.getProperties().getMultipleWorkingFilesLocation();
+		String iFilesLocationConcatenate = oFilesLocationAlign;
+		super.getStorageService().createMultipleDirs(Arrays.asList(iFilesLocationAlign, oFilesLocationAlign));
+		return new String[] {iFilesLocationAlign, oFilesLocationAlign, iFilesLocationConcatenate};
+	}
+
 
     @Override
 	public String[] createDirs() {
 	    //i-input, o-output
-        String iFilesLocatPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
-        String oFilesLocatPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
-        String iFilesLocatBlast = oFilesLocatPrepNames;
-        String oFilesLocatBlast = super.getProperties().getMultipleWorkingFilesLocation();
-        String iFilesLocatCreateCogs = oFilesLocatBlast;
-        super.getStorageService().createMultipleDirs(Arrays.asList(iFilesLocatPrepNames, oFilesLocatPrepNames, oFilesLocatBlast));
-        return new String[] {iFilesLocatPrepNames, oFilesLocatPrepNames, iFilesLocatBlast, oFilesLocatBlast, iFilesLocatCreateCogs};
+        String iFilesLocationPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
+        String oFilesLocationPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
+        String iFilesLocationBlast = oFilesLocationPrepNames;
+        String oFilesLocationBlast = super.getProperties().getMultipleWorkingFilesLocation();
+        String iFilesLocationCreateCogs = oFilesLocationBlast;
+        super.getStorageService().createMultipleDirs(Arrays.asList(iFilesLocationPrepNames, oFilesLocationPrepNames, oFilesLocationBlast));
+        return new String[] {iFilesLocationPrepNames, oFilesLocationPrepNames, iFilesLocationBlast, oFilesLocationBlast, iFilesLocationCreateCogs};
     }
+
+    @Override
+    public EvolutionInternal storeFilesAndPrepareCommandArgumentsConcat(final EvolutionRequest evolutionRequest, String[] locations) throws IncorrectRequestException {
+        EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, locations[0]);
+        evolutionInternal.setFields();
+        evolutionInternal.setOutputFileName(super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
+
+
+        List<String> argsForAlignMultiple = new LinkedList<>();
+        List<String> argsForConcatenate = new LinkedList<>();
+
+        argsForAlignMultiple.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[0], ParamPrefixes.OUTPUT.getPrefix()+locations[1]));
+
+        argsForConcatenate.add(ParamPrefixes.INPUT.getPrefix()+locations[2]);
+        argsForConcatenate.add(ParamPrefixes.OUTPUT.getPrefix() + evolutionInternal.getOutputFileName());
+        argsForConcatenate.addAll(evolutionInternal.getAllFields());
+
+        String[] arrayOfInterpreters = {super.getBash(), super.getPython()};
+        String[] arrayOfPrograms = {alignMultiple, super.getProgram(evolutionInternal.getCommandToBeProcessedBy())};
+        List<List<String>> listOfArgumentLists = new LinkedList<>(Arrays.asList(argsForAlignMultiple, argsForConcatenate));
+        prepareCommandArgumentsCommon(evolutionInternal, arrayOfInterpreters, arrayOfPrograms, listOfArgumentLists);
+
+        return evolutionInternal;
+    }
+
+//    public EvolutionInternal storeFilesAndPrepareCommandArgumentsU(final EvolutionRequest evolutionRequest,
+//                                                                   String[] locations,
+//                                                                   int numberOfIntermScripts,
+//                                                                   Map<Integer, List<String>> intermediateParams) throws IncorrectRequestException {
+//        EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, locations[0]);
+//        evolutionInternal.setFields();
+//        evolutionInternal.setOutputFileName(super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
+//
+//        List<List<String>> listOfArgumentLists = new LinkedList<>();
+//        List<String> argsForScript = new LinkedList<>();
+//
+//        for (int i = 0; i < numberOfIntermScripts; i++) {
+//            argsForScript = new LinkedList<>();
+//            argsForScript.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[i], ParamPrefixes.OUTPUT.getPrefix()+locations[i+1]));
+//            if (intermediateParams.containsKey(i)) {
+//                argsForScript.addAll(intermediateParams.get(i));
+//            }
+//            listOfArgumentLists.add(argsForScript);
+//        }
+//
+//        argsForScript.add(ParamPrefixes.INPUT.getPrefix()+locations[locations.length-1]);
+//        argsForScript.addAll(evolutionInternal.getAllFields());
+//
+//
+//	    return null;
+//    }
 
     @Override
     public EvolutionInternal storeFilesAndPrepareCommandArguments (final EvolutionRequest evolutionRequest, String[] locations) throws IncorrectRequestException {
@@ -66,7 +130,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
         List<String> argsForBlast = new LinkedList<>();
         List<String> argsForCreateCogs = new LinkedList<>();
         argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[0], ParamPrefixes.OUTPUT.getPrefix()+locations[1]));
-        argsForPrepNames.addAll(evolutionInternal.getFieldsInfo());
+        argsForPrepNames.addAll(evolutionInternal.getFieldForIntermScript());
 
         argsForBlast.add(ParamPrefixes.WDIR.getPrefix() + super.getPathToMainDirFromBioProgs() + super.getWorkingDir()+"/");
         argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[2], ParamPrefixes.OUTPUT.getPrefix()+locations[3]));
@@ -76,37 +140,39 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
         argsForCreateCogs.addAll(evolutionInternal.getAllFields());
 
 
-        String[] arrayOfPrograms = {super.getBash(), super.getBash(), super.getPython()};
-        String[] arrayOfCommands = {prepareNames, blastAllVsAll, super.getProgram(evolutionInternal.getCommandToBeProcessedBy())};
+        String[] arrayOfInterpreters = {super.getBash(), super.getBash(), super.getPython()};
+        String[] arrayOfPrograms = {prepareNames, blastAllVsAll, super.getProgram(evolutionInternal.getCommandToBeProcessedBy())};
         List<List<String>> listOfArgumentLists = new LinkedList<>(Arrays.asList(argsForPrepNames, argsForBlast, argsForCreateCogs));
 
+        prepareCommandArgumentsCommon(evolutionInternal, arrayOfInterpreters, arrayOfPrograms, listOfArgumentLists);
+
+        return evolutionInternal;
+    }
+
+    public void prepareCommandArgumentsCommon(EvolutionInternal evolutionInternal, String[] arrayOfInterpreters,
+                                              String[] arrayOfPrograms, List<List<String>> listOfArgumentLists) {
         List<List<String>> commandsAndArguments = new LinkedList<>();
 
-        for (int i=0; i<arrayOfCommands.length; i++) {
+        for (int i=0; i< arrayOfPrograms.length; i++) {
             List<String> listOfCommandsAndArgs= new LinkedList<>();
+            listOfCommandsAndArgs.add(arrayOfInterpreters[i]);
             listOfCommandsAndArgs.add(arrayOfPrograms[i]);
-            listOfCommandsAndArgs.add(arrayOfCommands[i]);
             listOfCommandsAndArgs.addAll(listOfArgumentLists.get(i));
             commandsAndArguments.add(listOfCommandsAndArgs);
         }
-
-
         int jobId = saveBioJobToDB(evolutionInternal);
         evolutionInternal.setJobId(jobId);
         evolutionInternal.setCommandsAndArguments(commandsAndArguments);
-
-        return evolutionInternal;
     }
 
 
     @Override
     @Async
-    public void createCogs(EvolutionInternal evolutionInternal) throws IncorrectRequestException {
+    public void runMainProgram(EvolutionInternal evolutionInternal) throws IncorrectRequestException {
         for (List<String> commandArgument : evolutionInternal.getCommandsAndArguments()) {
             super.launchProcess(commandArgument);
         }
         saveResultFileToDB(evolutionInternal);
-
     }
 
 

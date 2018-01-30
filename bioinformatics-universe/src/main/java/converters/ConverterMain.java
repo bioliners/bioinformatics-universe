@@ -37,6 +37,12 @@ public class ConverterMain {
 		evolutionInternal.setFileDelim(checkForNullAndGet(ParamPrefixes.DELIM.getPrefix(), getInternalDelim(evolutionRequest.getFileDelim())));
 		evolutionInternal.setCommandToBeProcessedBy(evolutionRequest.getCommandToBeProcessedBy());
 
+
+		evolutionInternal.setOrganismNameColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPrefix(), checkClmnAndGetString(evolutionRequest.getFileColumn())));
+        evolutionInternal.setProteinNameColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPrefix(), checkClmnAndGetString(evolutionRequest.getFileColumn())));
+        evolutionInternal.setCogIdColumn(checkForNullAndGet(ParamPrefixes.COLUMN.getPrefix(), checkClmnAndGetString(evolutionRequest.getFileColumn())));
+
+
 		return evolutionInternal;
 	}
 	

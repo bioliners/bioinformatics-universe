@@ -76,16 +76,20 @@ public class EvolutionController extends BioUniverseController {
     @PostMapping(value="/process-request", produces="text/plain")
     @ResponseBody
     public String processRequest(EvolutionRequest evolutionRequest) throws IncorrectRequestException, ExecutionException, InterruptedException {
-        Integer jobId = null;
+        EvolutionInternal evolutionInternal = null;
 
+        //Split it to several functions because 'createCogs' method is asynchronous
+        //and files in 'listOfFiles' field of evolutionRequest are got cleared at the end of request processing.
         if (evolutionRequest.getCommandToBeProcessedBy().equals(BioPrograms.CREATE_COGS.getProgramName())) {
-            //Split it to several functions because 'createCogs' method is asynchronous
-            //and files in 'listOfFiles' field of evolutionRequest are got cleared at the end of request processing.
             String[] locations = evolutionService.createDirs();
-            EvolutionInternal evolutionInternal = evolutionService.storeFilesAndPrepareCommandArguments(evolutionRequest, locations);
-            jobId = evolutionInternal.getJobId();
-            evolutionService.createCogs(evolutionInternal);
+            evolutionInternal = evolutionService.storeFilesAndPrepareCommandArguments(evolutionRequest, locations);
+        } else if (evolutionRequest.getCommandToBeProcessedBy().equals(BioPrograms.CONCATENATE.getProgramName())) {
+            String[] locations = evolutionService.createDirsConcat();
+            evolutionInternal = evolutionService.storeFilesAndPrepareCommandArgumentsConcat(evolutionRequest, locations);
         }
+        Integer jobId = evolutionInternal.getJobId();
+        evolutionService.runMainProgram(evolutionInternal);
+
         return String.valueOf(jobId);
     }
 

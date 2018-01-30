@@ -19,8 +19,12 @@ public class EvolutionInternal {
 
     private List<List<String>> commandsAndArguments;
 
-	private List<String> fieldsInfo = new LinkedList<>();
+	private List<String> fieldsForIntermediateScript = new LinkedList<>();
     private List<String> allFields = new LinkedList<>();
+
+    private String organismNameColumn;
+    private String proteinNameColumn;
+    private String cogIdColumn;
 
     public String getFileDelim() {
         return fileDelim;
@@ -38,8 +42,8 @@ public class EvolutionInternal {
         this.fileColumn = fileColumn;
     }
 
-    public List<String> getFieldsInfo() {
-        return fieldsInfo;
+    public List<String> getFieldForIntermScript() {
+        return fieldsForIntermediateScript;
     }
 
     public String getIdentityThreshold() {
@@ -88,12 +92,12 @@ public class EvolutionInternal {
 
     public void setFields() {
         if (fileDelim != null) {
-            fieldsInfo.add(fileDelim);
+            fieldsForIntermediateScript.add(fileDelim);
         }
         if (fileColumn != null) {
-            fieldsInfo.add(fileColumn);
+            fieldsForIntermediateScript.add(fileColumn);
         }
-        allFields.addAll(fieldsInfo);
+        allFields.addAll(fieldsForIntermediateScript);
 
         if (identityThreshold != null) {
             allFields.add(identityThreshold);
@@ -103,6 +107,16 @@ public class EvolutionInternal {
         }
         if (evalueThreshold != null) {
             allFields.add(evalueThreshold);
+        }
+
+        if (organismNameColumn != null) {
+            allFields.add(organismNameColumn);
+        }
+        if (proteinNameColumn != null) {
+            allFields.add(proteinNameColumn);
+        }
+        if (cogIdColumn != null) {
+            allFields.add(cogIdColumn);
         }
     }
 
@@ -128,5 +142,29 @@ public class EvolutionInternal {
 
     public void setOutputFileName(String outputFileName) {
         this.outputFileName = outputFileName;
+    }
+
+    public String getOrganismNameColumn() {
+        return organismNameColumn;
+    }
+
+    public void setOrganismNameColumn(String organismNameColumn) {
+        this.organismNameColumn = organismNameColumn;
+    }
+
+    public String getProteinNameColumn() {
+        return proteinNameColumn;
+    }
+
+    public void setProteinNameColumn(String proteinNameColumn) {
+        this.proteinNameColumn = proteinNameColumn;
+    }
+
+    public String getCogIdColumn() {
+        return cogIdColumn;
+    }
+
+    public void setCogIdColumn(String cogIdColumn) {
+        this.cogIdColumn = cogIdColumn;
     }
 }

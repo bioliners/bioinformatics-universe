@@ -39,6 +39,7 @@ public class BioUniverseServiceImpl implements BioUniverseService {
         programs.put(BioPrograms.CREATE_COGS.getProgramName(), properties.getCreateCogs());
         programs.put(BioPrograms.MAKE_UNIQUE.getProgramName(), properties.getMakeUnique());
         programs.put(BioPrograms.GET_SEQ_BYNAME.getProgramName(), properties.getGetSeqByName());
+        programs.put(BioPrograms.CONCATENATE.getProgramName(), properties.getConcatenate());
     }
 
     @Override

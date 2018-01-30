@@ -17,6 +17,10 @@ public class AppProperties {
     private String prepareNamesProgram = bioProgramsDir + "/prepareNames.sh";
     private String blastAllVsAllProgram = bioProgramsDir + "/blast-all-vs-all.sh";
     private String createCogs = bioProgramsDir + "/createCOGs.py";
+
+    private String alignMultiple = bioProgramsDir + "/align_multiple.sh";
+    private String concatenate = bioProgramsDir + "/concatenate.py";
+
     private String pythonLocation = "/usr/bin/python";
     private String bashLocation = "/bin/bash";
     private String blastpLocation = "/usr/bin/blastp";
@@ -132,4 +136,19 @@ public class AppProperties {
         this.postfix = postFix;
     }
 
+    public String getAlignMultiple() {
+        return alignMultiple;
+    }
+
+    public void setAlignMultiple(String alignMultiple) {
+        this.alignMultiple = alignMultiple;
+    }
+
+    public String getConcatenate() {
+        return concatenate;
+    }
+
+    public void setConcatenate(String concatenate) {
+        this.concatenate = concatenate;
+    }
 }

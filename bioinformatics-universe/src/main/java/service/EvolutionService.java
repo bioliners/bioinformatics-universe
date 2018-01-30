@@ -7,12 +7,13 @@ import exceptions.IncorrectRequestException;
 
 
 public interface EvolutionService {
-	void createCogs(EvolutionInternal evolutionInternal) throws IncorrectRequestException;
+	void runMainProgram(EvolutionInternal evolutionInternal) throws IncorrectRequestException;
 
 	String[] createDirs();
+	String[] createDirsConcat();
 
 	EvolutionInternal storeFilesAndPrepareCommandArguments (EvolutionRequest evolutionRequest, String[] locations) throws IncorrectRequestException;
-
+	EvolutionInternal storeFilesAndPrepareCommandArgumentsConcat(final EvolutionRequest evolutionRequest, String[] locations) throws IncorrectRequestException;
 	BioJob getBioJobIfFinished(int jobId);
 
 }
