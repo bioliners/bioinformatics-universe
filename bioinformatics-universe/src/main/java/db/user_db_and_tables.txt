@@ -1,8 +1,8 @@
 sudo su - postgres
 createuser -P -S -d -e biouniverse
 
-createdb -h localhost -p 5432 -U biouniverse biouniversedb
-psql -h localhost -U biouniverse -d biouniversedb
+createdb -h localhost -p 5432 -U biouniverse biouniversedbO
+psql -h localhost -U biouniverse -d biouniversedbO
 
 CREATE TABLE biojobs(
 	BIOJOB_ID integer PRIMARY KEY NOT NULL,
