@@ -106,10 +106,6 @@ def processInputData():
 					else:
 						GENOMENM_TO_PROT_TOPROT_LIST_MAP[oneGenomeNmToAnotherGenomeNm] = DefaultOrderedDict(list)
 						checkAndAddProteins(GENOMENM_TO_PROT_TOPROT_LIST_MAP[oneGenomeNmToAnotherGenomeNm], eVal, coverage, identity, firstProt, secondProt)
-			for eachPair, prots in GENOMENM_TO_PROT_TOPROT_LIST_MAP.items():
-				print (eachPair)
-				print (prots)
-				print "======================================"
 		except Exception:
 			print ("Problem happened: ")
 			print (traceback.print_exc())
@@ -134,22 +130,33 @@ def createCOGs():
 		firstGenomeToSecGenome = GENOMENM_TO_PROT_TOPROT_LIST_MAP[frstGenNmToSecGenNm]
 		secondGenomeToFirstGenome = GENOMENM_TO_PROT_TOPROT_LIST_MAP[secGenNmToFrstGenNm]
 
-		for firstGenomeProt in firstGenomeToSecGenome:
-			listOfProtsInSecGenome_ForProtInFrstGenome = firstGenomeToSecGenome[firstGenomeProt]
-			for protHitInSecondGenomeFromFirstGenome in listOfProtsInSecGenome_ForProtInFrstGenome:
-				if protHitInSecondGenomeFromFirstGenome in secondGenomeToFirstGenome:
-					listOfProtsInFrstGenome_ForProtInSecGenome = secondGenomeToFirstGenome[protHitInSecondGenomeFromFirstGenome]
-					# for protInFirstGenomeFromSecondGenome in listOfProtsInFrstGenome_ForProtInSecGenome:
-					# 	if protInFirstGenomeFromSecondGenome == firstGenomeProt:
-					# 		if DO_MERGE:
-					# 			clusterName = processIfDoMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
-					# 		else:
-					# 			clusterName = processIfNotMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
-					if listOfProtsInFrstGenome_ForProtInSecGenome[0] == firstGenomeProt:
-						if DO_MERGE:
-							clusterName = processIfDoMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
-						else:
-							clusterName = processIfNotMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
+		if len(list(firstGenomeToSecGenome)):
+			firstGenomeProt = list(firstGenomeToSecGenome)[0]
+			protHitInSecondGenomeFromFirstGenome = firstGenomeToSecGenome[firstGenomeProt][0]
+			if protHitInSecondGenomeFromFirstGenome in secondGenomeToFirstGenome and len(secondGenomeToFirstGenome[protHitInSecondGenomeFromFirstGenome]):
+				protHitInFirstGenomeFromSecondGenome = secondGenomeToFirstGenome[protHitInSecondGenomeFromFirstGenome][0]
+				if firstGenomeProt == protHitInFirstGenomeFromSecondGenome:
+					if DO_MERGE:
+						clusterName = processIfDoMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
+					else:
+						clusterName = processIfNotMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
+		# for firstGenomeProt in firstGenomeToSecGenome:
+		# 	listOfProtsInSecGenome_ForProtInFrstGenome = firstGenomeToSecGenome[firstGenomeProt]
+		# 	for protHitInSecondGenomeFromFirstGenome in listOfProtsInSecGenome_ForProtInFrstGenome:
+		# 		if protHitInSecondGenomeFromFirstGenome in secondGenomeToFirstGenome:
+		# 			listOfProtsInFrstGenome_ForProtInSecGenome = secondGenomeToFirstGenome[protHitInSecondGenomeFromFirstGenome]
+		# 			# for protInFirstGenomeFromSecondGenome in listOfProtsInFrstGenome_ForProtInSecGenome:
+		# 			# 	if protInFirstGenomeFromSecondGenome == firstGenomeProt:
+		# 			# 		if DO_MERGE:
+		# 			# 			clusterName = processIfDoMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
+		# 			# 		else:
+		# 			# 			clusterName = processIfNotMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
+		# 			if listOfProtsInFrstGenome_ForProtInSecGenome[0] == firstGenomeProt:
+		# 				if DO_MERGE:
+		# 					clusterName = processIfDoMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
+		# 				else:
+		# 					clusterName = processIfNotMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName)
+
 
 
 def processIfNotMerge(firstGenomeProt, protHitInSecondGenomeFromFirstGenome, clusterName):
@@ -277,6 +284,3 @@ def main(argv):
 
 if __name__ == "__main__":
 	main(sys.argv)
-
-
-
