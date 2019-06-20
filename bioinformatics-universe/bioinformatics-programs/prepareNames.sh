@@ -1,25 +1,20 @@
 #!/bin/bash
 #author: Vadim M. Gumerov; 08/29/2017
 
-
 PROGNAME=$(basename $0)
 input_dir="../bioinformatics-programs-workingDir/files"
 output_dir="../new_output"
-name_delim="|"
-name_column=2
+name_delim="@"
 tempExt=temp
 finalExt=fa
 
-
-
 numOfLetters=26
-
 fromIntTOLetterArray=({A..Z})
 declare -A letterCombsArray
 declare -a letterCombsArray2
 
 usage() {
-	echo "usage:" $PROGNAME " [-i input directory -o output directory -d delimeter -c column with unique genome locus | -h]"
+	echo "usage:" $PROGNAME " [-i input directory -o output directory -d delimeter | -h]"
 }
 
 initializeDirectories()  {
@@ -34,9 +29,6 @@ initializeDirectories()  {
 			-d | --delim)		shift
 						name_delim=$1
 						;;
-			-c | --column)		shift
-						name_column=$(($1+1))
-						;;
 			-h | --help)		usage
 						exit
 						;;
@@ -46,25 +38,23 @@ initializeDirectories()  {
 		esac
 		shift
 	done
-	
+
 	echo "name_delim: $name_delim"
-	echo "name_column: $name_column"
 	echo "input_dir: $input_dir"
 	echo "output_dir $output_dir"
-	
+
 	if ! [[ -d "$input_dir" ]]; then
 		echo "Input directory does not exist!"
 		echo "Aborting!"
 		exit 1
-	fi 
-	
+	fi
+
 	if ! [[ -d "$output_dir" ]]; then
 		mkdir "$output_dir"
-	fi	
+	fi
 }
 
-
-getRandomThreeLetterStr() {	
+getRandomThreeLetterStr() {
 	local newComb
 	num1=$[ ( $RANDOM % $numOfLetters ) ]
 	num2=$[ ( $RANDOM % $numOfLetters ) ]
@@ -98,54 +88,30 @@ fillInLetterCombsArray() {
 	done
 }
 
-
 getRidOfSpaces() {
 	for eachFile in "$input_dir"/*; do
 		echo "eachFile " $eachFile
 		newName=${eachFile// /_}
-		cp "$eachFile" "$output_dir"/$(basename ${newName%.*}).$tempExt		
+		cp "$eachFile" "$output_dir"/$(basename ${newName%.*}).$tempExt
 	done
 }
 
-
-main() { 
+main() {
 	fillInLetterCombsArray
 	getRidOfSpaces
-	
+
 	local inde=0
 
 	echo "Following files are created: "
 	for everyFile in "$output_dir"/*.$tempExt; do
-		/usr/bin/awk -v letterComb=${letterCombsArray2[$inde]} -v nameDelim="$name_delim" -v nameColumn="$name_column" \
-		'BEGIN{FS=nameDelim}{if (substr($1, 1,1) == ">") {newstring=""; for (i=1; i<=NF; i++) {\
-		if (i != nameColumn) {newstring=newstring""nameDelim""$i} \
-		else {newstring=newstring""nameDelim""letterComb"_"$i}}; print newstring} else {print $0}}' $everyFile | /bin/sed "s/$name_delim//" > "$output_dir"/$(basename ${everyFile%.*}).$finalExt
+		/usr/bin/awk -v letterComb=${letterCombsArray2[$inde]} -v nameDelim="$name_delim" \
+		'{if (substr($0, 1,1) == ">") {print ">"letterComb""nameDelim""substr($0, 2)} else {print $0}}' $everyFile > "$output_dir"/$(basename ${everyFile%.*}).$finalExt
 		echo "$output_dir"/$(basename ${everyFile%.*}).$finalExt
 		echo $((inde++))
 	done
 	rm "$output_dir"/*.temp
 }
 
+
 initializeDirectories $@
 main
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

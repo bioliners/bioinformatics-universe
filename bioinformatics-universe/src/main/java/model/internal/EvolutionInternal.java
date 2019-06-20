@@ -19,7 +19,6 @@ public class EvolutionInternal {
 
     private List<List<String>> commandsAndArguments;
 
-	private List<String> fieldsForIntermediateScript = new LinkedList<>();
     private List<String> allFields = new LinkedList<>();
 
     private String organismNameColumn;
@@ -40,10 +39,6 @@ public class EvolutionInternal {
 
     public void setFileColumn(String fileColumn) {
         this.fileColumn = fileColumn;
-    }
-
-    public List<String> getFieldForIntermScript() {
-        return fieldsForIntermediateScript;
     }
 
     public String getIdentityThreshold() {
@@ -91,14 +86,6 @@ public class EvolutionInternal {
     }
 
     public void setFields() {
-        if (fileDelim != null) {
-            fieldsForIntermediateScript.add(fileDelim);
-        }
-        if (fileColumn != null) {
-            fieldsForIntermediateScript.add(fileColumn);
-        }
-        allFields.addAll(fieldsForIntermediateScript);
-
         if (identityThreshold != null) {
             allFields.add(identityThreshold);
         }
@@ -108,7 +95,6 @@ public class EvolutionInternal {
         if (evalueThreshold != null) {
             allFields.add(evalueThreshold);
         }
-
         if (organismNameColumn != null) {
             allFields.add(organismNameColumn);
         }
