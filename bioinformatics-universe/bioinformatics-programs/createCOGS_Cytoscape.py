@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #author: Vadim M. Gumerov; 06/20/2019
-#assistant: Robert M. Morganti; 06/28/2019
+#assistant: Robert M. Morganti; 07/15/2019
 
 import sys, getopt, fileinput, os, traceback
 import collections
@@ -12,6 +12,8 @@ import collections
 
 INPUT_DIR = "../bioinformatics-programs-workingDir2/blast_output"
 OUTPUT_FILENAME = "COGs.txt"
+# add arguments here like
+OUTPUT_PROTEINS_FILENAME = "COGs_Proteins.txt"
 OUTPUT_SIF_FILENAME = 'COGs.sif'
 OUTPUT_SIF_UNIQUE_CONNECTIONS_FILENAME = 'UniqueCOGs.sif'
 DELIM="@"
@@ -20,10 +22,18 @@ EVAL_THRESHOLD = 0.000005
 COVERAGE_THRESHOLD = 80.0
 DO_MERGE=True
 BEST_HIT=True
+UNIQUE_NETWORK= True
 
 # Network of organism connections. Think of it like [(1,2),(1,2)....]
 network = []
 
+# List of proteins used
+
+listOfProtsUsed = []
+
+# Network of organisms that are unique; used in printAllSifConnections and printProtein
+
+UNIQUE_CONNECTIONS_NETWORK = dict()
 
 #{g1:2, g2:10, ...}
 GENOMENM_TO_NUM_OF_PROTS = dict()
@@ -133,6 +143,8 @@ def processInputData():
 def checkAndAddProteins(firstGenomeToSecGenome, eVal, coverage, identity, firstProt, secondProt):
 	if float(eVal) <= EVAL_THRESHOLD and float(coverage) >= COVERAGE_THRESHOLD and float(identity) >= IDENTITY_THRESHOLD:
 		firstGenomeToSecGenome[firstProt].append(secondProt)
+
+
 
 #Create COGs
 def createCOGs():
@@ -248,35 +260,65 @@ def printData():
 			clstName+=1
 			for prot in proteins:
 				outFile.write(prot + "\n")		
-				
-				
-def printSifAllConnections(network):
+
+def printProtData():
+	# opening directory location
 	os.chdir("..")
-	removedOrganisms = {'initial'}
-	CONNECTIONS_NETWORK = dict()
-	UNIQUE_CONNECTIONS_NETWORK = dict()
+
+	# correct directory
+	pathPrefix = "/media/sf_Shared/COGs/new_output2"
+
+	proteinFilesAll = os.listdir(pathPrefix)
+	proteinFilesUsed = []
+	# getting only fa files and not .fa
+	for item in proteinFilesAll:
+		if item.endswith(".fa") and item != ".fa":
+			proteinFilesUsed.append(item)
+
+	for protFile in proteinFilesUsed:
+		with open(pathPrefix + "/" + protFile,"r") as fileOpened:
+			linesReadUnsplit = fileOpened.read()
+			linesRead = linesReadUnsplit.split(">")
+			for protSequence in linesRead:
+				possibleProtein = protSequence[protSequence.find("@") + 1:protSequence.find(".") + 2]
+				if not UNIQUE_NETWORK:
+					for prot in network:
+						if possibleProtein == prot[:prot.find(".") + 2] and protSequence not in listOfProtsUsed:
+							listOfProtsUsed.append(protSequence)
+				else:
+					for key in UNIQUE_CONNECTIONS_NETWORK:
+						keyItem = key[key.find("_") + 1 : len(key)]
+						if possibleProtein == keyItem and protSequence not in listOfProtsUsed:
+							listOfProtsUsed.append(protSequence)			
+		
+				
+	with open(OUTPUT_PROTEINS_FILENAME,"w") as outProtFile:
+		for i in range(0,len(listOfProtsUsed)):	
+			outProtFile.write(listOfProtsUsed[i] + "\n")					
+			
+					
 
 
-	def indexFirstOrganism(network,variable):
-		# Indexing to scientific organism name
-		organism1 = network[variable][network[variable].find("["):network[variable].find("]")]
-		# Indexing to protein identifier 
-		identifier1 = network[variable][:network[variable].find(".") + 2]
-		# Correct name assignment
-		connection1 = (organism1[organism1.find("[") + 1:organism1.find("[") + 4] + '.' 
-		+ organism1[organism1.find("_") + 1: organism1.find("_") + 4] + '_'  + identifier1)
-		return connection1
+def indexFirstOrganism(network,variable):
+	# Indexing to scientific organism name
+	organism1 = network[variable][network[variable].find("["):network[variable].find("]")]
+	# Indexing to protein identifier 
+	identifier1 = network[variable][:network[variable].find(".") + 2]
+	# Correct name assignment
+	connection1 = (organism1[organism1.find("[") + 1:organism1.find("[") + 4] + '.' 
+	+ organism1[organism1.find("_") + 1: organism1.find("_") + 4] + '_'  + identifier1)
+	return connection1
 
-	def indexSecondOrganism(network,variable):
-		organism2 = network[variable + 1][network[variable + 1].find("["):network[variable + 1].find("]")]
-		# Indexing to protein identifier 
-		identifier2 = network[variable + 1][:network[variable + 1].find(".") + 2]
-		# Correct name assignment
-		connection2 =  (organism2[organism2.find("[") + 
-		1:organism2.find("[") + 4] + '.' + organism2[organism2.find("_") + 1: organism2.find("_") + 4] + '_' + identifier2)
-		return connection2
+def indexSecondOrganism(network,variable):
+	organism2 = network[variable + 1][network[variable + 1].find("["):network[variable + 1].find("]")]
+	# Indexing to protein identifier 
+	identifier2 = network[variable + 1][:network[variable + 1].find(".") + 2]
+	# Correct name assignment
+	connection2 =  (organism2[organism2.find("[") + 
+	1:organism2.find("[") + 4] + '.' + organism2[organism2.find("_") + 1: organism2.find("_") + 4] + '_' + identifier2)
+	return connection2
 
-	def makeOrIncrementConnections(networkDictionary,connection1,connection2):
+def makeOrIncrementConnections(networkDictionary,connection1,connection2):
 		if connection1 in networkDictionary.keys():
 				networkDictionary[connection1] = networkDictionary[connection1] + 1
 		else:
@@ -285,6 +327,14 @@ def printSifAllConnections(network):
 				networkDictionary[connection2] = networkDictionary[connection2] + 1
 		else:
 				networkDictionary[connection2] = 1
+
+				
+def printSifAllConnections(network):
+	os.chdir("..")
+	removedOrganisms = {'initial'}
+	CONNECTIONS_NETWORK = dict()
+
+
 
 	# Number of connections for COGs non-unique dictionary
 	i = 0 
@@ -336,7 +386,7 @@ def printSifAllConnections(network):
 				if connection1 not in removedOrganisms and connection2 not in removedOrganisms:
 					outSifUniqueFile.write(connection1 + ' (' + str(UNIQUE_CONNECTIONS_NETWORK[connection1]) + ')' +  '	pp	' +
 					connection2  + ' (' + str(UNIQUE_CONNECTIONS_NETWORK[connection2]) + ')\n')
-				j = j + 2			
+				j = j + 2
 		
 
 			
@@ -389,6 +439,8 @@ def main(argv):
 	createCOGs()
 	printData()
 	printSifAllConnections(network)
+	printProtData()
+	
 	
 
 if __name__ == "__main__":
