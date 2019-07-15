@@ -14,6 +14,7 @@ public class EvolutionInternal {
     private String evalueThreshold;
     private String commandToBeProcessedBy;
     private String doMerge;
+    private String doBestHit;
     private int jobId;
     private String outputFileName;
 
@@ -79,6 +80,14 @@ public class EvolutionInternal {
 
 	public void setDoMerge(String doMerge) {
 		this.doMerge = doMerge;
+	}
+	
+	public String getDoBestHit() {
+		return doBestHit;
+	}
+
+	public void setDoBestHit(String doBestHit) {
+		this.doBestHit = doBestHit;
 	}
 	
     public List<String> getAllFields() {

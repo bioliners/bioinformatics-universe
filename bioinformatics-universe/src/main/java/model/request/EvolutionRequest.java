@@ -13,6 +13,7 @@ public class EvolutionRequest {
 	private Double evalueThreshold;
 	private String commandToBeProcessedBy;
 	private String doMerge;
+	private String doBestHit;
 
 	private Integer organismNameColumn;
 	private Integer proteinNameColumn;
@@ -80,6 +81,14 @@ public class EvolutionRequest {
 
 	public void setDoMerge(String doMerge) {
 		this.doMerge = doMerge;
+	}
+	
+	public String getDoBestHit() {
+		return doBestHit;
+	}
+
+	public void setDoBestHit(String doBestHit) {
+		this.doBestHit = doBestHit;
 	}
 
 	public Integer getOrganismNameColumn() {
