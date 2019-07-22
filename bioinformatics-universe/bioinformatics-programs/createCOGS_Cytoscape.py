@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #author: Vadim M. Gumerov; 06/20/2019
-#assistant: Robert M. Morganti; 07/15/2019
+#assistant: Robert M. Morganti; 07/17/2019
 
 import sys, getopt, fileinput, os, traceback
 import collections
@@ -11,23 +11,24 @@ import collections
 #usage:
 
 INPUT_DIR = "../bioinformatics-programs-workingDir2/blast_output"
+INPUT_PROTS_DIR = "/media/sf_Shared/COGs/new_output2"
 OUTPUT_FILENAME = "COGs.txt"
 # add arguments here like
 OUTPUT_PROTEINS_FILENAME = "COGs_Proteins.txt"
-OUTPUT_SIF_FILENAME = 'COGs.sif'
-OUTPUT_SIF_UNIQUE_CONNECTIONS_FILENAME = 'UniqueCOGs.sif'
+OUTPUT_SIF_FILENAME = "COGs.sif"
+OUTPUT_SIF_UNIQUE_CONNECTIONS_FILENAME = "UniqueCOGs.sif"
 DELIM="@"
 IDENTITY_THRESHOLD=0
 EVAL_THRESHOLD = 0.000005
 COVERAGE_THRESHOLD = 80.0
 DO_MERGE=True
 BEST_HIT=True
-UNIQUE_NETWORK= True
+UNIQUE_NETWORK=True
 
 # Network of organism connections. Think of it like [(1,2),(1,2)....]
 network = []
 
-# List of proteins used
+# List of proteins used, for .fa file output
 
 listOfProtsUsed = []
 
@@ -51,14 +52,14 @@ CLUSTER_TO_PROTSET = collections.defaultdict(set)
 GENOME_PAIRS = list()
 GENOME_SET = set()
 
-USAGE = sys.argv[0] + ' -i input directory -o output file name -d delimeter -t identity threshold -e E-value threashold -v coverage threshold -m merge clusters or not (yes|no) -b focus on best ortholog hits (yes|no) -u display only unique network'
-#DEFAULT_PARAMS = ["INPUT_DIR ", "OUTPUT_FILENAME ", "DELIM ", "COLUMN_NUM ", "IDENTITY_THRESHOLD ", "EVAL_THRESHOLD ", "COVERAGE_THRESHOLD ", "DO_MERGE "]
-#DEFAULT_VALUES = [INPUT_DIR, OUTPUT_FILENAME, DELIM, COLUMN_NUM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE]
+USAGE = sys.argv[0] + ' -i input directory -n input proteins directory -o output file name -p output file name of proteins -d delimeter -t identity threshold -e E-value threashold -v coverage threshold -m merge clusters or not (yes|no) -b focus on best ortholog hits (yes|no) -u display only unique network'
+#DEFAULT_PARAMS = ["INPUT_DIR ", "INPUT_PROTS_DIR", "OUTPUT_FILENAME ", "OUTPUT_PROTEINS_FILENAME", "DELIM ", "COLUMN_NUM ", "IDENTITY_THRESHOLD ", "EVAL_THRESHOLD ", "COVERAGE_THRESHOLD ", "DO_MERGE "]
+#DEFAULT_VALUES = [INPUT_DIR, INPUT_PROTS_DIR, OUTPUT_FILENAME, OUTPUT_PROTEINS_FILENAME, DELIM, COLUMN_NUM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE]
 
 def initialyze(argv):
-	global INPUT_DIR, OUTPUT_FILENAME, DELIM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE, BEST_HIT,UNIQUE_NETWORK
+	global INPUT_DIR, INPUT_PROTS_DIR, OUTPUT_FILENAME, OUTPUT_PROTEINS_FILENAME, DELIM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE, BEST_HIT, UNIQUE_NETWORK
 	try:
-		opts, args = getopt.getopt(argv[1:],"hi:o:d:c:t:e:v:m:b:u:",["inputDir=", "outputFileName=", "delimeter=", "identity=", "eValue=", "coverage=", "merge=", "bestHit=", "uniqueNetwork="])
+		opts, args = getopt.getopt(argv[1:],"hi:n:o:p:d:c:t:e:v:m:b:u:",["inputDir=", "inputProtDir", "outputFileName=", "outputFileNameProts=", "delimeter=", "identity=", "eValue=", "coverage=", "merge=", "bestHit=", "uniqueNetwork="])
 	except getopt.GetoptError:
 		print (USAGE + " Error")
 		sys.exit(2)
@@ -68,8 +69,12 @@ def initialyze(argv):
 			sys.exit()
 		elif opt in ("-i", "--inputDir"):
 			INPUT_DIR = arg.strip()
+		elif opt in ("-n", "--inputProtDir"):
+			INPUT_PROTS_DIR = arg.strip()	
 		elif opt in ("-o", "--outputFileName"):
 			OUTPUT_FILENAME = str(arg).strip()
+		elif opt in ("-p","--outputFileNameProts"):
+			OUTPUT_PROTEINS_FILENAME = str(arg).strip()	
 		elif opt in ("-d", "--delimeter"):
 			DELIM = arg
 		elif opt in ("-t", "--identity"):
@@ -262,13 +267,10 @@ def printData():
 				outFile.write(prot + "\n")		
 
 def printProtData():
-	# opening directory location
-	os.chdir("..")
-
 	# correct directory
-	pathPrefix = "/media/sf_Shared/COGs/new_output2"
-
-	proteinFilesAll = os.listdir(pathPrefix)
+	os.chdir(INPUT_PROTS_DIR)
+	
+	proteinFilesAll = os.listdir('.')
 	proteinFilesUsed = []
 	# getting only fa files and not .fa
 	for item in proteinFilesAll:
@@ -276,7 +278,7 @@ def printProtData():
 			proteinFilesUsed.append(item)
 
 	for protFile in proteinFilesUsed:
-		with open(pathPrefix + "/" + protFile,"r") as fileOpened:
+		with open(protFile,"r") as fileOpened:
 			linesReadUnsplit = fileOpened.read()
 			linesRead = linesReadUnsplit.split(">")
 			for protSequence in linesRead:
@@ -291,7 +293,7 @@ def printProtData():
 						if possibleProtein == keyItem and protSequence not in listOfProtsUsed:
 							listOfProtsUsed.append(protSequence)			
 		
-				
+	os.chdir("..")			
 	with open(OUTPUT_PROTEINS_FILENAME,"w") as outProtFile:
 		for i in range(0,len(listOfProtsUsed)):	
 			outProtFile.write(listOfProtsUsed[i] + "\n")					
@@ -330,7 +332,6 @@ def makeOrIncrementConnections(networkDictionary,connection1,connection2):
 
 				
 def printSifAllConnections(network):
-	os.chdir("..")
 	removedOrganisms = {'initial'}
 	CONNECTIONS_NETWORK = dict()
 
@@ -345,7 +346,7 @@ def printSifAllConnections(network):
 		makeOrIncrementConnections(CONNECTIONS_NETWORK,connection1,connection2)
 		i = i + 2
 	if not UNIQUE_NETWORK: 
-		# SIF Output for Non-unqiue COGs
+		# SIF Output for Non-unique COGs
 		with open(OUTPUT_SIF_FILENAME, "w") as outSifFile:
 			m = 0	
 			while m < len(network):

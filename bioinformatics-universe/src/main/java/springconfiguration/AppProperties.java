@@ -16,7 +16,7 @@ public class AppProperties {
     private String makeUnique = bioProgramsDir + "/getUniqueSeqs.py";
     private String prepareNamesProgram = bioProgramsDir + "/prepareNames.sh";
     private String blastAllVsAllProgram = bioProgramsDir + "/blast-all-vs-all.sh";
-    private String createCogs = bioProgramsDir + "/createCOGs.py";
+    private String createCogs = bioProgramsDir + "/createCOGS_Cytoscape.py";
 
     private String alignMultiple = bioProgramsDir + "/align_multiple.sh";
     private String concatenate = bioProgramsDir + "/concatenate.py";

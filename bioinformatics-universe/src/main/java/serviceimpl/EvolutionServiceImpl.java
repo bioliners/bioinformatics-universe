@@ -61,7 +61,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	public String[] createDirs() {
 	    //i-input, o-output
         String iFilesLocationPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
-        String oFilesLocationPrepNames = super.getProperties().getMultipleWorkingFilesLocation();
+        String oFilesLocationPrepNames = super.getProperties().getMultipleWorkingFilesLocation();;
         String iFilesLocationBlast = oFilesLocationPrepNames;
         String oFilesLocationBlast = super.getProperties().getMultipleWorkingFilesLocation();
         String iFilesLocationCreateCogs = oFilesLocationBlast;
@@ -74,14 +74,12 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
         EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, locations[0]);
         evolutionInternal.setFields();
         evolutionInternal.setOutputFileName(super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
-
-
+        
         List<String> argsForAlignMultiple = new LinkedList<>();
         List<String> argsForConcatenate = new LinkedList<>();
-
+        
         argsForAlignMultiple.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[0], ParamPrefixes.OUTPUT.getPrefix()+locations[1]));
-
-        argsForConcatenate.add(ParamPrefixes.INPUT.getPrefix()+locations[2]);
+        argsForConcatenate.add(ParamPrefixes.INPUT.getPrefix()+locations[3]);
         argsForConcatenate.add(ParamPrefixes.OUTPUT.getPrefix() + evolutionInternal.getOutputFileName());
         argsForConcatenate.addAll(evolutionInternal.getAllFields());
 
@@ -125,20 +123,29 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 	    EvolutionInternal evolutionInternal = storeFileAndGetInternalRepresentation(evolutionRequest, locations[0]);
         evolutionInternal.setFields();
         evolutionInternal.setOutputFileName(super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
+        
+        //output file of .fa proteins actually used
+        evolutionInternal.setOutputFileNameProtsUsed(getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
 
         List<String> argsForPrepNames = new LinkedList<>();
         List<String> argsForBlast = new LinkedList<>();
         List<String> argsForCreateCogs = new LinkedList<>();
+        
         argsForPrepNames.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[0], ParamPrefixes.OUTPUT.getPrefix()+locations[1]));
 
         argsForBlast.add(ParamPrefixes.WDIR.getPrefix() + super.getPathToMainDirFromBioProgs() + super.getWorkingDir()+"/");
         argsForBlast.addAll(Arrays.asList(ParamPrefixes.INPUT.getPrefix()+locations[2], ParamPrefixes.OUTPUT.getPrefix()+locations[3]));
-
+        
+        
         argsForCreateCogs.add(ParamPrefixes.INPUT.getPrefix()+locations[4]);
+        
         argsForCreateCogs.add(ParamPrefixes.OUTPUT.getPrefix() + evolutionInternal.getOutputFileName());
+        argsForCreateCogs.add(ParamPrefixes.INPUT_PROTS.getPrefix() + locations[2]);
+        argsForCreateCogs.add(ParamPrefixes.OUTPUT_PROTS.getPrefix() + evolutionInternal.getOutputFileNameProtsUsed());
         argsForCreateCogs.addAll(evolutionInternal.getAllFields());
+        
 
-
+        System.out.println(super.getProgram(evolutionInternal.getCommandToBeProcessedBy()));
         String[] arrayOfInterpreters = {super.getBash(), super.getBash(), super.getPython()};
         String[] arrayOfPrograms = {prepareNames, blastAllVsAll, super.getProgram(evolutionInternal.getCommandToBeProcessedBy())};
         List<List<String>> listOfArgumentLists = new LinkedList<>(Arrays.asList(argsForPrepNames, argsForBlast, argsForCreateCogs));

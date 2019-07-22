@@ -17,6 +17,7 @@ public class EvolutionInternal {
     private String doBestHit;
     private int jobId;
     private String outputFileName;
+    private String outputFileNameProtsUsed;
 
     private List<List<String>> commandsAndArguments;
 
@@ -137,6 +138,14 @@ public class EvolutionInternal {
 
     public void setOutputFileName(String outputFileName) {
         this.outputFileName = outputFileName;
+    }
+    
+    public String getOutputFileNameProtsUsed() {
+    	return outputFileNameProtsUsed;
+    }
+    
+    public void setOutputFileNameProtsUsed(String outputFileNameProtsUsed) {
+    	this.outputFileNameProtsUsed = outputFileNameProtsUsed;
     }
 
     public String getOrganismNameColumn() {
