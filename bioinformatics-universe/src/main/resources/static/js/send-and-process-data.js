@@ -68,8 +68,10 @@ function processRetrievedData(data) {
 }
 
 function processRetrievedDataAsync(data) {
+	console.log(data.result.length)
     if (data.status[0] != 'notReady') {
-        if (data.result.length === 1) {
+	
+        if (data.result.length >= 1) {
             $('#results-load').attr('href', data.result[0]);
         }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #author: Vadim M. Gumerov; 06/20/2019
-#assistant: Robert M. Morganti; 07/17/2019
+#assistant: Robert M. Morganti; 07/26/2019
 
 import sys, getopt, fileinput, os, traceback
 import collections
@@ -52,14 +52,14 @@ CLUSTER_TO_PROTSET = collections.defaultdict(set)
 GENOME_PAIRS = list()
 GENOME_SET = set()
 
-USAGE = sys.argv[0] + ' -i input directory -n input proteins directory -o output file name -p output file name of proteins -d delimeter -t identity threshold -e E-value threashold -v coverage threshold -m merge clusters or not (yes|no) -b focus on best ortholog hits (yes|no) -u display only unique network'
-#DEFAULT_PARAMS = ["INPUT_DIR ", "INPUT_PROTS_DIR", "OUTPUT_FILENAME ", "OUTPUT_PROTEINS_FILENAME", "DELIM ", "COLUMN_NUM ", "IDENTITY_THRESHOLD ", "EVAL_THRESHOLD ", "COVERAGE_THRESHOLD ", "DO_MERGE "]
-#DEFAULT_VALUES = [INPUT_DIR, INPUT_PROTS_DIR, OUTPUT_FILENAME, OUTPUT_PROTEINS_FILENAME, DELIM, COLUMN_NUM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE]
+USAGE = sys.argv[0] + ' -i input directory -n input proteins directory -o output file name -f output file name of unique sif -p output file name of proteins -d delimeter -t identity threshold -e E-value threashold -v coverage threshold -m merge clusters or not (yes|no) -b focus on best ortholog hits (yes|no) -u display only unique network'
+#DEFAULT_PARAMS = ["INPUT_DIR ", "INPUT_PROTS_DIR", "OUTPUT_FILENAME ", "OUTPUT_SIF_UNIQUE_CONNECTIONS_FILENAME", "OUTPUT_PROTEINS_FILENAME", "DELIM ", "COLUMN_NUM ", "IDENTITY_THRESHOLD ", "EVAL_THRESHOLD ", "COVERAGE_THRESHOLD ", "DO_MERGE "]
+#DEFAULT_VALUES = [INPUT_DIR, INPUT_PROTS_DIR, OUTPUT_FILENAME, "OUTPUT_SIF_UNIQUE_CONNECTIONS_FILENAME", OUTPUT_PROTEINS_FILENAME, DELIM, COLUMN_NUM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE]
 
 def initialyze(argv):
-	global INPUT_DIR, INPUT_PROTS_DIR, OUTPUT_FILENAME, OUTPUT_PROTEINS_FILENAME, DELIM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE, BEST_HIT, UNIQUE_NETWORK
+	global INPUT_DIR, INPUT_PROTS_DIR, OUTPUT_FILENAME, OUTPUT_SIF_UNIQUE_CONNECTIONS_FILENAME, OUTPUT_PROTEINS_FILENAME, DELIM, IDENTITY_THRESHOLD, EVAL_THRESHOLD, COVERAGE_THRESHOLD, DO_MERGE, BEST_HIT, UNIQUE_NETWORK
 	try:
-		opts, args = getopt.getopt(argv[1:],"hi:n:o:p:d:c:t:e:v:m:b:u:",["inputDir=", "inputProtDir", "outputFileName=", "outputFileNameProts=", "delimeter=", "identity=", "eValue=", "coverage=", "merge=", "bestHit=", "uniqueNetwork="])
+		opts, args = getopt.getopt(argv[1:],"hi:n:o:f:p:d:c:t:e:v:m:b:u:",["inputDir=", "inputProtDir", "outputFileName=", "outputFileNameUniqueSIF=", "outputFileNameProts=", "delimeter=", "identity=", "eValue=", "coverage=", "merge=", "bestHit=", "uniqueNetwork="])
 	except getopt.GetoptError:
 		print (USAGE + " Error")
 		sys.exit(2)
@@ -72,7 +72,9 @@ def initialyze(argv):
 		elif opt in ("-n", "--inputProtDir"):
 			INPUT_PROTS_DIR = arg.strip()	
 		elif opt in ("-o", "--outputFileName"):
-			OUTPUT_FILENAME = str(arg).strip()
+			OUTPUT_FILENAME = str(arg).strip()	
+		elif opt in ("-f", "--outputFileNameUniqueSIF"):
+			OUTPUT_SIF_UNIQUE_CONNECTIONS_FILENAME = str(arg).strip()	
 		elif opt in ("-p","--outputFileNameProts"):
 			OUTPUT_PROTEINS_FILENAME = str(arg).strip()	
 		elif opt in ("-d", "--delimeter"):
@@ -441,7 +443,6 @@ def main(argv):
 	printData()
 	printSifAllConnections(network)
 	printProtData()
-	
 	
 
 if __name__ == "__main__":

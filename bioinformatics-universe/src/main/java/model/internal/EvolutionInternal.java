@@ -18,6 +18,7 @@ public class EvolutionInternal {
     private int jobId;
     private String outputFileName;
     private String outputFileNameProtsUsed;
+    private String outputFileNameUniqueSIF;
 
     private List<List<String>> commandsAndArguments;
 
@@ -147,7 +148,14 @@ public class EvolutionInternal {
     public void setOutputFileNameProtsUsed(String outputFileNameProtsUsed) {
     	this.outputFileNameProtsUsed = outputFileNameProtsUsed;
     }
-
+    
+    public String getOutputFileNameUniqueSIF() {
+    	return outputFileNameUniqueSIF;
+    }
+    
+    public void setOutputFileNameUniqueSIF(String outputFileNameUniqueSIF) {
+    	this.outputFileNameUniqueSIF = outputFileNameUniqueSIF;
+    }	
     public String getOrganismNameColumn() {
         return organismNameColumn;
     }

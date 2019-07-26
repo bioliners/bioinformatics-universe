@@ -124,9 +124,12 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
         evolutionInternal.setFields();
         evolutionInternal.setOutputFileName(super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
         
+        //output file of SIF for network
+        evolutionInternal.setOutputFileNameUniqueSIF(super.getPrefix()+ UUID.randomUUID().toString() + ".sif");
+        
         //output file of .fa proteins actually used
-        evolutionInternal.setOutputFileNameProtsUsed(getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
-
+        evolutionInternal.setOutputFileNameProtsUsed(super.getPrefix() + UUID.randomUUID().toString() + super.getPostfix());
+        
         List<String> argsForPrepNames = new LinkedList<>();
         List<String> argsForBlast = new LinkedList<>();
         List<String> argsForCreateCogs = new LinkedList<>();
@@ -140,6 +143,7 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
         argsForCreateCogs.add(ParamPrefixes.INPUT.getPrefix()+locations[4]);
         
         argsForCreateCogs.add(ParamPrefixes.OUTPUT.getPrefix() + evolutionInternal.getOutputFileName());
+        argsForCreateCogs.add(ParamPrefixes.OUTPUT_UNIQUE_SIF.getPrefix() + evolutionInternal.getOutputFileNameUniqueSIF());
         argsForCreateCogs.add(ParamPrefixes.INPUT_PROTS.getPrefix() + locations[2]);
         argsForCreateCogs.add(ParamPrefixes.OUTPUT_PROTS.getPrefix() + evolutionInternal.getOutputFileNameProtsUsed());
         argsForCreateCogs.addAll(evolutionInternal.getAllFields());
@@ -195,8 +199,21 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		bioJobResult.setResultFile("placeholder");
 		bioJobResult.setResultFileName(evolutionInternal.getOutputFileName());
         bioJobResult.setBiojob(bioJob);
-
+        
+        BioJobResult bioJobResultUniqueSIF = new BioJobResult();
+        bioJobResultUniqueSIF.setResultFile("placeholder");
+        bioJobResultUniqueSIF.setResultFileName(evolutionInternal.getOutputFileNameUniqueSIF());
+        bioJobResultUniqueSIF.setBiojob(bioJob);
+        
+        BioJobResult bioJobResultProts = new BioJobResult();
+        bioJobResultProts.setResultFile("placeholder");
+        bioJobResultProts.setResultFileName(evolutionInternal.getOutputFileNameProtsUsed());
+        bioJobResultProts.setBiojob(bioJob);
+        
         bioJob.addToBioJobResultList(bioJobResult);
+        bioJob.addToBioJobResultList(bioJobResultUniqueSIF);
+        bioJob.addToBioJobResultList(bioJobResultProts);
+
         super.getBioJobDao().save(bioJob);
 		return jobId;
 	}
@@ -220,15 +237,70 @@ public class EvolutionServiceImpl extends BioUniverseServiceImpl implements Evol
 		} catch (IOException e) {
 			System.out.println("Unable to read file " + file.toString());
 		}
+		
+		File fileUniqueSIF = null;
+		try {
+			fileUniqueSIF = getStorageService().loadAsResource(evolutionInternal.getOutputFileNameUniqueSIF()).getFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		StringBuilder fileAsStringBuilderUniqueSIF = new StringBuilder();
+		try (BufferedReader br = new BufferedReader(new FileReader(fileUniqueSIF))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				fileAsStringBuilderUniqueSIF.append(line + "\n");
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Can't find file " + fileUniqueSIF.toString());
+		} catch (IOException e) {
+			System.out.println("Unable to read file " + fileUniqueSIF.toString());
+		}
+		
+		File fileProts = null;
+		try {
+			fileProts = getStorageService().loadAsResource(evolutionInternal.getOutputFileNameProtsUsed()).getFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		StringBuilder fileAsStringBuilderProts = new StringBuilder();
+		try (BufferedReader br = new BufferedReader(new FileReader(fileProts))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				fileAsStringBuilderProts.append(line + "\n");
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Can't find file " + fileProts.toString());
+		} catch (IOException e) {
+			System.out.println("Unable to read file " + fileProts.toString());
+		}
+		
+
 
 		BioJobResult bioJobResult = super.getBioJobResultDao().findByResultFileName(evolutionInternal.getOutputFileName());
 		bioJobResult.setResultFile(fileAsStringBuilder.toString());
         super.getBioJobResultDao().save(bioJobResult);
-
+        
+        BioJobResult bioJobResultUniqueSIF = super.getBioJobResultDao().findByResultFileName(evolutionInternal.getOutputFileNameUniqueSIF());
+        bioJobResultUniqueSIF.setResultFile(fileAsStringBuilderUniqueSIF.toString());
+        super.getBioJobResultDao().save(bioJobResultUniqueSIF);
+        
+        BioJobResult bioJobResultProts = super.getBioJobResultDao().findByResultFileName(evolutionInternal.getOutputFileNameProtsUsed());
+        bioJobResultProts.setResultFile(fileAsStringBuilderProts.toString());
+        super.getBioJobResultDao().save(bioJobResultProts);
+        
+        
+        
 		BioJob bioJob = super.getBioJobDao().findByJobId(evolutionInternal.getJobId());
+		
+		System.out.println(bioJob.getBioJobResultList());
+		
 		bioJob.setFinished(true);
         super.getBioJobDao().save(bioJob);
 	}
+	
+	
 
 	private Integer getLastJobId() {
         Integer lastJobId = super.getBioJobDao().getLastJobId();

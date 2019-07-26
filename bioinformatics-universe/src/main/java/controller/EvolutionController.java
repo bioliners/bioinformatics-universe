@@ -120,7 +120,7 @@ public class EvolutionController extends BioUniverseController {
 
         response.setContentType("text/plain");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + bioJobResult.getResultFileName());
-
+        System.out.println(bioJobResult.getResultFileName().length());
         OutputStream outputStream = response.getOutputStream();
         OutputStream buffOutputStream= new BufferedOutputStream(outputStream);
         OutputStreamWriter outputwriter = new OutputStreamWriter(buffOutputStream);
